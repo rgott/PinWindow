@@ -160,7 +160,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="images\ColorPicker.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="images\CloseArrow.png" />
     <Resource Include="images\Exit.png" />

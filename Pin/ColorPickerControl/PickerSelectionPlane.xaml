@@ -76,8 +76,12 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Rectangle Fill="Blue"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="23"/>
+        </Grid.RowDefinitions>
+        <Grid Name="ColorSelectionGrid" Grid.Column="0" MouseMove="ColorSelectionGrid_MouseMove" MouseDown="ColorSelectionGrid_MouseDown">
+            <Rectangle Name="PrimaryFillColor" Fill="Blue"/>
             <Rectangle>
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -94,7 +98,7 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-5">
+            <Grid Name="ColorSelectionGridColorFinder" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-5">
                 <Ellipse Stroke="Black" StrokeThickness="1" Margin="1" />
                 <Ellipse Width="10" Height="10" Stroke="White" StrokeThickness="1" />
             </Grid>
@@ -132,5 +136,21 @@
                 <Polygon HorizontalAlignment="Right" Points="5 -5,0 0,5 5" Fill="Black"/>
             </Grid>
         </Grid>
+
+        <Grid Grid.Row="1" Margin="0,1,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <UniformGrid Rows="1">
+                <!--TODO:to be implemented color visuals and data behind-->
+                <Rectangle Name="InitialColor" Margin="0,0,1,0" Fill="Yellow"/>
+                <Rectangle Name="CurrentColor" Grid.Column="1" Margin="1,0,1,0" Fill="Blue"/>
+            </UniformGrid>
+            <Rectangle Name="LastColor" Grid.Column="1" Width="23" Fill="Purple"/>
+        </Grid>
+        <Image Grid.Column="1" Grid.Row="1" Margin="1,1,0,0" Source="/images/ColorPicker.png"/>
+        <!--TODO:to be implemented color selector-->
     </Grid>
 </UserControl>
