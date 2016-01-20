@@ -9,5 +9,6 @@
         Title="Test" Height="300" Width="300">
     <Grid>
         <CP:PickerSelectionPlane/>
+
     </Grid>
 </Window>

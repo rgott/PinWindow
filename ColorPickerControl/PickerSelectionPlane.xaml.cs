@@ -32,7 +32,6 @@ namespace Pin.ColorPicker
 
         static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
 
-        IntPtr hdc;
         public PickerSelectionPlane()
         {
             InitializeComponent();
@@ -41,30 +40,31 @@ namespace Pin.ColorPicker
          
         private void MajorColorSelectorPlane_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MajorColorSelection(e.GetPosition(MajorColorSelectorPlane));
+            if(canInitiate)
+            {
+                PrimaryFillColor.Fill = new SolidColorBrush(ColorSelection(MajorColorSelectorPlane, e));
+                MajorColorSelector.Margin = new Thickness(0, e.GetPosition(MajorColorSelectorPlane).Y, 0, 0);
+            }
         }
         
         private void MajorColorSelectorPlane_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            canInitiate = true;
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
-
+        protected bool canInitiate = true;
+        protected bool isInitiated = false;
         private void MajorColorSelectorPlane_MouseMove(object sender, MouseEventArgs e)
         {
-            if(Mouse.LeftButton == MouseButtonState.Pressed)
+            if(canInitiate && Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                MajorColorSelection(e.GetPosition(MajorColorSelectorPlane));
+                PrimaryFillColor.Fill = new SolidColorBrush(ColorSelection(MajorColorSelectorPlane,e));
+                MajorColorSelector.Margin = new Thickness(0, e.GetPosition(MajorColorSelectorPlane).Y, 0, 0);
             }
         }
 
-        private void MajorColorSelection(Point point)
+        private Color ColorSelection(Point screenPoint)
         {
-            MajorColorSelector.Margin = new Thickness(0, point.Y, 0, 0);
-            Point screenPoint = MajorColorSelectorPlane.PointToScreen(point);
             IntPtr hdc = GetDC(IntPtr.Zero);
             uint color = GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
             ReleaseDC(IntPtr.Zero, hdc);
@@ -72,24 +72,40 @@ namespace Pin.ColorPicker
             byte r = (byte)(color >> 16);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 0);
-            PrimaryFillColor.Fill = new SolidColorBrush(Color.FromArgb(255, r, g, b));
-        }
+            Console.WriteLine(Color.FromArgb(255, r, g, b));
+            return Color.FromArgb(255, r, g, b);
 
+        }
+        private Color ColorSelection(UIElement UIComponent, MouseEventArgs e)
+        {
+            return ColorSelection(UIComponent.PointToScreen(e.GetPosition(UIComponent)));
+        }
         private void ColorSelectionGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Mouse.LeftButton == MouseButtonState.Pressed)
-            {
-                Point mousPos = e.GetPosition(ColorSelectionGrid);
-                ColorSelectionGridColorFinder.Margin = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
-            }
-
+            //if (Mouse.LeftButton == MouseButtonState.Pressed)
+            //{
+            //    Point mousPos = e.GetPosition(ColorSelectionGrid);
+            //    ColorSelectionGridColorFinder.Margin = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
+            //    LastColor.Fill = new SolidColorBrush(ColorSelection(ColorSelectionGrid.PointFromScreen(new Point(5, e.GetPosition(ColorSelectionGrid).Y))));
+            //}
         }
 
         private void ColorSelectionGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
-                Point mousPos = e.GetPosition(ColorSelectionGrid);
-                ColorSelectionGridColorFinder.Margin = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
+            //Point mousPos = e.GetPosition(ColorSelectionGrid);
+            //ColorSelectionGridColorFinder.Margin = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
+        }
+
+        private void MajorColorSelectorPlane_MouseEnter(object sender, MouseEventArgs e)
+        {
+            //if(e.LeftButton != MouseButtonState.Pressed || !isInitiated)
+            //{
+            //    canInitiate = false;
+            //}
+            //else
+            //{
+            //    canInitiate = true;
+            //}
         }
     }
 }
