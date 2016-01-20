@@ -81,7 +81,7 @@
             <RowDefinition Height="23"/>
         </Grid.RowDefinitions>
         <Grid Name="ColorSelectionGrid" Grid.Column="0" MouseMove="ColorSelectionGrid_MouseMove" MouseDown="ColorSelectionGrid_MouseDown">
-            <Rectangle Name="PrimaryFillColor" Fill="Blue"/>
+            <Rectangle Name="PrimaryFillColor" Fill="Red"/>
             <Rectangle>
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -103,7 +103,7 @@
                 <Ellipse Width="10" Height="10" Stroke="White" StrokeThickness="1" />
             </Grid>
         </Grid>
-        <Grid Name="MajorColorSelectorPlane" Grid.Column="1" MouseDown="MajorColorSelectorPlane_MouseDown" MouseUp="MajorColorSelectorPlane_MouseUp"  Margin="1,0,0,0" MouseMove="MajorColorSelectorPlane_MouseMove">
+        <Grid Name="MajorColorSelectorPlane" Grid.Column="1" MouseDown="MajorColorSelectorPlane_MouseDown" MouseUp="MajorColorSelectorPlane_MouseUp" MouseEnter="MajorColorSelectorPlane_MouseEnter" Margin="1,0,0,0" MouseMove="MajorColorSelectorPlane_MouseMove">
             <Rectangle>
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
