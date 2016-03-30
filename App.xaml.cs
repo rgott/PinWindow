@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace Pin
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+        }
     }
 }

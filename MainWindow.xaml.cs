@@ -226,7 +226,7 @@ namespace Pin
         }
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            new Options().Show();
+            //new Options().Show();
         }
         private void exit_btn_Click(object sender, RoutedEventArgs e)
         {
