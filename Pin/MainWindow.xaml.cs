@@ -153,7 +153,7 @@ namespace Pin
                 {
                     foreach (string item in data)
                     {
-                        Console.WriteLine(String.Join(", ", item));
+                        Console.WriteLine(String.Join(", ", item) + "\t=>\t" + project.getCurrentProjectPath());
                         // TODO:setting selector for cut,copy,move
                         //File.Copy(item, savePath);
                     }
