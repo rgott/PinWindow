@@ -27,6 +27,10 @@ namespace Pin
                     // else error
                 } 
             }
+            else
+            {
+                Properties.Settings.Default.Projects = new StringCollection();
+            }
         }
 
         public string getCurrentProjectPath()
@@ -34,7 +38,7 @@ namespace Pin
             // TODO: get path
             //foreach(UIElement el in projectPanel.Children)
                 //((TextBlock)((Grid)((RadioButton)el))).Text;
-            return "";
+            return ""; // convert to list panel to select
         }
 
         private void addProject(string projectName,string projectPath)
