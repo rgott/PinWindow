@@ -74,22 +74,22 @@ namespace Pin
             tempB.Content = "+";
             tempB.Click += new RoutedEventHandler(delegate (object o, RoutedEventArgs e)
             {
-                System.Diagnostics.Process.Start("explorer.exe", "/root," + projectPath);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", projectPath));
             });
-            #endregion
             tempG.Children.Add(tempB);
+            #endregion
 
-            #region tempB => button Application
-            tempB = new Button();
-            tempB.HorizontalAlignment = HorizontalAlignment.Right;
-            tempB.Padding = new Thickness(0);
-            tempB.Content = ">";
-            tempB.Click += new RoutedEventHandler(delegate (object o, RoutedEventArgs e)
-            {
-                System.Diagnostics.Process.Start("explorer.exe", "/root," + projectPath);
-            });
-            #endregion
-            tempG.Children.Add(tempB);
+            //#region tempB => button Application
+            //tempB = new Button();
+            //tempB.HorizontalAlignment = HorizontalAlignment.Right;
+            //tempB.Padding = new Thickness(0);
+            //tempB.Content = ">";
+            //tempB.Click += new RoutedEventHandler(delegate (object o, RoutedEventArgs e)
+            //{
+            //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", projectPath));
+            //});
+            //tempG.Children.Add(tempB);
+            //#endregion
 
             #region ContextMenu
             ContextMenu tempG_cMenu = new ContextMenu();
@@ -99,8 +99,19 @@ namespace Pin
             tempG_cMenu.Closed += masterPopupToggleOff;
 
             MenuItem tempG_mItem;
+
+            tempG_mItem = new MenuItem(); // open with explorer
+            tempG_mItem.Header = "Open with Explorer";
+            tempG_mItem.Click += new RoutedEventHandler(delegate (object o, RoutedEventArgs e)
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", projectPath));
+            });
+            tempG_cMenu.Items.Add(tempG_mItem);
+
+
+
             tempG_mItem = new MenuItem();
-            tempG_mItem.Header = "Edit";
+            tempG_mItem.Header = "Edits";
             tempG_mItem.Click += new RoutedEventHandler(delegate (object o, RoutedEventArgs e)
             {
                 int index = projectPanel.Children.IndexOf(RButton); // replace radio button with editable version

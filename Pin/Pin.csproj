@@ -52,6 +52,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,14 +84,17 @@
     <Compile Include="ColorPickerControl\PickerSelectionPlane.xaml.cs">
       <DependentUpon>PickerSelectionPlane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PRadioButton.cs" />
     <Compile Include="Project.xaml.cs">
       <DependentUpon>Project.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectItem.xaml.cs">
+      <DependentUpon>ProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Win32.cs" />
     <Compile Include="WindowState.cs" />
     <Page Include="ColorPickerControl\ColorPickerXML.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -119,6 +123,10 @@
     <Page Include="Project.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ProjectItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Test.xaml">
       <Generator>MSBuild:Compile</Generator>

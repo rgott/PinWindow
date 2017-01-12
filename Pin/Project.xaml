@@ -57,12 +57,12 @@
             </Grid.RowDefinitions>
             <Border Background="#FF646769">
                 <Grid Margin="10" Grid.Row="0" VerticalAlignment="Top">
-                    <Button Background="#FF646769" BorderBrush="#FF646769" HorizontalAlignment="Left">
+                    <!--<Button Background="#FF646769" BorderBrush="#FF646769" HorizontalAlignment="Left">
                         <Button.Content>
                             <Image Source="images/menu.png"/>
                         </Button.Content>
-                    </Button>
-                    <TextBlock Margin="30,0,0,0" FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
+                    </Button>-->
+                    <TextBlock Margin="0,0,0,0" FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
                     <ToggleButton HorizontalAlignment="Right" Padding="0" Name="projects" Click="projects_Click">
                         <Grid>
                             <TextBlock Name="addP" Text="+"/>
