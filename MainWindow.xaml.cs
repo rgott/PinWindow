@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Pin
@@ -23,8 +23,8 @@ namespace Pin
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
         }
+
         #region Window Controller
-        
         private void WindowChangeState(MouseOverController.WindowState? wState = null)
         {
             if (wState == null)
@@ -106,19 +106,12 @@ namespace Pin
             }
         }
         #endregion
+
+        #region Sizing btn
         private void sizing_btn_Click(object sender, RoutedEventArgs e)
         {
             WindowChangeState();
         }
-
-        private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized && !dragDrop)
-            {
-                WindowChangeState(MouseOverController.WindowState.pinned);
-            }
-        }
-
         private void sizing_btn_DragEnter(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Move;
@@ -126,21 +119,6 @@ namespace Pin
         }
 
         private void sizing_btn_Drop(object sender, DragEventArgs e)
-        {
-            //Console.WriteLine(e.Source);
-            //Console.WriteLine(e.RoutedEvent.Name);
-            //Console.WriteLine(e.KeyStates);
-            //Console.WriteLine(e.OriginalSource);
-            //Console.WriteLine(e.GetType());
-            //Console.WriteLine(string.Join(", ",e.Data.GetFormats()));
-            //Console.WriteLine(string.Join(", ",e.Data.GetData("FileName")));
-            //Console.WriteLine(string.Join(", ", e.Data.GetData("FileDrop")));
-            //Console.WriteLine(e.GetType());
-            //Console.WriteLine(getName(e));
-            saveFile(e, "");
-        }
-
-        private void saveFile(DragEventArgs e, string savePath)
         {
             if (e.Data.GetFormats().contains(DataFormats.Html))
             {// if html then from web retrieve and save image
@@ -160,18 +138,61 @@ namespace Pin
                 }
             }
         }
+        #endregion
+
+        private void pin_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(MouseOverController.isPinned)
+            {
+                MouseOverController.isPinned = false;
+                pin_btn_image.Source = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
+            }
+            else
+            {
+                MouseOverController.isPinned = true;
+                pin_btn_image.Source = new BitmapImage(new Uri("images/pinned.png", UriKind.Relative));
+            }
+        }
+
+        private void borderMain_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Move;
+        }
+
+        #region Window Events
+
+        private void pinWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
+
+            // get window style
+            int exStyle = (int)Win32.GetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE);
+
+            // add to style that it is a tool window so it does not show in the task view (alt + tab)
+            exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
+            Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
+        }
+
+        private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized && !dragDrop)
+            {
+                WindowChangeState(MouseOverController.WindowState.pinned);
+            }
+        }
 
         private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
             dragDrop = false;
             if (
-                MouseOverController.Win_State != MouseOverController.WindowState.Minimized 
-                && !MouseOverController.isPinned 
+                MouseOverController.Win_State != MouseOverController.WindowState.Minimized
+                && !MouseOverController.isPinned
                 && !MouseOverController.isMouseOverMenu
-            ){
-                if(MouseOverController.Win_State == MouseOverController.WindowState.pinned)
+            )
+            {
+                if (MouseOverController.Win_State == MouseOverController.WindowState.pinned)
                 {
-                    new Task(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         Thread.Sleep(100);
                         // recheck after x time
@@ -180,12 +201,12 @@ namespace Pin
                             && !MouseOverController.isMouseOverMenu
                             )
                             Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
-                    }).Start();
+                    });
 
                 }
                 else
                 {
-                    new Task(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         Thread.Sleep(750);
                         // recheck after x time
@@ -194,116 +215,18 @@ namespace Pin
                             && !MouseOverController.isPinned
                             && !MouseOverController.isMouseOverMenu
                             )
-                        Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
-                    }).Start();
-
+                            Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
+                    });
                 }
-
-            }
-        }
-        
-        private void pin_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if(MouseOverController.isPinned)
-            {
-                MouseOverController.isPinned = false;
-                pin_btn_image.Source = new BitmapImage(new Uri("pin.png", UriKind.Relative));
-            }
-            else
-            {
-                MouseOverController.isPinned = true;
-                pin_btn_image.Source = new BitmapImage(new Uri("pinned.png", UriKind.Relative));
             }
         }
 
-        private void borderMain_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Move;
-        }
-        private void Popup_MouseLeave(object sender, MouseEventArgs e)
-        {
-            //popup.IsOpen = false;
-        }
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            //new Options().Show();
-        }
         private void exit_btn_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Save();
             this.Close();
         }
-        
-        private void pinWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
 
-            int exStyle = (int)GetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE);
-
-            exStyle |= (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW;
-            SetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
-        }
-        #region Window styles
-        [Flags]
-        public enum ExtendedWindowStyles
-        {
-            // ...
-            WS_EX_TOOLWINDOW = 0x00000080,
-            // ...
-        }
-
-        public enum GetWindowLongFields
-        {
-            // ...
-            GWL_EXSTYLE = (-20),
-            // ...
-        }
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowLong(IntPtr hWnd, int nIndex);
-
-        public static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
-        {
-            int error = 0;
-            IntPtr result = IntPtr.Zero;
-            // Win32 SetWindowLong doesn't clear error on success
-            SetLastError(0);
-
-            if (IntPtr.Size == 4)
-            {
-                // use SetWindowLong
-                Int32 tempResult = IntSetWindowLong(hWnd, nIndex, IntPtrToInt32(dwNewLong));
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(tempResult);
-            }
-            else
-            {
-                // use SetWindowLongPtr
-                result = IntSetWindowLongPtr(hWnd, nIndex, dwNewLong);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            return result;
-        }
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
-        private static extern IntPtr IntSetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
-        private static extern Int32 IntSetWindowLong(IntPtr hWnd, int nIndex, Int32 dwNewLong);
-
-        private static int IntPtrToInt32(IntPtr intPtr)
-        {
-            return unchecked((int)intPtr.ToInt64());
-        }
-
-        [DllImport("kernel32.dll", EntryPoint = "SetLastError")]
-        public static extern void SetLastError(int dwErrorCode);
         #endregion
     }
 }

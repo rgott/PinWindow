@@ -49,6 +49,7 @@ namespace Pin
         {
             Normal,
             pinned,
+            pinDrop,
             Minimized
         }
         public enum PinnedWindowState
