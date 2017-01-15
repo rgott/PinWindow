@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin"
+             xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style TargetType="RadioButton">
             <Setter Property="Background" Value="#FF646769"/>
         </Style>
-        
+
         <!-- most of the Radio button styling-->
         <ControlTemplate x:Key="StyledRadioButton" TargetType="{x:Type RadioButton}">
             <Grid x:Name="templateRoot" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
@@ -68,20 +69,38 @@
                             <TextBlock Name="addP" Text="+"/>
                             <Popup Name="popupToggle" IsOpen="{Binding IsChecked, ElementName=projects}" MouseEnter="popupToggle_MouseEnter" MouseLeave="popupToggle_MouseLeave" Placement="Left" HorizontalOffset="10" VerticalOffset="29">
                                 <Grid Width="280" Background="#FF646769" Height="91">
-                                    <StackPanel Height="23" VerticalAlignment="Top" Orientation="Horizontal">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ColorPicker:ColorSelectionBox x:Name="UI_ColorPicker_ColorSelectionBox" Margin="10"/>
+                                    <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="10"/>
+                                        </Grid.ColumnDefinitions>
                                         <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Project Name"/>
-                                        <TextBox Name="projectName" Width="150"/>
-                                    </StackPanel>
-                                    <StackPanel Margin="0,30,0,0" Height="23" VerticalAlignment="Top" Orientation="Horizontal">
-                                        <TextBlock FontSize="16" Foreground="White" Margin="10,0,22,0" Text="Project Path"/>
-                                        <TextBox Name="projectPath" Width="150"/>
-                                    </StackPanel>
-                                    <Button Name="buttonName" Click="buttonName_Click" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add"/>
+                                        <TextBox Name="UI_TxtBox_ProjectName" Grid.Column="1"/>
+                                    </Grid>
+                                    <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="10"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Project Path"/>
+                                        <TextBox Name="UI_TxtBox_ProjectPath" Grid.Column="1"/>
+                                        <Button x:Name="UI_Btn_FolderBrowse" Click="UI_Btn_FolderBrowse_Click" Grid.Column="2">Browse</Button>
+                                    </Grid>
+                                    <Button Name="UI_Btn_AddProject" Click="UI_Btn_AddProject_Click" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
                                 </Grid>
                             </Popup>
                         </Grid>
                     </ToggleButton>
                 </Grid>
+
             </Border>
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Name="projectPanel">
