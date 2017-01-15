@@ -1,9 +1,19 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Pin
 {
     static class MouseOverController
     {
+        public static event MouseLeaveMenuEventHandler MouseLeaveMenu;
+        private static void OnMouseLeaveMenu(EventArgs e)
+        {
+            if (MouseLeaveMenu != null)
+                MouseLeaveMenu(e);
+        }
+
         public static void init()
         {
             Win_State = MouseOverController.WindowState.Minimized;
@@ -43,8 +53,17 @@ namespace Pin
             set
             {
                 Application.Current.Properties["isMouseOverMenu"] = value;
+                if(value == false)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        Thread.Sleep(350);
+                        OnMouseLeaveMenu(EventArgs.Empty);
+                    });
+                }
             }
         }
+
         public enum WindowState
         {
             Normal,
@@ -58,4 +77,7 @@ namespace Pin
             closed
         }
     }
+    public delegate void MouseLeaveMenuEventHandler(EventArgs e);
+
+
 }

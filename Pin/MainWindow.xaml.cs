@@ -15,6 +15,16 @@ namespace Pin
     /// </summary>
     public partial class MainWindow : Window
     {
+        public delegate void MinimizedWindowEventHandler(EventArgs e);
+
+        public static event MinimizedWindowEventHandler MinimizedWindow;
+
+        private void OnMinimizedWindow(EventArgs e)
+        {
+            if (MinimizedWindow != null)
+                MinimizedWindow(e);
+        }
+
         MouseOverController.WindowState Win_prev_State;
         bool dragDrop = false;
         public MainWindow()
@@ -22,6 +32,12 @@ namespace Pin
             MouseOverController.init();
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
+            MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
+        }
+
+        private void MouseOverController_MouseLeaveMenu(EventArgs e)
+        {
+            minimizeWindowDelay(250);
         }
 
         #region Window Controller
@@ -159,6 +175,34 @@ namespace Pin
             e.Effects = DragDropEffects.Move;
         }
 
+
+        private void minimizeWindowDelay(int millisecondDelay = 750)
+        {
+            // should prepare to minimize window?
+            if (
+                MouseOverController.Win_State != MouseOverController.WindowState.Minimized
+                && !MouseOverController.isPinned
+            )
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(millisecondDelay);
+                    // recheck after x time
+                    if (MouseOverController.Win_State != MouseOverController.WindowState.Minimized
+                        && !IsMouseOver
+                        && !MouseOverController.isPinned
+                        && !MouseOverController.isMouseOverMenu
+                        )
+                    {
+                        Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
+                        OnMinimizedWindow(EventArgs.Empty);
+                    }
+                });
+            }
+        }
+
+
+
         #region Window Events
 
         private void pinWindow_Loaded(object sender, RoutedEventArgs e)
@@ -184,41 +228,8 @@ namespace Pin
         private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
             dragDrop = false;
-            if (
-                MouseOverController.Win_State != MouseOverController.WindowState.Minimized
-                && !MouseOverController.isPinned
-                && !MouseOverController.isMouseOverMenu
-            )
-            {
-                if (MouseOverController.Win_State == MouseOverController.WindowState.pinned)
-                {
-                    Task.Factory.StartNew(() =>
-                    {
-                        Thread.Sleep(100);
-                        // recheck after x time
-                        if (MouseOverController.Win_State != MouseOverController.WindowState.Minimized
-                            && !MouseOverController.isPinned
-                            && !MouseOverController.isMouseOverMenu
-                            )
-                            Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
-                    });
 
-                }
-                else
-                {
-                    Task.Factory.StartNew(() =>
-                    {
-                        Thread.Sleep(750);
-                        // recheck after x time
-                        if (MouseOverController.Win_State != MouseOverController.WindowState.Minimized
-                            && !IsMouseOver
-                            && !MouseOverController.isPinned
-                            && !MouseOverController.isMouseOverMenu
-                            )
-                            Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
-                    });
-                }
-            }
+            minimizeWindowDelay();
         }
 
         private void exit_btn_Click(object sender, RoutedEventArgs e)
