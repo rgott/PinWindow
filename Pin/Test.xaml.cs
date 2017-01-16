@@ -22,6 +22,11 @@ namespace Pin
         public Test()
         {
             InitializeComponent();
+
+            Properties.Settings.Default.Projects.Add(new Model.Project("sdf", "sdf;lskdajf;lsdkjf", new SolidColorBrush(Colors.Beige)).Serialize());
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
+            Console.WriteLine(Properties.Settings.Default.Projects.ToString());
         }
     }
 }
