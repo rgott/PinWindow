@@ -22,14 +22,14 @@ namespace Pin
             // load projects in form 
             if(Properties.Settings.Default.Projects != null)
             {
-                foreach (Model.Project item in Properties.Settings.Default.Projects)
+                foreach (string item in Properties.Settings.Default.Projects)
                 {
-                    addProject(item);
+                    addProject(Model.Project.Deserialize(item));
                 } 
             }
             else
             {
-                Properties.Settings.Default.Projects = new ArrayList();
+                Properties.Settings.Default.Projects = new StringCollection();
                 Properties.Settings.Default.Save();
             }
         }
@@ -90,7 +90,7 @@ namespace Pin
                 UI_ColorPicker_ColorSelectionBox.FillColor);
 
             addProject(ProjectModel);
-            Properties.Settings.Default.Projects.Add(ProjectModel);
+            Properties.Settings.Default.Projects.Add(ProjectModel.Serialize());
             Properties.Settings.Default.Save();
             popupToggle.IsOpen = false;
             addP.Text = "+";

@@ -73,9 +73,9 @@ namespace Pin.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.ArrayList Projects {
+        public global::System.Collections.Specialized.StringCollection Projects {
             get {
-                return ((global::System.Collections.ArrayList)(this["Projects"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Projects"]));
             }
             set {
                 this["Projects"] = value;

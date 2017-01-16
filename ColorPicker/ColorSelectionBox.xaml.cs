@@ -33,8 +33,8 @@ namespace Pin.ColorPicker
             }
         }
 
-        private Brush _FillColor;
-        public Brush FillColor
+        private SolidColorBrush _FillColor;
+        public SolidColorBrush FillColor
         {
             get
             {
@@ -66,7 +66,6 @@ namespace Pin.ColorPicker
 
         private void UI_Popup_PickerPlane_MouseLeave(object sender, MouseEventArgs e)
         {
-            MouseOverController.isMouseOverMenu = false;
         }
         private void UI_Btn_ProjectColor_Click(object sender, RoutedEventArgs e)
         {
@@ -83,6 +82,7 @@ namespace Pin.ColorPicker
         {
             UI_Popup_PickerPlane.IsOpen = false;
             FillColor = UI_PickerSelectionPlane.FillColor;
+            MouseOverController.isMouseOverMenu = false;
         }
 
     }

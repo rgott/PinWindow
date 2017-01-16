@@ -25,11 +25,11 @@ namespace Pin.ColorPicker
 
 
 
-        public Brush FillColor
+        public SolidColorBrush FillColor
         {
             get
             {
-                return (Brush)GetValue(FillColorProperty);
+                return (SolidColorBrush)GetValue(FillColorProperty);
             }
             set
             {
@@ -40,7 +40,7 @@ namespace Pin.ColorPicker
 
         // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FillColorProperty =
-            DependencyProperty.Register("FillColor", typeof(Brush), typeof(PickerSelectionPlane), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
+            DependencyProperty.Register("FillColor", typeof(SolidColorBrush), typeof(PickerSelectionPlane), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
 
 
 
@@ -89,7 +89,6 @@ namespace Pin.ColorPicker
             byte r = (byte)(color >> 0);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 16);
-            Console.WriteLine(Color.FromArgb(255, r, g, b));
             return Color.FromArgb(255, r, g, b);
         }
         

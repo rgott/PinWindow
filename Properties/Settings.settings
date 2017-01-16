@@ -14,7 +14,7 @@
     <Setting Name="WINDOW_STATE_MINIMIZED_WIDTH" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="Projects" Type="System.Collections.ArrayList" Scope="User">
+    <Setting Name="Projects" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

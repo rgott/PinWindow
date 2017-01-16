@@ -29,6 +29,7 @@ namespace Pin
         bool dragDrop = false;
         public MainWindow()
         {
+            Properties.Settings.Default.Upgrade();
             MouseOverController.init();
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
