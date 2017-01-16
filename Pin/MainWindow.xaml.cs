@@ -202,8 +202,6 @@ namespace Pin
             }
         }
 
-
-
         #region Window Events
 
         private void pinWindow_Loaded(object sender, RoutedEventArgs e)
