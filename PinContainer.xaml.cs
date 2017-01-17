@@ -21,7 +21,7 @@ namespace Pin
     /// <summary>
     /// Interaction logic for PinContainer.xaml
     /// </summary>
-    public partial class PinContainer : UserControl, INotifyPropertyChanged
+    public partial class PinContainer : UserControl, INotifyPropertyChanged , IPinState
     {
         #region Properties
         public event PropertyChangedEventHandler PropertyChanged;
@@ -44,21 +44,6 @@ namespace Pin
             set
             {
                 _UI_SizingSource = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        private ImageSource _UI_ArrowSource;
-
-        public ImageSource UI_ArrowSource
-        {
-            get
-            {
-                return _UI_ArrowSource;
-            }
-            set
-            {
-                _UI_ArrowSource = value;
                 NotifyPropertyChanged();
             }
         }
@@ -112,8 +97,8 @@ namespace Pin
 
         #endregion
 
-        public event EventHandler OnOpenPin;
-        public event EventHandler OnClosePin;
+        public event EventHandler OnPinned;
+        public event EventHandler OnUnPinned;
 
         public event EventHandler OnOpenMenu;
         public event EventHandler OnCloseMenu;
@@ -124,30 +109,52 @@ namespace Pin
         public event EventHandler OnCloseArrow;
 
 
-        public event EventHandler OnDrop;
-
         public PinContainer()
         {
-            UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));
-            UI_ArrowSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
+            UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
             UI_ExitSource = new BitmapImage(new Uri("images/Exit.png", UriKind.Relative));
             UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
             UI_MenuSource = new BitmapImage(new Uri("images/menu.png", UriKind.Relative));
 
             DataContext = this;
             InitializeComponent();
+
+            if (Properties.Settings.Default.Projects != null)
+            {
+                foreach (var item in Properties.Settings.Default.Projects)
+                {
+                    UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(Model.Project.Deserialize(item)));
+                }
+            }
+            Properties.Settings.Default.PropertyChanged += Default_PropertyChanged;
+
+        }
+
+        private void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("Projects"))
+            {
+                UI_StackPanel_PinContainerProjects.Children.Clear();
+                if (Properties.Settings.Default.Projects != null)
+                {
+                    foreach (var item in Properties.Settings.Default.Projects)
+                    {
+                        UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(Model.Project.Deserialize(item)));
+                    }
+                }
+            }
         }
 
         private void UI_Btn_Sizing_Click(object sender, RoutedEventArgs e)
         {
             if(ArrowStatus)
             {
-                UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));
+                UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
                 if (OnCloseArrow != null) OnCloseArrow(this, e);
             }
             else
             {
-                UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
+                UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));
                 if (OnOpenArrow != null) OnOpenArrow(this, e);
             }
             ArrowStatus = !ArrowStatus;
@@ -176,26 +183,102 @@ namespace Pin
             if(PinStatus)
             {
                 UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
+                if (OnUnPinned != null) OnUnPinned(this, e);
             }
             else
             {
                 UI_PinSource = new BitmapImage(new Uri("images/pinned.png", UriKind.Relative));
+                if (OnPinned != null) OnPinned(this, e);
             }
             PinStatus = !PinStatus;
         }
 
-        private void UI_Border_Polygon_DragEnter(object sender, DragEventArgs e)
-        {
-
-        }
-
+        
         private void UI_Btn_Polygon_Drop(object sender, DragEventArgs e)
         {
 
         }
 
+        private void UI_UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if(!MouseOverController.isMoveOverWindow)
+            {
+                UI_Grid_MinimizedOpen.Visibility = Visibility.Visible;
+
+                UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
+                UI_Grid_Maximized.Visibility = Visibility.Hidden;
+            }
+        }
 
 
-        
+        private void sizing_btn_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetFormats().contains(DataFormats.Html))
+            {// if html then from web retrieve and save image
+                Console.WriteLine(String.Join(", ", e.Data.GetData(DataFormats.Html)));
+            }
+            else
+            {// file drop
+                Array data = ((IDataObject)e.Data).GetData(DataFormats.FileDrop) as Array;
+                if (data != null)
+                {
+                    foreach (string item in data)
+                    {
+                        //Console.WriteLine(String.Join(", ", item) + "\t=>\t" + project.getCurrentProjectPath());
+                        // TODO:setting selector for cut,copy,move
+                        //File.Copy(item, savePath);
+                    }
+                }
+            }
+        }
+
+        private void sizing_btn_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Move;
+        }
+
+        public void WindowChangeState(MouseOverController.WindowState? wState = default(MouseOverController.WindowState?))
+        {
+            switch (wState)
+            {
+                case MouseOverController.WindowState.Minimized:
+
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
+
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
+                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+
+
+                    UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
+                    ArrowStatus = true;
+
+                    break;
+                case MouseOverController.WindowState.Normal:
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
+
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
+                    UI_Grid_Maximized.Visibility = Visibility.Visible;
+                    break;
+                case MouseOverController.WindowState.pinDrop:
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Visible;
+
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
+                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+                    break;
+                case MouseOverController.WindowState.MinimizedDragging:
+                    UI_Grid_ProjectView.Visibility = Visibility.Visible;
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
+
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
+                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+                    break;
+                case MouseOverController.WindowState.pinned:
+
+                    break;
+                default:
+
+                    break;
+            }
+        }
     }
 }

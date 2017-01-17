@@ -5,8 +5,10 @@ using System.Windows;
 
 namespace Pin
 {
-    static class MouseOverController
+    public class MouseOverController
     {
+        internal static bool isMoveOverWindow;
+
         public static event MouseLeaveMenuEventHandler MouseLeaveMenu;
         private static void OnMouseLeaveMenu(EventArgs e)
         {
@@ -14,12 +16,13 @@ namespace Pin
                 MouseLeaveMenu(e);
         }
 
-        public static void init()
+        public static void Init()
         {
             Win_State = MouseOverController.WindowState.Minimized;
             isPinned = false;
             isMouseOverMenu = false;
         }
+
         public static WindowState Win_State
         {
             get
@@ -69,7 +72,8 @@ namespace Pin
             Normal,
             pinned,
             pinDrop,
-            Minimized
+            Minimized,
+            MinimizedDragging
         }
         public enum PinnedWindowState
         {

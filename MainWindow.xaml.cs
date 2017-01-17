@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Pin
 {
@@ -19,18 +16,21 @@ namespace Pin
 
         public static event MinimizedWindowEventHandler MinimizedWindow;
 
+        MouseOverController.WindowState Win_prev_State;
+
+        bool dragDrop = false; // TODO:fix
+
         private void OnMinimizedWindow(EventArgs e)
         {
             if (MinimizedWindow != null)
                 MinimizedWindow(e);
         }
 
-        MouseOverController.WindowState Win_prev_State;
-        bool dragDrop = false;
         public MainWindow()
         {
             Properties.Settings.Default.Upgrade();
-            MouseOverController.init();
+            MouseOverController.Init();
+            DataContext = this;
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
@@ -65,117 +65,32 @@ namespace Pin
             }
             Win_prev_State = MouseOverController.Win_State;
             MouseOverController.Win_State = (MouseOverController.WindowState)wState;
-
+            UI_PinContainer.WindowChangeState(wState);
             switch (wState)
             {
                 case MouseOverController.WindowState.Normal:
-                    pin_btn.Visibility = Visibility.Visible;
-                    border.Visibility = Visibility.Visible;
-                    setPinnedWindowState(MouseOverController.PinnedWindowState.open);
-                    borderMain.Margin = new Thickness(80, 0, 0, 0);
                     Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
+                    border.Visibility = Visibility.Visible;
                     break;
                 case MouseOverController.WindowState.Minimized:
-                    pin_btn.Visibility = Visibility.Hidden;
-                    setPinnedWindowState(MouseOverController.PinnedWindowState.closed);
-                    borderMain.Margin = new Thickness(80, 0, 0, 0);
                     border.Visibility = Visibility.Hidden;
                     Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_HEIGHT;
                     break;
                 case MouseOverController.WindowState.pinned:
-                    setPinnedWindowState(MouseOverController.PinnedWindowState.closed);
                     border.Visibility = Visibility.Hidden;
-                    borderMain.Margin = new Thickness(80, 0, 0, 0);
-                    Width = 40;
-                    Height = 40;
+                    Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_WIDTH;
+                    Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_HEIGHT;
                     break;
-            }
-        }
-        
-        private void setPinnedWindowState(MouseOverController.PinnedWindowState pws)
-        {
-            switch (pws)
-            {
-                case MouseOverController.PinnedWindowState.open:
-                    menu_btn.Margin = new Thickness(40, 0, 0, 0);
-                    sizing_btn.Margin = new Thickness(0);
-                    exit_btn.Margin = new Thickness(20, 0, 0, 0);
-                    pin_btn.Margin = new Thickness(60, 0, 0, 0);
-                    project.Visibility = Visibility.Visible;
-                    sizing_btn_image.Source = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));
-
-                    PinnedHolder.VerticalAlignment = VerticalAlignment.Top;
-                    PinnedHolder.HorizontalAlignment = HorizontalAlignment.Left;
-                    break;
-                case MouseOverController.PinnedWindowState.closed:
-                    menu_btn.Margin = new Thickness(60, 0, 0, 0);
-                    sizing_btn.Margin = new Thickness(60, -20, 0, 0);
-                    exit_btn.Margin = new Thickness(80, -20, 0, 0);
-                    pin_btn.Margin = new Thickness(60, 0, 0, 0);
-                    project.Visibility = Visibility.Hidden;
-                    sizing_btn_image.Source = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
-
-                    PinnedHolder.VerticalAlignment = VerticalAlignment.Bottom;
-                    PinnedHolder.HorizontalAlignment = HorizontalAlignment.Right;
+                case MouseOverController.WindowState.MinimizedDragging:
+                    border.Visibility = Visibility.Hidden;
+                    Width = 1000;
+                    Height = 1000;
                     break;
             }
         }
         #endregion
-
-        #region Sizing btn
-        private void sizing_btn_Click(object sender, RoutedEventArgs e)
-        {
-            WindowChangeState();
-        }
-        private void sizing_btn_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Move;
-            dragDrop = true;
-        }
-
-        private void sizing_btn_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetFormats().contains(DataFormats.Html))
-            {// if html then from web retrieve and save image
-                Console.WriteLine(String.Join(", ", e.Data.GetData(DataFormats.Html)));
-            }
-            else
-            {// file drop
-                Array data = ((IDataObject)e.Data).GetData(DataFormats.FileDrop) as Array;
-                if (data != null)
-                {
-                    foreach (string item in data)
-                    {
-                        Console.WriteLine(String.Join(", ", item) + "\t=>\t" + project.getCurrentProjectPath());
-                        // TODO:setting selector for cut,copy,move
-                        //File.Copy(item, savePath);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        private void pin_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if(MouseOverController.isPinned)
-            {
-                MouseOverController.isPinned = false;
-                pin_btn_image.Source = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
-            }
-            else
-            {
-                MouseOverController.isPinned = true;
-                pin_btn_image.Source = new BitmapImage(new Uri("images/pinned.png", UriKind.Relative));
-            }
-        }
-
-        private void borderMain_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Move;
-        }
-
 
         private void minimizeWindowDelay(int millisecondDelay = 750)
         {
@@ -218,6 +133,7 @@ namespace Pin
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
         {
+            MouseOverController.isMoveOverWindow = true;
             if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized && !dragDrop)
             {
                 WindowChangeState(MouseOverController.WindowState.pinned);
@@ -226,17 +142,59 @@ namespace Pin
 
         private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
+            MouseOverController.isMoveOverWindow = false;
             dragDrop = false;
-
+            if(MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging)
+            {
+                WindowChangeState(MouseOverController.WindowState.Minimized);
+            }
             minimizeWindowDelay();
         }
 
-        private void exit_btn_Click(object sender, RoutedEventArgs e)
+        #endregion
+
+        #region PinContainer
+        private void UI_PinContainer_OnCloseArrow(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Save();
-            this.Close();
+            WindowChangeState(MouseOverController.WindowState.Minimized);
         }
 
+        private void UI_PinContainer_OnOpenArrow(object sender, EventArgs e)
+        {
+            WindowChangeState(MouseOverController.WindowState.Normal);
+        }
+
+        private void UI_PinContainer_OnCloseMenu(object sender, EventArgs e)
+        {
+            // TODO: create menu
+        }
+
+        private void UI_PinContainer_OnOpenMenu(object sender, EventArgs e)
+        {
+            // TODO: create menu
+        }
+
+        private void UI_PinContainer_OnUnPinned(object sender, EventArgs e)
+        {
+            WindowChangeState(MouseOverController.WindowState.Normal);
+        }
+
+        private void UI_PinContainer_OnPinned(object sender, EventArgs e)
+        {
+            WindowChangeState(MouseOverController.WindowState.pinned);
+        }
+
+        private void UI_PinContainer_OnExit(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            Close();
+        }
         #endregion
+
+        private void UI_pinWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            WindowChangeState(MouseOverController.WindowState.MinimizedDragging);
+            e.Effects = DragDropEffects.Move;
+        }
     }
 }

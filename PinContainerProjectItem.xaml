@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Pin.PinContainerProjectItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pin"
+             mc:Ignorable="d" 
+             AllowDrop="True"
+             DragEnter="UserControl_DragEnter"
+             Drop="UserControl_Drop"
+             MouseEnter="UI_Btn_ProjectColor_MouseEnter"
+             MouseLeave="UI_Btn_ProjectColor_MouseLeave"
+             d:DesignHeight="20" d:DesignWidth="20">
+    <Grid>
+        <Button x:Name="UI_Btn_ProjectColor" Background="{Binding ProjectColor}" Template="{StaticResource PinBtn}" />
+        <Popup IsOpen="{Binding isPopupOpen,UpdateSourceTrigger=PropertyChanged}" Placement="Right" HorizontalOffset="10">
+            <Grid Background="White" Width="200">
+                <Border Padding="5" BorderBrush="black" BorderThickness="1">
+                    <Grid>
+                        <TextBlock Text="{Binding ProjectName,FallbackValue=ProjectName}"/>
+                        <TextBlock Text="{Binding ProjectPath,FallbackValue=ProjectPath}" Margin="0,21,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Popup>
+    </Grid>
+</UserControl>
