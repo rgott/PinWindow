@@ -81,5 +81,29 @@ namespace Pin.Properties {
                 this["Projects"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public int WINDOW_STATE_MINIMIZEDPINNED_WIDTH {
+            get {
+                return ((int)(this["WINDOW_STATE_MINIMIZEDPINNED_WIDTH"]));
+            }
+            set {
+                this["WINDOW_STATE_MINIMIZEDPINNED_WIDTH"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public int WINDOW_STATE_MINIMIZEDPINNED_HEIGHT {
+            get {
+                return ((int)(this["WINDOW_STATE_MINIMIZEDPINNED_HEIGHT"]));
+            }
+            set {
+                this["WINDOW_STATE_MINIMIZEDPINNED_HEIGHT"] = value;
+            }
+        }
     }
 }

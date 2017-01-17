@@ -79,14 +79,15 @@
     <Compile Include="ColorPicker\ColorSelectionBox.xaml.cs">
       <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FormStates\Minimized.xaml.cs">
-      <DependentUpon>Minimized.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="IPinState.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />
     <Compile Include="PinContainer.xaml.cs">
       <DependentUpon>PinContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PinContainerProjectItem.xaml.cs">
+      <DependentUpon>PinContainerProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Project.xaml.cs">
       <DependentUpon>Project.xaml</DependentUpon>
@@ -104,10 +105,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FormStates\Minimized.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -121,6 +118,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PinContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PinContainerProjectItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,40 +17,27 @@
         MouseLeave="pinWindow_MouseLeave"
         ResizeMode="NoResize"
         Left="0" Top="0"
+        DragEnter="UI_pinWindow_DragEnter"
         Loaded="pinWindow_Loaded"
-        DragEnter="sizing_btn_DragEnter"
         Title="MainWindow" Height="370" Width="525">
-    <Grid DragEnter="sizing_btn_DragEnter">
-        <Grid Name="border" Height="20" VerticalAlignment="Top" Background="#FF646769">
-            <UniformGrid HorizontalAlignment="Right" Margin="0,3,40,0" Width="120"  Rows="1">
-                <RadioButton Content="Move"/>
-                <RadioButton Content="Copy"/>
-            </UniformGrid>
-            <Button HorizontalAlignment="Right" Width="35" Content="Edit"/>
+    <Grid>
+        <Grid Name="border">
+            <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
+                <UniformGrid HorizontalAlignment="Right" Margin="0,3,40,0" Width="120"  Rows="1">
+                    <RadioButton Content="Move"/>
+                    <RadioButton Content="Copy"/>
+                </UniformGrid>
+                <Button HorizontalAlignment="Right" Width="35" Content="Edit"/>
+            </Grid>
+            <local:Project x:Name="project" Margin="0,20,0,0"/>
         </Grid>
-        <local:Project x:Name="project" Margin="0,20,0,0"/>
-        <Grid Background="Transparent" Name="PinnedHolder" Width="100" Height="20"  VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,0,0,0" Width="20" Height="20" Name="pin_btn" Click="pin_btn_Click" Padding="0">
-                <Button.Content>
-                    <Image Name="pin_btn_image" Source="images/pin.png"/>
-                </Button.Content>
-            </Button>
-            <Button Name="menu_btn" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" Margin="40,0,0,0" Background="White" Padding="0">
-                <Image Source="images/menu.png"/>
-            </Button>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" Background="White" Name="sizing_btn" Click="sizing_btn_Click" Padding="0">
-                <Button.Content>
-                    <Image Name="sizing_btn_image" Source="images/OpenArrow.png"/>
-                </Button.Content>
-            </Button>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,0,0,0" Width="20" Height="20" Name="exit_btn" Click="exit_btn_Click" Padding="0">
-                <Button.Content>
-                    <Image Source="images/Exit.png"/>
-                </Button.Content>
-            </Button>
-            <Border Name="borderMain" Margin="80,0,0,0" Background="Transparent" DragEnter="borderMain_DragEnter" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
-                <Polygon Name="triangle_borderMain" AllowDrop="True" Drop="sizing_btn_Drop" IsHitTestVisible="True" Points="0,0 0,20, 20,0" Stroke="Transparent" Fill="Orange" />
-            </Border>
-        </Grid>
+        <local:PinContainer x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                            OnCloseArrow="UI_PinContainer_OnCloseArrow" 
+                            OnOpenArrow="UI_PinContainer_OnOpenArrow"
+                            OnCloseMenu="UI_PinContainer_OnCloseMenu"
+                            OnOpenMenu="UI_PinContainer_OnOpenMenu"
+                            OnUnPinned="UI_PinContainer_OnUnPinned"
+                            OnPinned="UI_PinContainer_OnPinned"
+                            OnExit="UI_PinContainer_OnExit"/>
     </Grid>
 </Window>
