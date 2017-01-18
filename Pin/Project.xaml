@@ -7,6 +7,20 @@
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="Template_Project_Open" TargetType="ToggleButton">
+            <Border CornerRadius="5" Background="{TemplateBinding Background}" Height="20" Width="20">
+                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -21,13 +35,16 @@
                         </Button.Content>
                     </Button>-->
                     <TextBlock Margin="0,0,0,0" FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
-                    <ToggleButton HorizontalAlignment="Right" Padding="0" Name="projects" Click="projects_Click">
-                        <Grid>
-                            <TextBlock Name="addP" Text="+"/>
-                            
-                        </Grid>
+                    <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" Padding="0" Name="projects" Click="projects_Click">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton">
+                                <Setter Property="Background" Value="DarkGray"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </ToggleButton.Style>
+                        <TextBlock Name="addP" VerticalAlignment="Center" HorizontalAlignment="Center" Text="+"/>
                     </ToggleButton>
-                    <Popup Name="popupToggle" IsOpen="{Binding IsChecked, ElementName=projects}" MouseEnter="popupToggle_MouseEnter" MouseLeave="popupToggle_MouseLeave" Placement="Left" HorizontalOffset="280" VerticalOffset="29">
+                    <Popup Name="popupToggle" IsOpen="{Binding IsChecked, ElementName=projects}" MouseEnter="popupToggle_MouseEnter" Placement="Left" HorizontalOffset="280" VerticalOffset="29">
                         <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1">
                             <Grid Width="280" Background="#FF646769" Height="91">
                                 <Grid.ColumnDefinitions>
@@ -41,7 +58,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="10"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Project Name"/>
+                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
                                     <TextBox Name="UI_TxtBox_ProjectName" Grid.Column="1"/>
                                 </Grid>
                                 <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
@@ -51,7 +68,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="10"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Project Path"/>
+                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
                                     <TextBox Name="UI_TxtBox_ProjectPath" Grid.Column="1"/>
                                     <Button x:Name="UI_Btn_FolderBrowse" Click="UI_Btn_FolderBrowse_Click" Grid.Column="2">Browse</Button>
                                 </Grid>

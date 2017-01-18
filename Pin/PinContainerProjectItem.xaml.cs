@@ -103,21 +103,12 @@ namespace Pin
             ProjectColor = project.Color;
         }
 
-        private void UI_Btn_ProjectColor_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void UI_Btn_ProjectColor_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
-
         private void UserControl_DragEnter(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Copy;
             isPopupOpen = true;
             MouseOverController.isMoveOverWindow = true;
             e.Handled = true;
-
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
@@ -134,6 +125,5 @@ namespace Pin
             isPopupOpen = false;
             e.Handled = true;
         }
-
     }
 }

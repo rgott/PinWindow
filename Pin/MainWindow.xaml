@@ -19,17 +19,17 @@
         Left="0" Top="0"
         DragEnter="UI_pinWindow_DragEnter"
         DragLeave="pinWindow_DragLeave"
-        Drop="pinWindow_Drop"
         Loaded="pinWindow_Loaded"
         Title="MainWindow" Height="370" Width="525">
     <Grid>
         <Grid Name="border">
             <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
-                <UniformGrid HorizontalAlignment="Right" Margin="0,3,40,0" Width="120"  Rows="1">
-                    <RadioButton x:Name="UI_RadioButton_Move" Content="Move" Checked="UI_RadioButton_Checked"/>
-                    <RadioButton x:Name="UI_RadioButton_Copy" Content="Copy" Checked="UI_RadioButton_Checked"/>
-                </UniformGrid>
-                <Button HorizontalAlignment="Right" Width="35" Content="Edit"/>
+                <Border HorizontalAlignment="Right" Margin="1,2,2,0" Width="80" BorderBrush="DarkGray" BorderThickness="1">
+                    <UniformGrid Rows="1">
+                        <RadioButton x:Name="UI_RadioButton_Move" Template="{StaticResource StyledRadioButton}" Margin="0,0,0,0" Content="Move" Checked="UI_RadioButton_Checked"/>
+                        <RadioButton x:Name="UI_RadioButton_Copy" Template="{StaticResource StyledRadioButton}" Margin="0,0,0,0" Content="Copy" Checked="UI_RadioButton_Checked"/>
+                    </UniformGrid>
+                </Border>
             </Grid>
             <local:Project x:Name="UI_Project" Margin="0,20,0,0"/>
         </Grid>

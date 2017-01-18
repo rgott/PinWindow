@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin"
-             MouseEnter="UI_UserControl_MouseEnter"
-             DragEnter="sizing_btn_DragEnter"
+             DragEnter="UI_UserControl_DragEnter"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <Grid>
         <Grid x:Name="UI_Grid_MinimizedOpen" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden">

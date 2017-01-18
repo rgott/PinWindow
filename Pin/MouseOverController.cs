@@ -70,7 +70,7 @@ namespace Pin
         public enum WindowState
         {
             Normal,
-            pinned,
+            Pinned,
             MinimizedOpen,
             Minimized,
             MinimizedDragging

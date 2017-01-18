@@ -52,6 +52,7 @@ namespace Pin
             ProjectItem projectItem = new ProjectItem(projectModel);
 
             RadioButton RButton = new RadioButton();
+            RButton.Margin = new Thickness(0);
             RButton.Template = (ControlTemplate)FindResource("StyledRadioButton");
             RButton.GroupName = "Projects";
             RButton.Checked += RButton_Checked;
@@ -102,11 +103,6 @@ namespace Pin
         private void popupToggle_MouseEnter(object sender, MouseEventArgs e)
         {
             MouseOverController.isMouseOverMenu = true;
-        }
-
-        private void popupToggle_MouseLeave(object sender, MouseEventArgs e)
-        {
-
         }
 
         private void UI_Btn_AddProject_Click(object sender, RoutedEventArgs e)

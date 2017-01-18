@@ -97,7 +97,6 @@
       <DependentUpon>ProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32.cs" />
-    <Compile Include="WindowState.cs" />
     <Page Include="ColorPicker\PickerSelectionPlane.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -177,7 +176,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="images\Folder.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

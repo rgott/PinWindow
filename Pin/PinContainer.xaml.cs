@@ -285,44 +285,9 @@ namespace Pin
             PinStatus = !PinStatus;
         }
 
-        
-        private void UI_Btn_Polygon_Drop(object sender, DragEventArgs e)
+        private void UI_UserControl_DragEnter(object sender, DragEventArgs e)
         {
-
-        }
-
-        private void UI_UserControl_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
-
-
-        private void sizing_btn_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetFormats().contains(DataFormats.Html))
-            {// if html then from web retrieve and save image
-                Console.WriteLine(String.Join(", ", e.Data.GetData(DataFormats.Html)));
-            }
-            else
-            {// file drop
-                Array data = ((IDataObject)e.Data).GetData(DataFormats.FileDrop) as Array;
-                if (data != null)
-                {
-                    foreach (string item in data)
-                    {
-                        //Console.WriteLine(String.Join(", ", item) + "\t=>\t" + project.getCurrentProjectPath());
-                        // TODO:setting selector for cut,copy,move
-                        //File.Copy(item, savePath);
-                    }
-                }
-            }
-        }
-
-        private void sizing_btn_DragEnter(object sender, DragEventArgs e)
-        {
-            Console.WriteLine("DRAG 4345");
-
             MouseOverController.isMoveOverWindow = true;
-            e.Effects = DragDropEffects.Move;
         }
 
         public void WindowChangeState(MouseOverController.WindowState? wState = default(MouseOverController.WindowState?))
@@ -341,7 +306,7 @@ namespace Pin
                     ArrowStatus = true;
 
                     break;
-                case MouseOverController.WindowState.pinned:
+                case MouseOverController.WindowState.Pinned:
                 case MouseOverController.WindowState.Normal:
                     UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
 
