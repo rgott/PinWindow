@@ -22,6 +22,8 @@ namespace Pin
     /// </summary>
     public partial class PinContainerProjectItem : UserControl, INotifyPropertyChanged
     {
+        public event EventHandler ItemDropped;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -32,9 +34,47 @@ namespace Pin
             }
         }
 
-        public string ProjectName { get; set; }
-        public string ProjectPath { get; set; }
-        public Brush ProjectColor { get; set; }
+        private string _ProjectName;
+        public string ProjectName
+        {
+            get
+            {
+                return _ProjectName;
+            }
+            set
+            {
+                _ProjectName = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private string _ProjectPath;
+        public string ProjectPath
+        {
+            get
+            {
+                return _ProjectPath;
+            }
+            set
+            {
+                _ProjectPath = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private Brush _ProjectColor;
+        public Brush ProjectColor
+        {
+            get
+            {
+                return _ProjectColor;
+            }
+            set
+            {
+                _ProjectColor = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         private bool _isPopupOpen = false;
         public bool isPopupOpen
@@ -54,9 +94,10 @@ namespace Pin
             DataContext = this;
             InitializeComponent();
         }
-
+        public Model.Project ProjectModel { get; set; }
         public PinContainerProjectItem(Model.Project project) : this()
         {
+            ProjectModel = project;
             ProjectName = project.ProjectName;
             ProjectPath = project.ProjectPath;
             ProjectColor = project.Color;
@@ -64,22 +105,35 @@ namespace Pin
 
         private void UI_Btn_ProjectColor_MouseEnter(object sender, MouseEventArgs e)
         {
-            isPopupOpen = true;
         }
 
         private void UI_Btn_ProjectColor_MouseLeave(object sender, MouseEventArgs e)
         {
-            isPopupOpen = false;
         }
 
         private void UserControl_DragEnter(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Copy;
+            isPopupOpen = true;
+            MouseOverController.isMoveOverWindow = true;
+            e.Handled = true;
+
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
-            Console.WriteLine("DROPPED");
+            DropDataHandler.dropData(ProjectModel, e);
+
+            isPopupOpen = false;
+            if (ItemDropped != null) ItemDropped(sender, e);
         }
+
+        private void UserControl_DragLeave(object sender, DragEventArgs e)
+        {
+            MouseOverController.isMoveOverWindow = false;
+            isPopupOpen = false;
+            e.Handled = true;
+        }
+
     }
 }

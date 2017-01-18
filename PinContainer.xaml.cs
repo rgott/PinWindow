@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Pin.MouseOverController;
 
 namespace Pin
 {
@@ -25,12 +26,55 @@ namespace Pin
     {
         #region Properties
         public event PropertyChangedEventHandler PropertyChanged;
+        
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private int _PrimaryProjectId;
+        public int PrimaryProjectId
+        {
+            get
+            {
+                return _PrimaryProjectId;
+            }
+            set
+            {
+                _PrimaryProjectId = value;
+                PrimaryProject = Model.Project.Deserialize(Properties.Settings.Default.Projects[value]);
+            }
+        }
+
+        private Model.Project _PrimaryProject;
+        public Model.Project PrimaryProject
+        {
+            get
+            {
+                return _PrimaryProject;
+            }
+            set
+            {
+                _PrimaryProject = value;
+                PrimaryProjectColor = value.Color;
+            }
+        }
+
+        private SolidColorBrush _PrimaryProjectColor;
+        public SolidColorBrush PrimaryProjectColor
+        {
+            get
+            {
+                return _PrimaryProjectColor;
+            }
+            set
+            {
+                _PrimaryProjectColor = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -47,6 +91,22 @@ namespace Pin
                 NotifyPropertyChanged();
             }
         }
+
+        private string _UI_TextBlock_ActionEventType;
+
+        public string UI_TextBlock_ActionEventType
+        {
+            get
+            {
+                return _UI_TextBlock_ActionEventType;
+            }
+            set
+            {
+                _UI_TextBlock_ActionEventType = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         private ImageSource _UI_MenuSource;
 
@@ -91,7 +151,7 @@ namespace Pin
             }
         }
 
-        private bool ArrowStatus = false;
+        private bool ArrowStatus = true;// true on openarrow.png false on closedarrow.png
         private bool PinStatus = false;
         private bool MenuStatus = false;
 
@@ -118,29 +178,60 @@ namespace Pin
 
             DataContext = this;
             InitializeComponent();
-
+            if(Properties.Settings.Default.PrimaryProjectId == -1)
+            {
+                PrimaryProjectColor = new SolidColorBrush(Colors.Orange);
+            }
+            else
+            {
+                PrimaryProjectId = Properties.Settings.Default.PrimaryProjectId;
+            }
             if (Properties.Settings.Default.Projects != null)
             {
                 foreach (var item in Properties.Settings.Default.Projects)
                 {
                     UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(Model.Project.Deserialize(item)));
                 }
+                if(PrimaryProjectId != -1 && UI_StackPanel_PinContainerProjects.Children.Count >= PrimaryProjectId + 1)
+                {
+                    var project = UI_StackPanel_PinContainerProjects.Children[PrimaryProjectId];
+                    UI_StackPanel_PinContainerProjects.Children.RemoveAt(PrimaryProjectId);
+                    UI_StackPanel_PinContainerProjects.Children.Insert(0, project);
+                }
             }
             Properties.Settings.Default.PropertyChanged += Default_PropertyChanged;
+
+            switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
+            {
+                case ActionEvent.Copy:
+                    UI_TextBlock_ActionEventType = "Copy";
+                    break;
+                case ActionEvent.Move:
+                    UI_TextBlock_ActionEventType = "Move";
+                    break;
+            }
 
         }
 
         private void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals("Projects"))
+            if(e.PropertyName.Equals("PrimaryProjectId"))
             {
-                UI_StackPanel_PinContainerProjects.Children.Clear();
-                if (Properties.Settings.Default.Projects != null)
+                if (Properties.Settings.Default.PrimaryProjectId != -1)
                 {
-                    foreach (var item in Properties.Settings.Default.Projects)
-                    {
-                        UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(Model.Project.Deserialize(item)));
-                    }
+                    PrimaryProjectId = Properties.Settings.Default.PrimaryProjectId;
+                }
+            }
+            else if (e.PropertyName.Equals("ActionEvent"))
+            {
+                switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
+                {
+                    case ActionEvent.Copy:
+                        UI_TextBlock_ActionEventType = "Copy";
+                        break;
+                    case ActionEvent.Move:
+                        UI_TextBlock_ActionEventType = "Move";
+                        break;
                 }
             }
         }
@@ -149,13 +240,13 @@ namespace Pin
         {
             if(ArrowStatus)
             {
-                UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
-                if (OnCloseArrow != null) OnCloseArrow(this, e);
+                if (OnOpenArrow != null) OnOpenArrow(this, e); // user pressed open arrow
+                UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));// change to opposite arrow
             }
             else
             {
-                UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));
-                if (OnOpenArrow != null) OnOpenArrow(this, e);
+                if (OnCloseArrow != null) OnCloseArrow(this, e); // user pressed close arrow
+                UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative)); // change to opposite arrow
             }
             ArrowStatus = !ArrowStatus;
         }
@@ -175,20 +266,21 @@ namespace Pin
 
         private void UI_Btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            if (OnExit != null) OnExit(this, e);
+            // passes back to listener presumable an extention of Window that can close itself
+            if (OnExit != null) OnExit(this, e); 
         }
 
         private void UI_Btn_Pin_Click(object sender, RoutedEventArgs e)
         {
             if(PinStatus)
             {
-                UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
                 if (OnUnPinned != null) OnUnPinned(this, e);
+                UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative)); // set opposite image
             }
             else
             {
-                UI_PinSource = new BitmapImage(new Uri("images/pinned.png", UriKind.Relative));
                 if (OnPinned != null) OnPinned(this, e);
+                UI_PinSource = new BitmapImage(new Uri("images/pinned.png", UriKind.Relative));// set opposite image
             }
             PinStatus = !PinStatus;
         }
@@ -201,13 +293,6 @@ namespace Pin
 
         private void UI_UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if(!MouseOverController.isMoveOverWindow)
-            {
-                UI_Grid_MinimizedOpen.Visibility = Visibility.Visible;
-
-                UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
-                UI_Grid_Maximized.Visibility = Visibility.Hidden;
-            }
         }
 
 
@@ -234,6 +319,9 @@ namespace Pin
 
         private void sizing_btn_DragEnter(object sender, DragEventArgs e)
         {
+            Console.WriteLine("DRAG 4345");
+
+            MouseOverController.isMoveOverWindow = true;
             e.Effects = DragDropEffects.Move;
         }
 
@@ -247,33 +335,46 @@ namespace Pin
 
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
                     UI_Grid_Maximized.Visibility = Visibility.Hidden;
-
+                    UI_Grid_ProjectView.Visibility = Visibility.Hidden;
 
                     UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
                     ArrowStatus = true;
 
                     break;
+                case MouseOverController.WindowState.pinned:
                 case MouseOverController.WindowState.Normal:
                     UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
 
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
                     UI_Grid_Maximized.Visibility = Visibility.Visible;
                     break;
-                case MouseOverController.WindowState.pinDrop:
+                case MouseOverController.WindowState.MinimizedOpen:
                     UI_Grid_MinimizedOpen.Visibility = Visibility.Visible;
 
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
                     UI_Grid_Maximized.Visibility = Visibility.Hidden;
                     break;
                 case MouseOverController.WindowState.MinimizedDragging:
+                    UI_StackPanel_PinContainerProjects.Children.Clear();
+                    if (Properties.Settings.Default.Projects != null)
+                    {
+                        foreach (var item in Properties.Settings.Default.Projects)
+                        {
+                            UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(Model.Project.Deserialize(item)));
+                        }
+                        if (PrimaryProjectId != -1)
+                        {
+                            var project = UI_StackPanel_PinContainerProjects.Children[PrimaryProjectId];
+                            UI_StackPanel_PinContainerProjects.Children.RemoveAt(PrimaryProjectId);
+                            UI_StackPanel_PinContainerProjects.Children.Insert(0, project);
+                        }
+                    }
+
                     UI_Grid_ProjectView.Visibility = Visibility.Visible;
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
 
                     UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
                     UI_Grid_Maximized.Visibility = Visibility.Hidden;
-                    break;
-                case MouseOverController.WindowState.pinned:
-
                     break;
                 default:
 

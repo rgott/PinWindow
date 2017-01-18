@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System;
 using System.Collections;
+using Pin.Model;
 
 namespace Pin
 {
@@ -16,6 +17,10 @@ namespace Pin
     /// </summary>
     public partial class Project : UserControl
     {
+        public delegate void ProjectChangedEventHandler(object sender, int ProjectId);
+
+        public event ProjectChangedEventHandler PrimaryProjectChanged;
+
         public Project()
         {
             InitializeComponent();
@@ -24,7 +29,15 @@ namespace Pin
             {
                 foreach (string item in Properties.Settings.Default.Projects)
                 {
-                    addProject(Model.Project.Deserialize(item));
+                    var project = Model.Project.Deserialize(item);
+                    if (project.ID == Properties.Settings.Default.PrimaryProjectId)
+                    {
+                        addProject(project, true);
+                    }
+                    else
+                    {
+                        addProject(project, false);
+                    }
                 } 
             }
             else
@@ -34,28 +47,42 @@ namespace Pin
             }
         }
 
-        public string getCurrentProjectPath()
+        private void addProject(Model.Project projectModel,bool isCheckedDefault = false)
         {
-            // TODO: get path
-            //foreach(UIElement el in projectPanel.Children)
-                //((TextBlock)((Grid)((RadioButton)el))).Text;
-            return ""; // convert to list panel to select
-        }
+            ProjectItem projectItem = new ProjectItem(projectModel);
 
-        private void addProject(Model.Project project)
-        {
-            ProjectItem item = new ProjectItem(project);
-            // add xaml
             RadioButton RButton = new RadioButton();
             RButton.Template = (ControlTemplate)FindResource("StyledRadioButton");
+            RButton.GroupName = "Projects";
+            RButton.Checked += RButton_Checked;
 
-            RButton.Content = item;
-
-            item.Deleted += new ProjectItem.DeletedEventHandler(delegate (object o, EventArgs e)
+            RButton.Content = projectItem;
+            projectItem.Deleted += new ProjectItem.DeletedEventHandler(delegate (object o, EventArgs e)
             {
                 projectPanel.Children.Remove(RButton);
             });
+
+            if (isCheckedDefault)
+            {
+                RButton.IsChecked = true;
+            }
+
             projectPanel.Children.Add(RButton);
+        }
+
+        private void RButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if(sender is RadioButton)
+            {
+                var RButtion = sender as RadioButton;
+                if(RButtion.IsChecked == true)
+                {
+                    var id = (RButtion.Content as ProjectItem).ID;
+                    Properties.Settings.Default.PrimaryProjectId = id;
+                    Properties.Settings.Default.Save();
+                    if (PrimaryProjectChanged != null) PrimaryProjectChanged(sender, id);
+                }
+            }
         }
 
         private void projects_Click(object sender, RoutedEventArgs e)
@@ -85,6 +112,7 @@ namespace Pin
         private void UI_Btn_AddProject_Click(object sender, RoutedEventArgs e)
         {
             var ProjectModel = new Model.Project(
+                Properties.Settings.Default.Projects.Count,
                 UI_TxtBox_ProjectName.Text,
                 UI_TxtBox_ProjectPath.Text.Replace('/', '\\'),
                 UI_ColorPicker_ColorSelectionBox.FillColor);
@@ -100,6 +128,7 @@ namespace Pin
             MouseOverController.isMouseOverMenu = false;
         }
 
+       
         private void UI_Btn_FolderBrowse_Click(object sender, RoutedEventArgs e)
         {
             Forms.FolderBrowserDialog path = new Forms.FolderBrowserDialog();
