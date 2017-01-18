@@ -6,8 +6,22 @@
              xmlns:local="clr-namespace:Pin"
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="280">
-    <Border VerticalAlignment="Center">
+             d:DesignHeight="100" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">
+            <Border CornerRadius="3" Background="DarkGray" Height="15" Width="15">
+                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Border VerticalAlignment="Center" Padding="0,5">
         <Border.ContextMenu>
             <ContextMenu x:Name="UI_ContextMenu" Opened="UI_ContextMenu_Opened" Closed="UI_ContextMenu_Closed" MouseEnter="UI_ContextMenu_MouseEnter" MouseLeave="UI_ContextMenu_MouseLeave"> 
                 <MenuItem x:Name="UI_MenuItem_OpenWithExplorer" Header="Open with Explorer" Click="UI_MenuItem_OpenWithExplorer_Click"/>
@@ -15,12 +29,16 @@
                 <MenuItem x:Name="UI_MenuItem_Delete" Header="Delete" Click="UI_MenuItem_Delete_Click"/>
             </ContextMenu>
         </Border.ContextMenu>
-        <Grid Margin="0,5">
-            <Grid x:Name="UI_Grid_View" Width="280" Visibility="Visible">
+        <Grid>
+            <Grid x:Name="UI_Grid_View" Visibility="Visible">
                 <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding FillColor,UpdateSourceTrigger=PropertyChanged}" Margin="5,0,5,0" Width="10" Height="10" HorizontalAlignment="Left"/>
 
                 <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Text="{Binding ProjectName,FallbackValue=ProjectName}"/>
-                <Button VerticalAlignment="Center" x:Name="UI_Btn_OpenExplorer" Click="UI_Btn_OpenExplorer_Click" Margin="0,0,15,0" Padding="0" HorizontalAlignment="Right">+</Button>
+                <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" x:Name="UI_Btn_OpenExplorer" Click="UI_Btn_OpenExplorer_Click" Margin="0,0,5,0" Padding="0" HorizontalAlignment="Right">
+                    <Border Margin="2">
+                        <Image Source="/images/Folder.png"/>
+                    </Border>
+                </Button>
             </Grid>
             <Grid x:Name="UI_Grid_Edit" Width="275" Visibility="Hidden">
                 <Grid.RowDefinitions>

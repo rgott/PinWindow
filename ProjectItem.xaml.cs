@@ -24,6 +24,7 @@ namespace Pin
     /// </summary>
     public partial class ProjectItem : UserControl, INotifyPropertyChanged
     {
+        #region Properties
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -68,18 +69,9 @@ namespace Pin
             DependencyProperty.Register("ProjectPath", typeof(string), typeof(ProjectItem), new PropertyMetadata(default(string)));
 
 
-        private string _Cached_Project;
-        public string Cached_Project
-        {
-            get
-            {
-                return _Cached_Project;
-            }
-            set
-            {
-                _Cached_Project = value;
-            }
-        } // serialized version
+        public string Cached_Project { get; set; }
+
+        #endregion
 
         public ProjectItem()
         {
@@ -97,7 +89,6 @@ namespace Pin
             Cached_Project = project.Serialize();
         }
 
-
         private void FillColor_Changed(object sender, EventArgs e)
         {
             FillColor = UI_ColorSelectionBox.FillColor;
@@ -111,7 +102,6 @@ namespace Pin
             }
         }
 
-       
         private void UI_Btn_OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", ProjectPath));
@@ -124,7 +114,6 @@ namespace Pin
 
         private void UI_Btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            // change saved version
 
             int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project);
 
@@ -137,16 +126,10 @@ namespace Pin
                 Cached_Project = ProjectModel;
                 FillColor = UI_ColorSelectionBox.FillColor;
 
-                //if(settingIndex == Properties.Settings.Default.PrimaryProjectId)
-                //{
-                //    Properties.Settings.Default.PrimaryProjectId = -1; // initiate a change event
-                //    Properties.Settings.Default.PrimaryProjectId = settingIndex;
-                //}
                 Properties.Settings.Default.Save();
 
             }
             UI_Btn_Cancel_Click(sender, e);
-
         }
 
         private void UI_Btn_Browse_Click(object sender, RoutedEventArgs e)
@@ -202,6 +185,9 @@ namespace Pin
             }
             OnDeleted(EventArgs.Empty); // send to listener to be deleted by Project.cs
         }
+
+
+        // ProjectItem requests to delete itself
         #region Delete Event
         public delegate void DeletedEventHandler(object sender, EventArgs e);
 

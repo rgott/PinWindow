@@ -64,6 +64,7 @@ namespace Pin.ColorPicker
             Dispatcher.Invoke(() => { UI_Popup_PickerPlane.IsOpen = false; });
         }
 
+
         private void UI_Popup_PickerPlane_MouseLeave(object sender, MouseEventArgs e)
         {
         }

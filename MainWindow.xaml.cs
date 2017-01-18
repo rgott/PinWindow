@@ -7,21 +7,18 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using static Pin.MouseOverController;
-
 namespace Pin
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IPinState
     {
         public delegate void MinimizedWindowEventHandler(EventArgs e);
 
         public static event MinimizedWindowEventHandler MinimizedWindow;
 
         MouseOverController.WindowState Win_prev_State;
-
-        bool dragDrop = false; // TODO:fix
 
         private void OnMinimizedWindow(EventArgs e)
         {
@@ -50,33 +47,22 @@ namespace Pin
             }
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
             UI_Project.PrimaryProjectChanged += UI_Project_PrimaryProjectChanged;
-            //UI_PinContainer.drop
-        }
-
-        private void UI_Project_PrimaryProjectChanged(object sender, int ProjectItem)
-        {
-            UI_PinContainer.PrimaryProjectId = ProjectItem;
-        }
-
-        private void MouseOverController_MouseLeaveMenu(EventArgs e)
-        {
-            minimizeWindowDelay(250);
         }
 
         #region Window Controller
-        private void WindowChangeState(MouseOverController.WindowState? wState = null)
+        public void WindowChangeState(MouseOverController.WindowState? wState = null)
         {
             if (wState == null)
             { // setoppositestate
                 if (MouseOverController.Win_State == MouseOverController.WindowState.Normal && MouseOverController.isPinned)
                 {
-                    wState = MouseOverController.WindowState.pinned;
+                    wState = MouseOverController.WindowState.Pinned;
                 }
                 else if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized)
                 {
                     wState = MouseOverController.WindowState.Normal;
                 }
-                else if (MouseOverController.Win_State == MouseOverController.WindowState.pinned)
+                else if (MouseOverController.Win_State == MouseOverController.WindowState.Pinned)
                 {
                     wState = MouseOverController.WindowState.Normal;
                 }
@@ -91,7 +77,7 @@ namespace Pin
             UI_PinContainer.WindowChangeState(wState);
             switch (wState)
             {
-                case MouseOverController.WindowState.pinned:
+                case MouseOverController.WindowState.Pinned:
                     MouseOverController.isPinned = true;
                     Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
@@ -120,7 +106,6 @@ namespace Pin
                     break;
             }
         }
-        #endregion
 
         private void minimizeWindowDelay(int millisecondDelay = 750)
         {
@@ -146,47 +131,36 @@ namespace Pin
                 });
             }
         }
-
-        #region Window Events
-
-        private void pinWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
-
-            // get window style
-            int exStyle = (int)Win32.GetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE);
-
-            // add to style that it is a tool window so it does not show in the task view (alt + tab)
-            exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
-            Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
-        }
-
-        private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MouseOverController.isMoveOverWindow = true;
-            if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized && !dragDrop)
-            {
-                WindowChangeState(MouseOverController.WindowState.MinimizedOpen);
-            }
-        }
-
-        private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MouseOverController.isMoveOverWindow = false;
-            dragDrop = false;
-            if(MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
-            {
-                WindowChangeState(MouseOverController.WindowState.Minimized);
-            }
-            else
-            {
-                minimizeWindowDelay();
-            }
-        }
-
         #endregion
 
-        #region PinContainer
+        private void UI_Project_PrimaryProjectChanged(object sender, int ProjectItem)
+        {
+            UI_PinContainer.PrimaryProjectId = ProjectItem;
+        }
+
+        private void MouseOverController_MouseLeaveMenu(EventArgs e)
+        {
+            minimizeWindowDelay(250);
+        }
+
+        private void UI_RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton)
+            {
+                var RButton = sender as RadioButton;
+                if (RButton.Name.Equals("UI_RadioButton_Copy"))
+                {
+                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Copy;
+                }
+                else if (RButton.Name.Equals("UI_RadioButton_Move"))
+                {
+                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Move;
+                }
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        #region PinContainer Events
         private void UI_PinContainer_OnCloseArrow(object sender, EventArgs e)
         {
             WindowChangeState(MouseOverController.WindowState.Minimized);
@@ -214,7 +188,7 @@ namespace Pin
 
         private void UI_PinContainer_OnPinned(object sender, EventArgs e)
         {
-            WindowChangeState(MouseOverController.WindowState.pinned);
+            WindowChangeState(MouseOverController.WindowState.Pinned);
         }
 
         private void UI_PinContainer_OnExit(object sender, EventArgs e)
@@ -223,6 +197,41 @@ namespace Pin
             Close();
         }
         #endregion
+
+        #region Window Events
+        private void pinWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
+
+            // get window style
+            int exStyle = (int)Win32.GetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE);
+
+            // add to style that it is a tool window so it does not show in the task view (alt + tab)
+            exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
+            Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
+        }
+
+        private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MouseOverController.isMoveOverWindow = true;
+            if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized)
+            {
+                WindowChangeState(MouseOverController.WindowState.MinimizedOpen);
+            }
+        }
+
+        private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MouseOverController.isMoveOverWindow = false;
+            if (MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
+            {
+                WindowChangeState(MouseOverController.WindowState.Minimized);
+            }
+            else
+            {
+                minimizeWindowDelay();
+            }
+        }
 
         private void UI_pinWindow_DragEnter(object sender, DragEventArgs e)
         {
@@ -238,26 +247,7 @@ namespace Pin
             }
         }
 
-        private void pinWindow_Drop(object sender, DragEventArgs e)
-        {
+        #endregion
 
-        }
-
-        private void UI_RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if (sender is RadioButton)
-            {
-                var RButton = sender as RadioButton;
-                if(RButton.Name.Equals("UI_RadioButton_Copy"))
-                {
-                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Copy;
-                }
-                else if(RButton.Name.Equals("UI_RadioButton_Move"))
-                {
-                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Move;
-                }
-                Properties.Settings.Default.Save();
-            }
-        }
     }
 }
