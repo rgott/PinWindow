@@ -2,8 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using static Pin.MouseOverController;
 
 namespace Pin
 {
@@ -33,7 +36,26 @@ namespace Pin
             DataContext = this;
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
+
+            switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
+            {
+                case ActionEvent.Move:
+                    UI_RadioButton_Move.IsChecked = true;
+                    break;
+                case ActionEvent.Copy:
+                    UI_RadioButton_Move.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
+            UI_Project.PrimaryProjectChanged += UI_Project_PrimaryProjectChanged;
+            //UI_PinContainer.drop
+        }
+
+        private void UI_Project_PrimaryProjectChanged(object sender, int ProjectItem)
+        {
+            UI_PinContainer.PrimaryProjectId = ProjectItem;
         }
 
         private void MouseOverController_MouseLeaveMenu(EventArgs e)
@@ -63,12 +85,20 @@ namespace Pin
                     wState = MouseOverController.WindowState.Minimized;
                 }
             }
+
             Win_prev_State = MouseOverController.Win_State;
             MouseOverController.Win_State = (MouseOverController.WindowState)wState;
             UI_PinContainer.WindowChangeState(wState);
             switch (wState)
             {
+                case MouseOverController.WindowState.pinned:
+                    MouseOverController.isPinned = true;
+                    Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
+                    Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
+                    border.Visibility = Visibility.Visible;
+                    break;
                 case MouseOverController.WindowState.Normal:
+                    MouseOverController.isPinned = false;
                     Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
                     border.Visibility = Visibility.Visible;
@@ -78,7 +108,7 @@ namespace Pin
                     Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_HEIGHT;
                     break;
-                case MouseOverController.WindowState.pinned:
+                case MouseOverController.WindowState.MinimizedOpen:
                     border.Visibility = Visibility.Hidden;
                     Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_WIDTH;
                     Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_HEIGHT;
@@ -136,7 +166,7 @@ namespace Pin
             MouseOverController.isMoveOverWindow = true;
             if (MouseOverController.Win_State == MouseOverController.WindowState.Minimized && !dragDrop)
             {
-                WindowChangeState(MouseOverController.WindowState.pinned);
+                WindowChangeState(MouseOverController.WindowState.MinimizedOpen);
             }
         }
 
@@ -144,11 +174,14 @@ namespace Pin
         {
             MouseOverController.isMoveOverWindow = false;
             dragDrop = false;
-            if(MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging)
+            if(MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
             {
                 WindowChangeState(MouseOverController.WindowState.Minimized);
             }
-            minimizeWindowDelay();
+            else
+            {
+                minimizeWindowDelay();
+            }
         }
 
         #endregion
@@ -194,7 +227,37 @@ namespace Pin
         private void UI_pinWindow_DragEnter(object sender, DragEventArgs e)
         {
             WindowChangeState(MouseOverController.WindowState.MinimizedDragging);
-            e.Effects = DragDropEffects.Move;
+            DropDataHandler.setEffects(e);
+        }
+
+        private void pinWindow_DragLeave(object sender, DragEventArgs e)
+        {
+            if(MouseOverController.Win_State == MouseOverController.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
+            {
+                WindowChangeState(MouseOverController.WindowState.Minimized);
+            }
+        }
+
+        private void pinWindow_Drop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void UI_RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton)
+            {
+                var RButton = sender as RadioButton;
+                if(RButton.Name.Equals("UI_RadioButton_Copy"))
+                {
+                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Copy;
+                }
+                else if(RButton.Name.Equals("UI_RadioButton_Move"))
+                {
+                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Move;
+                }
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

@@ -10,9 +10,10 @@
              Drop="UserControl_Drop"
              MouseEnter="UI_Btn_ProjectColor_MouseEnter"
              MouseLeave="UI_Btn_ProjectColor_MouseLeave"
+             DragLeave="UserControl_DragLeave"
              d:DesignHeight="20" d:DesignWidth="20">
     <Grid>
-        <Button x:Name="UI_Btn_ProjectColor" Background="{Binding ProjectColor}" Template="{StaticResource PinBtn}" />
+        <Button x:Name="UI_Btn_ProjectColor" Background="{Binding ProjectColor,FallbackValue=red}" Template="{StaticResource PinBtn}" />
         <Popup IsOpen="{Binding isPopupOpen,UpdateSourceTrigger=PropertyChanged}" Placement="Right" HorizontalOffset="10">
             <Grid Background="White" Width="200">
                 <Border Padding="5" BorderBrush="black" BorderThickness="1">

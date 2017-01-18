@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Windows.Media;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Pin.Model
@@ -11,6 +13,17 @@ namespace Pin.Model
     [Serializable]
     public class Project
     {
+        public static implicit operator Project(string obj)
+        {
+            return Project.Deserialize(obj);
+        }
+
+        public static implicit operator string(Project obj)
+        {
+            return obj.Serialize();
+        }
+
+        public int ID { get; set; }
         public string ProjectName { get; set; }
         public string ProjectPath { get; set; }
 
@@ -22,8 +35,9 @@ namespace Pin.Model
 
         }
 
-        public Project(string ProjectName, string ProjectPath, SolidColorBrush Color)
+        public Project(int ID,string ProjectName, string ProjectPath, SolidColorBrush Color)
         {
+            this.ID = ID;
             this.ProjectName = ProjectName;
             this.ProjectPath = ProjectPath;
             this.Color = Color;
@@ -51,12 +65,17 @@ namespace Pin.Model
 
         internal string Serialize()
         {
+            StringBuilder xmlOutput = new StringBuilder();
             XmlSerializer xmlSerializer = new XmlSerializer(GetType());
 
-            using (StringWriter textWriter = new StringWriter())
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = false;
+            settings.NewLineHandling = NewLineHandling.None;
+
+            using (XmlWriter writer = XmlWriter.Create(xmlOutput, settings))
             {
-                xmlSerializer.Serialize(textWriter, this);
-                return textWriter.ToString();
+                xmlSerializer.Serialize(writer, this);
+                return xmlOutput.ToString();
             }
         }
 

@@ -71,7 +71,7 @@ namespace Pin
         {
             Normal,
             pinned,
-            pinDrop,
+            MinimizedOpen,
             Minimized,
             MinimizedDragging
         }
@@ -79,6 +79,12 @@ namespace Pin
         {
             open,
             closed
+        }
+
+        public enum ActionEvent
+        {
+            Move = 0,
+            Copy = 1
         }
     }
     public delegate void MouseLeaveMenuEventHandler(EventArgs e);

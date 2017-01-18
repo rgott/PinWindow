@@ -46,7 +46,7 @@ namespace Pin
                 NotifyPropertyChanged();
             }
         }
-
+        public int ID { get; set; }
         public string ProjectName
         {
             get { return (string)GetValue(ProjectNameProperty); }
@@ -67,7 +67,19 @@ namespace Pin
         public static readonly DependencyProperty ProjectPathProperty =
             DependencyProperty.Register("ProjectPath", typeof(string), typeof(ProjectItem), new PropertyMetadata(default(string)));
 
-        public Model.Project Cached_Project { get; set; }
+
+        private string _Cached_Project;
+        public string Cached_Project
+        {
+            get
+            {
+                return _Cached_Project;
+            }
+            set
+            {
+                _Cached_Project = value;
+            }
+        } // serialized version
 
         public ProjectItem()
         {
@@ -77,18 +89,19 @@ namespace Pin
         }
         public ProjectItem(Model.Project project) : this()
         {
+            this.ID = project.ID;
             this.ProjectName = project.ProjectName;
             this.ProjectPath = project.ProjectPath;
             FillColor = project.Color;
             UI_ColorSelectionBox.FillColor = project.Color;
-            Cached_Project = project;
+            Cached_Project = project.Serialize();
         }
 
 
         private void FillColor_Changed(object sender, EventArgs e)
         {
             FillColor = UI_ColorSelectionBox.FillColor;
-            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project.Serialize());
+            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project);
             if (settingIndex != -1)
             {
                 var tempProject = Model.Project.Deserialize(Properties.Settings.Default.Projects[settingIndex]);
@@ -111,19 +124,29 @@ namespace Pin
 
         private void UI_Btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            var ProjectModel = new Model.Project(ProjectName, ProjectPath.Replace('/', '\\'), FillColor);
-
             // change saved version
-            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project.Serialize());
+
+            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project);
+
             if (settingIndex != -1)
             {
-                Properties.Settings.Default.Projects[settingIndex] = ProjectModel.Serialize();
-                Properties.Settings.Default.Save();
-            }
-            Cached_Project = ProjectModel;
+                var ProjectModel = new Model.Project(settingIndex, ProjectName, ProjectPath.Replace('/', '\\'), FillColor).Serialize();
 
-            FillColor = UI_ColorSelectionBox.FillColor;
+                Properties.Settings.Default.Projects[settingIndex] = ProjectModel;
+
+                Cached_Project = ProjectModel;
+                FillColor = UI_ColorSelectionBox.FillColor;
+
+                //if(settingIndex == Properties.Settings.Default.PrimaryProjectId)
+                //{
+                //    Properties.Settings.Default.PrimaryProjectId = -1; // initiate a change event
+                //    Properties.Settings.Default.PrimaryProjectId = settingIndex;
+                //}
+                Properties.Settings.Default.Save();
+
+            }
             UI_Btn_Cancel_Click(sender, e);
+
         }
 
         private void UI_Btn_Browse_Click(object sender, RoutedEventArgs e)
@@ -171,7 +194,7 @@ namespace Pin
         private void UI_MenuItem_Delete_Click(object sender, RoutedEventArgs e)
         {
             // change saved version
-            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project.Serialize());
+            int settingIndex = Properties.Settings.Default.Projects.IndexOf(Cached_Project);
             if (settingIndex != -1)
             {
                 Properties.Settings.Default.Projects.RemoveAt(settingIndex);

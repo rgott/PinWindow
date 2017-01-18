@@ -105,5 +105,29 @@ namespace Pin.Properties {
                 this["WINDOW_STATE_MINIMIZEDPINNED_HEIGHT"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int PrimaryProjectId {
+            get {
+                return ((int)(this["PrimaryProjectId"]));
+            }
+            set {
+                this["PrimaryProjectId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ActionEvent {
+            get {
+                return ((int)(this["ActionEvent"]));
+            }
+            set {
+                this["ActionEvent"] = value;
+            }
+        }
     }
 }
