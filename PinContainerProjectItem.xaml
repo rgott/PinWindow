@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Pin.PinContainerProjectItem"
+﻿<local:UIProjectProperties x:Class="Pin.PinContainerProjectItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,18 +9,25 @@
              DragEnter="UserControl_DragEnter"
              Drop="UserControl_Drop"
              DragLeave="UserControl_DragLeave"
+             MouseEnter="UIProjectProperties_MouseEnter"
              d:DesignHeight="20" d:DesignWidth="20">
     <Grid>
-        <Button x:Name="UI_Btn_ProjectColor" Background="{Binding ProjectColor,FallbackValue=red}" Template="{StaticResource PinBtn}" />
-        <Popup IsOpen="{Binding isPopupOpen,UpdateSourceTrigger=PropertyChanged}" Placement="Right" HorizontalOffset="10">
-            <Grid Background="White" Width="200">
-                <Border Padding="5" BorderBrush="black" BorderThickness="1">
-                    <Grid>
-                        <TextBlock Text="{Binding ProjectName,FallbackValue=ProjectName}"/>
-                        <TextBlock Text="{Binding ProjectPath,FallbackValue=ProjectPath}" Margin="0,21,0,0"/>
-                    </Grid>
-                </Border>
+        <Button x:Name="UI_Btn_ProjectColor" Background="{Binding FillColor,FallbackValue=Orange}" Template="{StaticResource PinBtn}" />
+        <Popup IsOpen="{Binding isPopupOpen,UpdateSourceTrigger=PropertyChanged}" AllowsTransparency="True" Placement="Right" HorizontalOffset="0">
+            <Grid MinWidth="200" Width="Auto" Background="Transparent">
+                <Grid  Background="{StaticResource PopupBackground}" Margin="20,0,0,0">
+                    <Border  BorderBrush="{StaticResource MainAppThemeColor}" BorderThickness="1" >
+                        <Grid>
+                            <Grid Margin="5">
+                                <TextBlock Text="{Binding ProjectName,FallbackValue=ProjectName}" Foreground="{StaticResource PopupTextColor}"/>
+                                <TextBlock Text="{Binding ProjectPath,FallbackValue=ProjectPath}" Foreground="{StaticResource PopupTextColor}" FontStyle="Italic" FontSize="11" Margin="5,21,0,0"/>
+                            </Grid>
+                            <Polygon Points="-21,10,0 ,25,0 ,0 " Fill="{StaticResource MainAppThemeColor}"></Polygon>
+                            <Polygon Points="-19.5 ,10,0 ,24,0 ,1" Fill="{StaticResource PopupBackground}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
             </Grid>
         </Popup>
     </Grid>
-</UserControl>
+</local:UIProjectProperties>

@@ -35,7 +35,7 @@ namespace Pin.Model
 
         }
 
-        public Project(int ID,string ProjectName, string ProjectPath, SolidColorBrush Color)
+        public Project(string ProjectName, string ProjectPath, SolidColorBrush Color)
         {
             this.ID = ID;
             this.ProjectName = ProjectName;
@@ -45,6 +45,10 @@ namespace Pin.Model
 
         public override bool Equals(object obj)
         {
+            if(obj is int)
+            {
+                return ID == obj as int?;
+            }
             if (obj is string)
             {
                 return ProjectName.Equals(obj as string);

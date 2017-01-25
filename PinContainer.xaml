@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin"
-             DragEnter="UI_UserControl_DragEnter"
+             DragEnter="UserControl_DragEnter"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <Grid>
         <Grid x:Name="UI_Grid_MinimizedOpen" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden">
@@ -18,7 +18,7 @@
                 <Image Source="{Binding UI_ExitSource,UpdateSourceTrigger=PropertyChanged}"/>
             </Button>
             <Border Margin="20,20,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
-                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding PrimaryProjectColor,UpdateSourceTrigger=PropertyChanged}" />
+                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
         </Grid>
         <Grid x:Name="UI_Grid_Maximized" Background="Transparent" Visibility="Hidden" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -35,21 +35,25 @@
                 <Image Source="{Binding UI_ExitSource,UpdateSourceTrigger=PropertyChanged}"/>
             </Button>
             <Border Margin="80,0,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
-                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding PrimaryProjectColor,UpdateSourceTrigger=PropertyChanged}" />
+                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
         </Grid>
         <Grid x:Name="UI_Grid_MinimizedClosed" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Border Margin="0,0,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
-                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding PrimaryProjectColor,UpdateSourceTrigger=PropertyChanged}" />
+                <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
         </Grid>
-        <Grid x:Name="UI_Grid_ProjectView" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden">
-            <StackPanel>
-                <StackPanel Margin="0,0,0,0" x:Name="UI_StackPanel_PinContainerProjects">
+        <Grid x:Name="UI_Grid_ProjectView" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Visible">
+            <StackPanel DragEnter="UI_UserControl_DragEnter" Background="White" DragLeave="UI_UserControl_DragLeave">
+                <StackPanel Margin="0,0,0,0" x:Name="UI_StackPanel_PinContainerProjects" Background="White">
+                
                 </StackPanel>
-                <Border Margin="0,0,0,0" Padding="3" Background="White">
-                    <TextBlock Text="{Binding UI_TextBlock_ActionEventType,FallbackValue=Move}"/>
-                </Border>
+                <TextBlock x:Name="UI_TextBlock_FirstProject" Text="Add a project first" Padding="10" Background="{StaticResource MainAppThemeColor}" Foreground="{StaticResource MainTextColor}" FontSize="15"/>
+                <Popup IsOpen="{Binding UI_ProjectView_IsOpen}" Placement="Bottom">
+                    <Border Margin="0,0,0,0" Padding="3" Background="{StaticResource MainAppThemeColor}" BorderBrush="DarkBlue" BorderThickness="1">
+                        <TextBlock Text="{Binding UI_TextBlock_ActionEventType,FallbackValue=Move}" Foreground="{StaticResource MainTextColor}"/>
+                    </Border>
+                </Popup>
             </StackPanel>
         </Grid>
     </Grid>

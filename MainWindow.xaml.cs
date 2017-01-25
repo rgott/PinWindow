@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using static Pin.MouseOverController;
+
 namespace Pin
 {
     /// <summary>
@@ -34,6 +34,7 @@ namespace Pin
             InitializeComponent();
             WindowChangeState(MouseOverController.WindowState.Minimized);
 
+
             switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
             {
                 case ActionEvent.Move:
@@ -42,11 +43,9 @@ namespace Pin
                 case ActionEvent.Copy:
                     UI_RadioButton_Move.IsChecked = true;
                     break;
-                default:
-                    break;
             }
+
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
-            UI_Project.PrimaryProjectChanged += UI_Project_PrimaryProjectChanged;
         }
 
         #region Window Controller
@@ -133,11 +132,6 @@ namespace Pin
         }
         #endregion
 
-        private void UI_Project_PrimaryProjectChanged(object sender, int ProjectItem)
-        {
-            UI_PinContainer.PrimaryProjectId = ProjectItem;
-        }
-
         private void MouseOverController_MouseLeaveMenu(EventArgs e)
         {
             minimizeWindowDelay(250);
@@ -150,11 +144,11 @@ namespace Pin
                 var RButton = sender as RadioButton;
                 if (RButton.Name.Equals("UI_RadioButton_Copy"))
                 {
-                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Copy;
+                    ProjectSettings.Instance.setActionEvent(ActionEvent.Copy);
                 }
                 else if (RButton.Name.Equals("UI_RadioButton_Move"))
                 {
-                    Properties.Settings.Default.ActionEvent = (int)ActionEvent.Move;
+                    ProjectSettings.Instance.setActionEvent(ActionEvent.Move);
                 }
                 Properties.Settings.Default.Save();
             }
@@ -209,6 +203,8 @@ namespace Pin
             // add to style that it is a tool window so it does not show in the task view (alt + tab)
             exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
             Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
+
+            ProjectSettings.Instance.Load();
         }
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
