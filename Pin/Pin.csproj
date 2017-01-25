@@ -82,6 +82,8 @@
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="IPinState.cs" />
     <Compile Include="Model\Project.cs" />
+    <Compile Include="UIProjectProperties.cs" />
+    <Compile Include="ProjectSettings.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />
     <Compile Include="PinContainer.xaml.cs">

@@ -33,29 +33,31 @@ namespace Pin.ColorPicker
             }
         }
 
-        private SolidColorBrush _FillColor;
+
         public SolidColorBrush FillColor
         {
             get
             {
-                return _FillColor;
+                return (SolidColorBrush)GetValue(FillColorProperty);
             }
             set
             {
-                _FillColor = value;
+                SetValue(FillColorProperty, value);
                 NotifyPropertyChanged();
             }
         }
+
+        // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FillColorProperty =
+            DependencyProperty.Register("FillColor", typeof(SolidColorBrush), typeof(ColorSelectionBox), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
 
 
 
 
         public ColorSelectionBox()
         {
-            FillColor = new SolidColorBrush(Colors.Red);
             DataContext = this;
             InitializeComponent();
-            FillColor = UI_PickerSelectionPlane.FillColor;
             MainWindow.MinimizedWindow += MainWindow_MinimizedWindow;
         }
 

@@ -19,11 +19,9 @@ namespace Pin.ColorPicker
 
         [DllImport("user32.dll")]
         static extern Int32 ReleaseDC(IntPtr hwnd, IntPtr hdc);
+
         [DllImport("gdi32.dll")]
         static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
-
-
-
 
         public SolidColorBrush FillColor
         {
@@ -58,7 +56,6 @@ namespace Pin.ColorPicker
 
         public PickerSelectionPlane()
         {
-            FillColor = new SolidColorBrush(Colors.Red);
             DataContext = this;
             InitializeComponent();
         }

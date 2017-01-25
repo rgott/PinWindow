@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:Pin"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <SolidColorBrush x:Key="MainAppThemeColor" Color="#FF646769"/>
+        <SolidColorBrush x:Key="MainAppLightColor" Color="#FF646769"/>
+        <SolidColorBrush x:Key="MainTextColor" Color="White"/>
+        <SolidColorBrush x:Key="PopupBackground" Color="#FF848789"/>
+        <SolidColorBrush x:Key="PopupTextColor" Color="White"/>
+
+
         <ControlTemplate x:Key="StyledButton" TargetType="Button">
             <Border CornerRadius="5" Background="{TemplateBinding Background}">
                 <Grid>
@@ -20,8 +27,8 @@
         </ControlTemplate>
 
         <Style TargetType="RadioButton">
-            <Setter Property="Background" Value="#FF646769"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource MainAppThemeColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource MainTextColor}"/>
         </Style>
         
         <!-- most of the Radio button styling-->

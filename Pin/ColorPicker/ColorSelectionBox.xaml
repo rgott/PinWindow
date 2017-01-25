@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="20">
     <Grid>
-        <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding FillColor,UpdateSourceTrigger=PropertyChanged,FallbackValue=Red}" Margin="0" Width="10" Height="10" Click="UI_Btn_ProjectColor_Click"/>
+        <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding FillColor,UpdateSourceTrigger=PropertyChanged,FallbackValue=Orange}" Margin="0" Width="10" Height="10" Click="UI_Btn_ProjectColor_Click"/>
 
         <!--<Rectangle Fill="Red" x:Name="UI_Rect_ColorSelection" MouseUp="UI_Rect_ColorSelection_MouseUp"/>-->
         <Popup x:Name="UI_Popup_PickerPlane" Placement="Bottom" HorizontalOffset="10" VerticalOffset="1" Width="100" Height="100"  MouseLeave="UI_Popup_PickerPlane_MouseLeave" MouseEnter="UI_Popup_PickerPlane_MouseEnter">
@@ -16,7 +16,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="23"/>
                 </Grid.RowDefinitions>
-                <local:PickerSelectionPlane x:Name="UI_PickerSelectionPlane"/>
+                <local:PickerSelectionPlane x:Name="UI_PickerSelectionPlane" FillColor="{Binding FillColor,UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Click="Button_Click" Grid.Row="1">Done</Button>
             </Grid>
         </Popup>
