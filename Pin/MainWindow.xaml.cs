@@ -29,6 +29,7 @@ namespace Pin
         public MainWindow()
         {
             Properties.Settings.Default.Upgrade();
+
             MouseOverController.Init();
             DataContext = this;
             InitializeComponent();
