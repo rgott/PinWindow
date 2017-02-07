@@ -11,8 +11,6 @@ namespace Pin
     /// </summary>
     public partial class Project : UserControl
     {
-
-        
         public Project()
         {
             InitializeComponent();

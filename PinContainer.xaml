@@ -43,7 +43,7 @@
                 <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
         </Grid>
-        <Grid x:Name="UI_Grid_ProjectView" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Visible">
+        <Grid x:Name="UI_Grid_ProjectView" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden">
             <StackPanel DragEnter="UI_UserControl_DragEnter" Background="White" DragLeave="UI_UserControl_DragLeave">
                 <StackPanel Margin="0,0,0,0" x:Name="UI_StackPanel_PinContainerProjects" Background="White">
                 
