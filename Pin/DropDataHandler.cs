@@ -13,12 +13,24 @@ namespace Pin
 {
     public class DropDataHandler
     {
-        public static void dropData(Model.Project project, DragEventArgs e)
+        public static void dragDataOut(DependencyObject source,string[] filesToDrag)
+        {
+            var data = new DataObject(DataFormats.FileDrop, filesToDrag);
+            DragDrop.DoDragDrop(source, data, getEffects((ActionEvent)Properties.Settings.Default.ActionEvent));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="e"></param>
+        /// <returns>Path of newly dropped file</returns>
+        public static string[] dropData(Model.Project project, DragEventArgs e)
         {
             if (String.IsNullOrEmpty(project.ProjectPath))
             {
                 MessageBox.Show("Path Not set.");
-                return;
+                return null;
             }
 
             if (e.Data.GetFormats().contains(DataFormats.Html))
@@ -27,6 +39,7 @@ namespace Pin
                 var match = Regex.Match((string)e.Data.GetData(DataFormats.Html), "src=\"(.*?)\""); // find source of dropped image
                 if(match.Groups.Count >= 2)
                 {
+                    string DestinationPath;
                     var matchValue = match.Groups[1].Value;
                     if (matchValue.StartsWith("http"))
                     { // must download first
@@ -34,27 +47,28 @@ namespace Pin
                         {
                             var fileNameIndex = matchValue.LastIndexOf('/') + 1;
                             var fileName = matchValue.Substring(fileNameIndex, matchValue.Length - fileNameIndex);
-                            var absoluteFilePath = Path.Combine(project.ProjectPath, "_" + fileName);
-                            if (File.Exists(absoluteFilePath))
+                            DestinationPath = Path.Combine(project.ProjectPath, "_" + fileName);
+                            if (File.Exists(DestinationPath))
                             {
-                                absoluteFilePath = getCheckedRandomFileName(project.ProjectPath, fileName);
+                                DestinationPath = getCheckedRandomFileName(project.ProjectPath, fileName);
                             }
-                            client.DownloadFile(matchValue, absoluteFilePath);
+                            client.DownloadFile(matchValue, DestinationPath);
                         }
                     }
                     else //if (matchValue.StartsWith("data")
                     { // contains a base 64 image
                         var extention = Regex.Match(matchValue, @"image\/(.*?);").Groups[1]?.Value; // finds the type of image (data:image/jpeg;...)
-                        var absoluteFilePath = getCheckedRandomFileName(project.ProjectPath,"." + extention);
+                        DestinationPath = getCheckedRandomFileName(project.ProjectPath,"." + extention);
 
                         var base64 = Regex.Match(matchValue, "base64,(.*)").Groups[1]?.Value;
                         var bytes = Convert.FromBase64String(base64);
-                        using (var imageFile = new FileStream(absoluteFilePath, FileMode.Create))
+                        using (var imageFile = new FileStream(DestinationPath, FileMode.Create))
                         {
                             imageFile.Write(bytes, 0, bytes.Length);
                             imageFile.Flush();
                         }
                     }
+                    return new string[] { DestinationPath };
                 }
                 //WebClient client = new WebClient();
                 //client.DownloadFile("data:image/jpeg;base64,/9j/4AAQSk...
@@ -101,8 +115,10 @@ namespace Pin
                             MessageBox.Show("Invalid Location:" + DestinationPath);
                         }
                     }
+                    return (string[])data;
                 }
             }
+            return null;
         }
 
 
@@ -145,16 +161,19 @@ namespace Pin
             if (e.Data.GetFormats().contains(DataFormats.Html)
                 && e.Data.GetFormats().contains(DataFormats.FileDrop))
             {
-                switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
-                {
-                    case ActionEvent.Move:
-                        e.Effects = DragDropEffects.Move;
-                        break;
-                    case ActionEvent.Copy:
-                        e.Effects = DragDropEffects.Copy;
-                        break;
-                }
+                e.Effects = getEffects((ActionEvent)Properties.Settings.Default.ActionEvent);
             }
+        }
+        public static DragDropEffects getEffects(ActionEvent e)
+        {
+            switch (e)
+            {
+                case ActionEvent.Move:
+                    return DragDropEffects.Move;
+                case ActionEvent.Copy:
+                    return DragDropEffects.Copy;
+            }
+            return DragDropEffects.None;
         }
     }
 }

@@ -7,17 +7,18 @@
              DragEnter="UserControl_DragEnter"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <Grid>
-        <Grid x:Name="UI_Grid_MinimizedOpen" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden">
-            <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,20,0,0" Click="UI_Btn_Menu_Click">
-                <Image Source="{Binding UI_MenuSource,UpdateSourceTrigger=PropertyChanged}"/>
-            </Button>
+        <Grid x:Name="UI_Grid_MinimizedOpen" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Visible">
+            
+            <Rectangle Fill="{Binding UI_DragOut_Color,FallbackValue=Orange}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20" Margin="0,20,0,0" MouseDown="UI_Btn_MouseDown_DragOut">
+                <!--<Image Source="{Binding UI_DragOutSource,UpdateSourceTrigger=PropertyChanged}"/>-->
+            </Rectangle>
             <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Click="UI_Btn_Sizing_Click">
                 <Image Source="{Binding UI_SizingSource,UpdateSourceTrigger=PropertyChanged}"/>
             </Button>
             <Button Background="White" Template="{StaticResource PinBtn}" Margin="20,0,0,0" Click="UI_Btn_Exit_Click">
                 <Image Source="{Binding UI_ExitSource,UpdateSourceTrigger=PropertyChanged}"/>
             </Button>
-            <Border Margin="20,20,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
+            <Border Margin="20,20,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" MouseDown="UI_Btn_MouseDown_DragOut">
                 <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
         </Grid>
@@ -37,6 +38,11 @@
             <Border Margin="80,0,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">
                 <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
             </Border>
+            <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" MouseLeave="UI_Popup_Menu_MouseLeave" Placement="MousePoint" Width="auto" Height="auto">
+                <Grid Background="White">
+                    <Button Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
+                </Grid>
+            </Popup>
         </Grid>
         <Grid x:Name="UI_Grid_MinimizedClosed" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Border Margin="0,0,0,0" Background="Transparent" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20">

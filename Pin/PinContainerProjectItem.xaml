@@ -1,4 +1,4 @@
-﻿<local:UIProjectProperties x:Class="Pin.PinContainerProjectItem"
+﻿<UserControl x:Class="Pin.PinContainerProjectItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -13,7 +13,7 @@
              d:DesignHeight="20" d:DesignWidth="20">
     <Grid>
         <Button x:Name="UI_Btn_ProjectColor" Background="{Binding FillColor,FallbackValue=Orange}" Template="{StaticResource PinBtn}" />
-        <Popup IsOpen="{Binding isPopupOpen,UpdateSourceTrigger=PropertyChanged}" AllowsTransparency="True" Placement="Right" HorizontalOffset="0">
+        <Popup x:Name="UI_Popup_Project" AllowsTransparency="True" Placement="Right" HorizontalOffset="0">
             <Grid MinWidth="200" Width="Auto" Background="Transparent">
                 <Grid  Background="{StaticResource PopupBackground}" Margin="20,0,0,0">
                     <Border  BorderBrush="{StaticResource MainAppThemeColor}" BorderThickness="1" >
@@ -30,4 +30,4 @@
             </Grid>
         </Popup>
     </Grid>
-</local:UIProjectProperties>
+</UserControl>

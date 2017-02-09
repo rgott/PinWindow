@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Pin
 {
     /// <summary>
     /// Interaction logic for PinContainerProjectItem.xaml
     /// </summary>
-    public partial class PinContainerProjectItem : UIProjectProperties
+    public partial class PinContainerProjectItem : UserControl
     {
-        public event EventHandler ItemDropped;
+        public delegate void ProjectItemDropEventHandler(object sender, Model.Project project, string[] sourcePaths);
+        public event ProjectItemDropEventHandler ProjectItemDropped;
 
 
-        private bool _isPopupOpen = false;
         public bool isPopupOpen
         {
             get
             {
-                return _isPopupOpen;
+                return UI_Popup_Project.IsOpen;
             }
             set
             {
-                _isPopupOpen = value;
-                NotifyPropertyChanged();
+                UI_Popup_Project.IsOpen = value;
             }
         }
 
-        public Model.Project ProjectModel { get; set; }
-        public PinContainerProjectItem(Model.Project project) : base(project)
+        public ProjectViewModel DataModel { get; set; }
+        public PinContainerProjectItem(ProjectViewModel project)
         {
-            DataContext = this;
+            DataContext = DataModel = project;
             InitializeComponent();
-
-            ProjectModel = project;
         }
 
         private void UserControl_DragEnter(object sender, DragEventArgs e)
@@ -43,10 +41,8 @@ namespace Pin
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
-            DropDataHandler.dropData(ProjectModel, e);
-
             isPopupOpen = false;
-            if (ItemDropped != null) ItemDropped(sender, e);
+            if (ProjectItemDropped != null) ProjectItemDropped(sender, DataModel.Project, DropDataHandler.dropData(DataModel.Project, e));
         }
 
         private void UserControl_DragLeave(object sender, DragEventArgs e)

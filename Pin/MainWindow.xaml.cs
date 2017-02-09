@@ -29,7 +29,7 @@ namespace Pin
         public MainWindow()
         {
             Properties.Settings.Default.Upgrade();
-
+            
             MouseOverController.Init();
             DataContext = this;
             InitializeComponent();
@@ -107,6 +107,10 @@ namespace Pin
             }
         }
 
+
+        Task task;
+        CancellationTokenSource TokenSource;
+
         private void minimizeWindowDelay(int millisecondDelay = 750)
         {
             // should prepare to minimize window?
@@ -115,20 +119,35 @@ namespace Pin
                 && !MouseOverController.isPinned
             )
             {
-                Task.Factory.StartNew(() =>
+                if(task != null)
+                {
+                    TokenSource.Cancel();
+                    task.Wait(); // wait for task to finish
+
+                    // dispose both
+                    TokenSource.Dispose();
+                    task.Dispose();
+                }
+
+                TokenSource = new CancellationTokenSource();
+                task = Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(millisecondDelay);
+
+                    if (TokenSource?.IsCancellationRequested == true) return;
+
                     // recheck after x time
                     if (MouseOverController.Win_State != MouseOverController.WindowState.Minimized
                         && !IsMouseOver
                         && !MouseOverController.isPinned
                         && !MouseOverController.isMouseOverMenu
+                        && !MouseOverController.isProjectOpen
                         )
                     {
                         Dispatcher.Invoke(() => { WindowChangeState(MouseOverController.WindowState.Minimized); });
                         OnMinimizedWindow(EventArgs.Empty);
                     }
-                });
+                },TokenSource.Token);
             }
         }
         #endregion
