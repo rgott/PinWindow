@@ -1,31 +1,41 @@
 ﻿using System.Windows;
 using Forms = System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Pin
 {
     /// <summary>
     /// Interaction logic for ProjectItem.xaml
     /// </summary>
-    public partial class ProjectItem : UIProjectProperties
+    public partial class ProjectItem : UserControl
     {
-        public ProjectItem(Model.Project project) : base(project)
+        public ProjectViewModel DataModel { get; set; }
+        public ProjectItem(ProjectViewModel project)
         {
-            DataContext = this;
+            DataContext = DataModel = project;
             InitializeComponent();
 
-            UI_ColorSelectionBox.FillColor = project.Color;
+            UI_ColorSelectionBox.FillColor = project.Project.Color;
+        }
+        public ProjectItem()
+        {
+            DataContext = DataModel = new ProjectViewModel(new Model.Project("Blah","Blah",new SolidColorBrush(Colors.Blue)));
+            InitializeComponent();
+
+            UI_ColorSelectionBox.FillColor = new System.Windows.Media.SolidColorBrush(Colors.Red);
         }
 
         private void UI_OpenWithExplorer_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", ProjectPath));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", DataModel.ProjectPath));
         }
 
         private void UI_Btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            FillColor = UI_ColorSelectionBox.FillColor;
-            SaveProperties();
+            DataModel.FillColor = UI_ColorSelectionBox.FillColor;
+            DataModel.SaveProperties();
             UI_Btn_Cancel_Click(sender, e); // revert to previous state
         }
 
@@ -35,7 +45,7 @@ namespace Pin
             path.ShowDialog();
 
             // change current version
-            ProjectPath = path.SelectedPath;
+            DataModel.ProjectPath = path.SelectedPath;
         }
 
         private void UI_Btn_Cancel_Click(object sender, RoutedEventArgs e)
@@ -72,7 +82,7 @@ namespace Pin
 
         private void UI_MenuItem_Delete_Click(object sender, RoutedEventArgs e)
         {
-            DeleteProperties();
+            DataModel.DeleteProperties();
         }
     }
 }

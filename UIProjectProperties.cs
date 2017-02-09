@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace Pin
 {
-    public class UIProjectProperties : UserControl, INotifyPropertyChanged
+    public class ProjectViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,7 +41,7 @@ namespace Pin
 
         private delegate void Properties();
         Properties UpdateAllProperties;
-        public UIProjectProperties(Model.Project project)
+        public ProjectViewModel(Model.Project project)
         {
             UpdateAllProperties = new Properties(
                         () => NotifyPropertyChanged("ProjectName"));
@@ -97,6 +97,18 @@ namespace Pin
             {
                 _Project.Color = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is ProjectViewModel)
+            {
+                return Project.Equals(((ProjectViewModel)obj).Project);
+            }
+            else
+            {
+                return Project.Equals(obj);
             }
         }
     }

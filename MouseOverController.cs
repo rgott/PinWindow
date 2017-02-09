@@ -7,8 +7,11 @@ namespace Pin
 {
     public class MouseOverController
     {
+
+
         internal static bool isMoveOverWindow;
 
+        public delegate void MouseLeaveMenuEventHandler(EventArgs e);
         public static event MouseLeaveMenuEventHandler MouseLeaveMenu;
         private static void OnMouseLeaveMenu(EventArgs e)
         {
@@ -47,6 +50,20 @@ namespace Pin
             }
 
         }
+        private static bool _isProjectOpen = false;
+        public static bool isProjectOpen
+        {
+            get
+            {
+                return _isProjectOpen;
+            }
+            set
+            {
+                _isProjectOpen = value;
+            }
+        }
+
+
         public static bool isMouseOverMenu
         {
             get
@@ -56,16 +73,14 @@ namespace Pin
             set
             {
                 Application.Current.Properties["isMouseOverMenu"] = value;
-                if(value == false)
+                if (value == false)
                 {
-                    Task.Factory.StartNew(() =>
-                    {
-                        Thread.Sleep(350);
-                        OnMouseLeaveMenu(EventArgs.Empty);
-                    });
+                    OnMouseLeaveMenu(EventArgs.Empty);
                 }
             }
         }
+
+        public static bool CancellationRequested { get; set; }
 
         public enum WindowState
         {
@@ -87,7 +102,6 @@ namespace Pin
             Copy = 1
         }
     }
-    public delegate void MouseLeaveMenuEventHandler(EventArgs e);
 
 
 }

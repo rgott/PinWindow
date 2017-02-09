@@ -18,40 +18,40 @@ namespace Pin
             // load projects in form 
             ProjectSettings.Instance.OnLoad += new System.EventHandler(delegate (object sender, System.EventArgs e)
             {
-                foreach (Model.Project item in ProjectSettings.Instance.Projects)
+                foreach (ProjectViewModel item in ProjectSettings.Instance.Projects)
                 {
                     projectPanel.Children.Add(newProject(item));
                 }
             });
 
-            ProjectSettings.Instance.OnAdd += new ProjectSettings.ProjectEventHandler(delegate (object sender, Model.Project project)
+            ProjectSettings.Instance.OnAdd += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
                 projectPanel.Children.Add(newProject(project));
             });
 
-            ProjectSettings.Instance.OnUpdate += new ProjectSettings.ProjectEventHandler(delegate (object sender, Model.Project project)
+            ProjectSettings.Instance.OnUpdate += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
             });
 
-            ProjectSettings.Instance.OnDelete += new ProjectSettings.ProjectEventHandler(delegate (object sender, Model.Project project)
+            ProjectSettings.Instance.OnDelete += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
-                projectPanel.Children.Remove((sender as UIProjectProperties).Parent as UIElement);
+                projectPanel.Children.Remove((sender as UserControl).Parent as UIElement);
             });
         }
 
-        private RadioButton newProject(Model.Project project)
+        private RadioButton newProject(ProjectViewModel ViewModel)
         {
-            ProjectItem projectItem = new ProjectItem(project);
+            ProjectItem projectItem = new ProjectItem(ViewModel);
 
             RadioButton RButton = new RadioButton();
-            RButton.Margin = new Thickness(0);
+            
             RButton.Template = (ControlTemplate)FindResource("StyledRadioButton");
             RButton.GroupName = "Projects";
             RButton.Checked += RButton_Checked;
 
             RButton.Content = projectItem;
 
-            if (ProjectSettings.Instance.isPrimaryProject(project))
+            if (ProjectSettings.Instance.isPrimaryProject(ViewModel.Project))
             {
                 RButton.IsChecked = true;
             }
@@ -68,7 +68,7 @@ namespace Pin
                 if(RButtion.IsChecked == true)
                 {
                     var id = (RButtion.Content as ProjectItem);
-                    ProjectSettings.Instance.PrimaryProject = id.Project;
+                    ProjectSettings.Instance.PrimaryProject = id.DataModel;
                 }
             }
         }
@@ -79,19 +79,18 @@ namespace Pin
             {
                 addP.Text = "x";
                 popupToggle.IsOpen = true;
-                MouseOverController.isMouseOverMenu = true;
+                MouseOverController.isProjectOpen = true;
             }
             else
             {
                 addP.Text = "+";
                 popupToggle.IsOpen = false;
-                MouseOverController.isMouseOverMenu = false;
+                MouseOverController.isProjectOpen = false;
             }
         }
 
         private void popupToggle_MouseEnter(object sender, MouseEventArgs e)
         {
-            MouseOverController.isMouseOverMenu = true;
         }
 
         private void UI_Btn_AddProject_Click(object sender, RoutedEventArgs e)
@@ -109,10 +108,11 @@ namespace Pin
             projects.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             UI_TxtBox_ProjectName.Text = "";
             UI_TxtBox_ProjectPath.Text = "";
-            MouseOverController.isMouseOverMenu = false;
+            MouseOverController.isProjectOpen = false;
+
         }
 
-       
+
         private void UI_Btn_FolderBrowse_Click(object sender, RoutedEventArgs e)
         {
             Forms.FolderBrowserDialog path = new Forms.FolderBrowserDialog();

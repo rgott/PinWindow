@@ -5,7 +5,10 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <SolidColorBrush x:Key="MainAppThemeColor" Color="#FF646769"/>
-        <SolidColorBrush x:Key="MainAppLightColor" Color="#FF646769"/>
+        <SolidColorBrush x:Key="MainAppLightColor" Color="#FF848789"/>
+        <SolidColorBrush x:Key="HoverColor" Color="#FF747779"/>
+        <SolidColorBrush x:Key="PressedColor" Color="#FF949799"/>
+
         <SolidColorBrush x:Key="MainTextColor" Color="White"/>
         <SolidColorBrush x:Key="PopupBackground" Color="#FF848789"/>
         <SolidColorBrush x:Key="PopupTextColor" Color="White"/>
@@ -34,7 +37,7 @@
         <!-- most of the Radio button styling-->
         <ControlTemplate x:Key="StyledRadioButton" TargetType="{x:Type RadioButton}">
             <Grid x:Name="templateRoot" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="Center" Margin="0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" Margin="0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="HasContent" Value="True">
@@ -69,14 +72,37 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+
         <ControlTemplate x:Key="PinBtn" TargetType="Button">
             <Border Background="{TemplateBinding Background}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" Padding="0">
                 <Grid>
                     <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
                 </Grid>
             </Border>
+        </ControlTemplate>
+
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource MainTextColor}" />
+            <Setter Property="Background" Value="{StaticResource MainAppLightColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource MainAppThemeColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+        <ControlTemplate x:Key="SaveBtn" TargetType="Button">
             <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF747779"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF949799"/>
+                </Trigger>
             </ControlTemplate.Triggers>
+
+            <Border Background="{TemplateBinding Background}" BorderBrush="LightGray" BorderThickness="1">
+                <Grid>
+                    <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                </Grid>
+            </Border>
         </ControlTemplate>
     </Application.Resources>
 </Application>

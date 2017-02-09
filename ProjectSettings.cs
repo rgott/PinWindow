@@ -12,15 +12,15 @@ namespace Pin
 {
     public class ProjectSettings
     {
-        public delegate void ProjectEventHandler(object sender, Model.Project project);
+        public delegate void ProjectEventHandler(object sender, ProjectViewModel project);
 
         public event EventHandler OnLoad;
         public void Load()
         {
-            Projects = new List<Model.Project>();
+            Projects = new List<ProjectViewModel>();
             foreach (string item in _Projects)
             {
-                Projects.Add(item); // deserialize all
+                Projects.Add(new ProjectViewModel(item)); // deserialize all
             }
 
             if (PrimaryProjectChanged != null) PrimaryProjectChanged(PrimaryProject);
@@ -33,7 +33,7 @@ namespace Pin
         public static ProjectSettings Instance => _Instance;
         private ProjectSettings()
         {
-            Projects = new List<Model.Project>();
+            Projects = new List<ProjectViewModel>();
             if (Properties.Settings.Default.Projects == null)
             {
                 Properties.Settings.Default.Projects = new StringCollection();
@@ -42,20 +42,22 @@ namespace Pin
         }
         
         public StringCollection _Projects => Properties.Settings.Default.Projects;
-        public List<Model.Project> Projects { get; set; }
+        public List<ProjectViewModel> Projects { get; set; }
 
 
 
         public event ProjectEventHandler OnAdd;
-        public void Add(object sender, Model.Project project)
+        public void Add(object sender, Model.Project Model)
         {
-            project.ID = NextID;
+            Model.ID = NextID;
 
-            Projects.Add(project);
-            _Projects.Add(project);
+            var ViewModel = new ProjectViewModel(Model);
+
+            Projects.Add(ViewModel);
+            _Projects.Add(Model);
 
             Save();
-            if (OnAdd != null) OnAdd(sender, project);
+            if (OnAdd != null) OnAdd(sender, ViewModel);
         }
 
         private void Save()
@@ -64,32 +66,36 @@ namespace Pin
         }
 
         public event ProjectEventHandler OnUpdate;
-        internal void Update(object sender, Model.Project project)
+        internal void Update(object sender, Model.Project Model)
         {
-            var index = Projects.IndexOf(project);
+            var ViewModel = new ProjectViewModel(Model);
 
-            Projects[index] = project;
-            _Projects[index] = project;
+            var index = Projects.IndexOf(ViewModel);
 
-            if(project.Equals(PrimaryProject))
+            Projects[index] = ViewModel;
+            _Projects[index] = Model;
+
+            if(Model.Equals(PrimaryProject))
             {
-                PrimaryProject = project;
+                PrimaryProject = ViewModel;
             }
 
             Save();
-            if (OnUpdate != null) OnUpdate(sender,project);    
+            if (OnUpdate != null) OnUpdate(sender, ViewModel);    
         }
 
         public event ProjectEventHandler OnDelete;
-        internal void Delete(object sender, Model.Project project)
+        internal void Delete(object sender, Model.Project Model)
         {
-            var index = Projects.IndexOf(project);
+            var ViewModel = new ProjectViewModel(Model);
+
+            var index = Projects.IndexOf(ViewModel);
 
             Projects.RemoveAt(index);
             _Projects.RemoveAt(index);
 
             Save();
-            if (OnDelete != null) OnDelete(sender, project);
+            if (OnDelete != null) OnDelete(sender, ViewModel);
         }
 
         internal bool isPrimaryProject(Model.Project project)
@@ -108,18 +114,18 @@ namespace Pin
             if (ActionEventChanged != null) ActionEventChanged(actionevent);
         }
 
-        public delegate void ProjectChangedEventHandler(Model.Project project);
+        public delegate void ProjectChangedEventHandler(ProjectViewModel project);
         public event ProjectChangedEventHandler PrimaryProjectChanged;
 
-        public Model.Project PrimaryProject
+        public ProjectViewModel PrimaryProject
         {
             get
             {
-                return Projects?.Find(m => m.ID == Properties.Settings.Default.PrimaryProjectId);
+                return Projects?.Find(Model => Model.Project.ID == Properties.Settings.Default.PrimaryProjectId);
             }
             set
             {
-                Properties.Settings.Default.PrimaryProjectId = value.ID;
+                Properties.Settings.Default.PrimaryProjectId = value.Project.ID;
                 if (PrimaryProjectChanged != null) PrimaryProjectChanged(value);
 
             }

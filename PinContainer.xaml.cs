@@ -12,7 +12,7 @@ namespace Pin
     /// <summary>
     /// Interaction logic for PinContainer.xaml
     /// </summary>
-    public partial class PinContainer : UserControl, INotifyPropertyChanged , IPinState
+    public partial class PinContainer : UserControl, INotifyPropertyChanged, IPinState
     {
         #region Properties
 
@@ -146,7 +146,19 @@ namespace Pin
         public event EventHandler OnOpenArrow;
         public event EventHandler OnCloseArrow;
 
-
+        private bool _UI_Popup_Menu_IsOpen = false;
+        public bool UI_Popup_Menu_IsOpen
+        {
+            get
+            {
+                return _UI_Popup_Menu_IsOpen;
+            }
+            set
+            {
+                _UI_Popup_Menu_IsOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
         public PinContainer()
         {
             FillColor = new SolidColorBrush(Colors.Orange);
@@ -156,8 +168,11 @@ namespace Pin
             UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
             UI_MenuSource = new BitmapImage(new Uri("images/menu.png", UriKind.Relative));
 
+            UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
+
             DataContext = this;
             InitializeComponent();
+
 
 
             ProjectSettings.Instance.ActionEventChanged += new ProjectSettings.ActionEventChangedEventHandler(delegate (ActionEvent e)
@@ -173,7 +188,7 @@ namespace Pin
                 }
             });
 
-            ProjectSettings.Instance.PrimaryProjectChanged += new ProjectSettings.ProjectChangedEventHandler(delegate (Model.Project project)
+            ProjectSettings.Instance.PrimaryProjectChanged += new ProjectSettings.ProjectChangedEventHandler(delegate (ProjectViewModel ViewModel)
             {
                 UI_StackPanel_PinContainerProjects.Children.Clear();
 
@@ -181,16 +196,19 @@ namespace Pin
 
                 foreach (var item in ProjectSettings.Instance.Projects)
                 {
+                    var pinProjectItem = new PinContainerProjectItem(item);
+                    pinProjectItem.ProjectItemDropped += PinProjectItem_ProjectItemDropped;
+
                     if (primaryProject != null && primaryProject.Equals(item))
                     {
-                        UI_StackPanel_PinContainerProjects.Children.Insert(0, new PinContainerProjectItem(item));
+                        UI_StackPanel_PinContainerProjects.Children.Insert(0, pinProjectItem);
                     }
                     else
                     {
-                        UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(item));
+                        UI_StackPanel_PinContainerProjects.Children.Add(pinProjectItem);
                     }
                 }
-                if(UI_StackPanel_PinContainerProjects.Children.Count == 0)
+                if (UI_StackPanel_PinContainerProjects.Children.Count == 0)
                 {
                     UI_TextBlock_FirstProject.Visibility = Visibility.Visible;
                 }
@@ -201,14 +219,25 @@ namespace Pin
 
                 UI_StackPanel_PinContainerProjects.UpdateLayout();
 
-                FillColor = (project == null)? new SolidColorBrush(Colors.Orange) : FillColor = project.Color;
+                FillColor = (ViewModel == null) ? new SolidColorBrush(Colors.Orange) : FillColor = ViewModel.Project.Color;
             });
 
         }
 
+        public Model.Project LastMovedProject { get; set; }
+        public string[] SourcePaths { get; set; }
+        private void PinProjectItem_ProjectItemDropped(object sender, Model.Project Model, string[] sourcePaths)
+        {
+            LastMovedProject = Model;
+            SourcePaths = sourcePaths;
+
+            // set color and path information
+            UI_DragOut_Color = Model.Color;
+        }
+
         private void UI_Btn_Sizing_Click(object sender, RoutedEventArgs e)
         {
-            if(ArrowStatus)
+            if (ArrowStatus)
             {
                 if (OnOpenArrow != null) OnOpenArrow(this, e); // user pressed open arrow
                 UI_SizingSource = new BitmapImage(new Uri("images/CloseArrow.png", UriKind.Relative));// change to opposite arrow
@@ -220,29 +249,45 @@ namespace Pin
             }
             ArrowStatus = !ArrowStatus;
         }
-
+        public SolidColorBrush _UI_DragOut_Color { get; set; }
+        public SolidColorBrush UI_DragOut_Color
+        {
+            get
+            {
+                return _UI_DragOut_Color;
+            }
+            set
+            {
+                _UI_DragOut_Color = value;
+                NotifyPropertyChanged();
+            }
+        }
         private void UI_Btn_Menu_Click(object sender, RoutedEventArgs e)
         {
-            if(MenuStatus)
+            UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen;
+            if (UI_Popup_Menu_IsOpen)
             {
+                MouseOverController.isMouseOverMenu = true;
+
                 if (OnOpenMenu != null) OnOpenMenu(this, e);
             }
             else
             {
+                MouseOverController.isMouseOverMenu = false;
+
                 if (OnCloseMenu != null) OnCloseMenu(this, e);
             }
-            MenuStatus = !MenuStatus;
         }
 
         private void UI_Btn_Exit_Click(object sender, RoutedEventArgs e)
         {
             // passes back to listener presumable an extention of Window that can close itself
-            if (OnExit != null) OnExit(this, e); 
+            if (OnExit != null) OnExit(this, e);
         }
 
         private void UI_Btn_Pin_Click(object sender, RoutedEventArgs e)
         {
-            if(PinStatus)
+            if (PinStatus)
             {
                 if (OnUnPinned != null) OnUnPinned(this, e);
                 UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative)); // set opposite image
@@ -257,14 +302,12 @@ namespace Pin
 
         private void UI_UserControl_DragEnter(object sender, DragEventArgs e)
         {
-            Console.WriteLine("Enter");
         }
 
 
 
         private void UI_UserControl_DragLeave(object sender, DragEventArgs e)
         {
-            Console.WriteLine("SDFLKDSF");
         }
 
         public void WindowChangeState(MouseOverController.WindowState? wState = default(MouseOverController.WindowState?))
@@ -317,13 +360,31 @@ namespace Pin
         private void Popup_DragLeave(object sender, DragEventArgs e)
         {
             MouseOverController.isMoveOverWindow = false;
-            Console.WriteLine("POPUP");
 
         }
 
         private void Popup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            Console.WriteLine("MOUSE LEAVE SDFLSDKJFSD");
+        }
+
+        private void UI_Btn_MouseDown_DragOut(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(SourcePaths != null)
+                DropDataHandler.dragDataOut(this, SourcePaths);
+        }
+
+        private void UI_Popup_Menu_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            UI_Popup_Menu_IsOpen = false;
+            MouseOverController.isMouseOverMenu = false;
+
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.Reset();
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
         }
     }
 }
