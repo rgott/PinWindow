@@ -28,7 +28,9 @@ namespace Pin
 
         public MainWindow()
         {
-            Properties.Settings.Default.Upgrade();
+            Properties.Settings.Default.Reset();
+            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Upgrade();
             
             MouseOverController.Init();
             DataContext = this;

@@ -20,7 +20,7 @@ namespace Pin
             Projects = new List<ProjectViewModel>();
             foreach (string item in _Projects)
             {
-                Projects.Add(new ProjectViewModel(item)); // deserialize all
+                Projects.Add(new ProjectViewModel((Model.Project)item)); // deserialize all
             }
 
             if (PrimaryProjectChanged != null) PrimaryProjectChanged(PrimaryProject);
@@ -54,7 +54,7 @@ namespace Pin
             var ViewModel = new ProjectViewModel(Model);
 
             Projects.Add(ViewModel);
-            _Projects.Add(Model);
+            _Projects.Add((string)Model);
 
             Save();
             if (OnAdd != null) OnAdd(sender, ViewModel);
@@ -73,7 +73,7 @@ namespace Pin
             var index = Projects.IndexOf(ViewModel);
 
             Projects[index] = ViewModel;
-            _Projects[index] = Model;
+            _Projects[index] = (String)Model;
 
             if(Model.Equals(PrimaryProject))
             {

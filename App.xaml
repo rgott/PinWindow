@@ -14,6 +14,15 @@
         <SolidColorBrush x:Key="PopupTextColor" Color="White"/>
 
 
+        <BitmapImage x:Key="Menu" UriSource="./images/menu.png"/>
+        <BitmapImage x:Key="Exit" UriSource="./images/Exit.png"/>
+        <BitmapImage x:Key="CloseArrow" UriSource="./images/CloseArrow.png"/>
+        <BitmapImage x:Key="OpenArrow" UriSource="./images/OpenArrow.png"/>
+        <BitmapImage x:Key="Folder" UriSource="./images/Folder.png"/>
+        <BitmapImage x:Key="Tack-90deg" UriSource="./images/tack-90deg.png"/>
+        <BitmapImage x:Key="Tack-45deg" UriSource="./images/tack-45deg.png"/>
+
+
         <ControlTemplate x:Key="StyledButton" TargetType="Button">
             <Border CornerRadius="5" Background="{TemplateBinding Background}">
                 <Grid>

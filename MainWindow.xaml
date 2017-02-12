@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pin"
+        xmlns:MenuContainer="clr-namespace:Pin.MenuContainer"
         mc:Ignorable="d"
         x:Name="pinWindow"
         ShowInTaskbar="False"
@@ -33,13 +34,14 @@
             </Grid>
             <local:Project x:Name="UI_Project" Margin="0,20,0,0"/>
         </Grid>
-        <local:PinContainer x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" 
+        <MenuContainer:Menu x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <!--<PinContainer:Menu x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" 
                             OnCloseArrow="UI_PinContainer_OnCloseArrow" 
                             OnOpenArrow="UI_PinContainer_OnOpenArrow"
                             OnCloseMenu="UI_PinContainer_OnCloseMenu"
                             OnOpenMenu="UI_PinContainer_OnOpenMenu"
                             OnUnPinned="UI_PinContainer_OnUnPinned"
                             OnPinned="UI_PinContainer_OnPinned"
-                            OnExit="UI_PinContainer_OnExit"/>
+                            OnExit="UI_PinContainer_OnExit"/>-->
     </Grid>
 </Window>
