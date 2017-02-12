@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Pin
+namespace Pin.MenuContainer
 {
     /// <summary>
     /// Interaction logic for PinContainerProjectItem.xaml

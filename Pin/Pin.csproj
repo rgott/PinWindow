@@ -106,15 +106,34 @@
     </Compile>
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="IPinState.cs" />
+    <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="MenuContainer\IPinButton.cs" />
+    <Compile Include="MenuContainer\Maximized.xaml.cs">
+      <DependentUpon>Maximized.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MenuContainer\Minimized.xaml.cs">
+      <DependentUpon>Minimized.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MenuContainer\MinimizedOpen.xaml.cs">
+      <DependentUpon>MinimizedOpen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\IProject.cs" />
     <Compile Include="Model\Project.cs" />
+    <Compile Include="MenuContainer\ProjectView.xaml.cs">
+      <DependentUpon>ProjectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XmlSerializer.cs" />
     <Compile Include="UIProjectProperties.cs" />
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />
-    <Compile Include="PinContainer.xaml.cs">
-      <DependentUpon>PinContainer.xaml</DependentUpon>
+    <Compile Include="MenuContainer\Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PinContainerProjectItem.xaml.cs">
+    <Compile Include="MenuContainer\PinContainerProjectItem.xaml.cs">
       <DependentUpon>PinContainerProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Project.xaml.cs">
@@ -144,11 +163,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PinContainer.xaml">
+    <Page Include="MenuContainer\Maximized.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PinContainerProjectItem.xaml">
+    <Page Include="MenuContainer\Minimized.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuContainer\MinimizedOpen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuContainer\Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuContainer\PinContainerProjectItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -157,6 +188,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ProjectItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuContainer\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -191,8 +230,8 @@
     <Resource Include="images\menu-dark.png" />
     <Resource Include="images\menu.png" />
     <Resource Include="images\OpenArrow.png" />
-    <Resource Include="images\pin.png" />
-    <Resource Include="images\pinned.png" />
+    <Resource Include="images\tack-45deg.png" />
+    <Resource Include="images\tack-90deg.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

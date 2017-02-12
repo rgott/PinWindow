@@ -7,12 +7,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static Pin.MouseOverController;
 
-namespace Pin
+namespace Pin.MenuContainer
 {
     /// <summary>
     /// Interaction logic for PinContainer.xaml
     /// </summary>
-    public partial class PinContainer : UserControl, INotifyPropertyChanged, IPinState
+    public partial class Menu : UserControl, INotifyPropertyChanged, IPinState
     {
         #region Properties
 
@@ -97,21 +97,6 @@ namespace Pin
             }
         }
 
-        private SolidColorBrush _FillColor;
-        public SolidColorBrush FillColor
-        {
-            get
-            {
-                return _FillColor;
-            }
-            set
-            {
-                _FillColor = value;
-                NotifyPropertyChanged();
-            }
-
-        }
-
         private bool _UI_ProjectView_IsOpen = false;
         public bool UI_ProjectView_IsOpen
         {
@@ -127,6 +112,17 @@ namespace Pin
             }
         }
 
+        public Brush FillColor
+        {
+            get { return (Brush)GetValue(FillColorProperty); }
+            set { SetValue(FillColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FillColorProperty =
+            DependencyProperty.Register("FillColor", typeof(Brush), typeof(Menu), new PropertyMetadata(new SolidColorBrush(Colors.Orange)));
+
+
         public int PrimaryProjectOrigionalLocation { get; private set; }
 
         private bool ArrowStatus = true;// true on openarrow.png false on closedarrow.png
@@ -138,31 +134,14 @@ namespace Pin
         public event EventHandler OnPinned;
         public event EventHandler OnUnPinned;
 
-        public event EventHandler OnOpenMenu;
-        public event EventHandler OnCloseMenu;
-
         public event EventHandler OnExit;
 
         public event EventHandler OnOpenArrow;
         public event EventHandler OnCloseArrow;
 
-        private bool _UI_Popup_Menu_IsOpen = false;
-        public bool UI_Popup_Menu_IsOpen
-        {
-            get
-            {
-                return _UI_Popup_Menu_IsOpen;
-            }
-            set
-            {
-                _UI_Popup_Menu_IsOpen = value;
-                NotifyPropertyChanged();
-            }
-        }
-        public PinContainer()
-        {
-            FillColor = new SolidColorBrush(Colors.Orange);
 
+        public Menu()
+        {
             UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
             UI_ExitSource = new BitmapImage(new Uri("images/Exit.png", UriKind.Relative));
             UI_PinSource = new BitmapImage(new Uri("images/pin.png", UriKind.Relative));
@@ -187,53 +166,43 @@ namespace Pin
                         break;
                 }
             });
-
-            ProjectSettings.Instance.PrimaryProjectChanged += new ProjectSettings.ProjectChangedEventHandler(delegate (ProjectViewModel ViewModel)
-            {
-                UI_StackPanel_PinContainerProjects.Children.Clear();
-
-                var primaryProject = ProjectSettings.Instance.PrimaryProject;
-
-                foreach (var item in ProjectSettings.Instance.Projects)
-                {
-                    var pinProjectItem = new PinContainerProjectItem(item);
-                    pinProjectItem.ProjectItemDropped += PinProjectItem_ProjectItemDropped;
-
-                    if (primaryProject != null && primaryProject.Equals(item))
-                    {
-                        UI_StackPanel_PinContainerProjects.Children.Insert(0, pinProjectItem);
-                    }
-                    else
-                    {
-                        UI_StackPanel_PinContainerProjects.Children.Add(pinProjectItem);
-                    }
-                }
-                if (UI_StackPanel_PinContainerProjects.Children.Count == 0)
-                {
-                    UI_TextBlock_FirstProject.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    UI_TextBlock_FirstProject.Visibility = Visibility.Collapsed;
-                }
-
-                UI_StackPanel_PinContainerProjects.UpdateLayout();
-
-                FillColor = (ViewModel == null) ? new SolidColorBrush(Colors.Orange) : FillColor = ViewModel.Project.Color;
-            });
-
         }
 
-        public Model.Project LastMovedProject { get; set; }
-        public string[] SourcePaths { get; set; }
-        private void PinProjectItem_ProjectItemDropped(object sender, Model.Project Model, string[] sourcePaths)
-        {
-            LastMovedProject = Model;
-            SourcePaths = sourcePaths;
+        //    ProjectSettings.Instance.PrimaryProjectChanged += new ProjectSettings.ProjectChangedEventHandler(delegate (ProjectViewModel ViewModel)
+        //    {
+        //        UI_StackPanel_PinContainerProjects.Children.Clear();
 
-            // set color and path information
-            UI_DragOut_Color = Model.Color;
-        }
+        //        var primaryProject = ProjectSettings.Instance.PrimaryProject;
+
+        //        foreach (var item in ProjectSettings.Instance.Projects)
+        //        {
+        //            var pinProjectItem = new PinContainerProjectItem(item);
+        //            pinProjectItem.ProjectItemDropped += PinProjectItem_ProjectItemDropped;
+
+        //            if (primaryProject != null && primaryProject.Equals(item))
+        //            {
+        //                UI_StackPanel_PinContainerProjects.Children.Insert(0, pinProjectItem);
+        //            }
+        //            else
+        //            {
+        //                UI_StackPanel_PinContainerProjects.Children.Add(pinProjectItem);
+        //            }
+        //        }
+        //        if (UI_StackPanel_PinContainerProjects.Children.Count == 0)
+        //        {
+        //            UI_TextBlock_FirstProject.Visibility = Visibility.Visible;
+        //        }
+        //        else
+        //        {
+        //            UI_TextBlock_FirstProject.Visibility = Visibility.Collapsed;
+        //        }
+
+        //        UI_StackPanel_PinContainerProjects.UpdateLayout();
+
+        //        FillColor = (ViewModel == null) ? new SolidColorBrush(Colors.Orange) : ViewModel.Project.Color;
+        //    });
+
+        //}
 
         private void UI_Btn_Sizing_Click(object sender, RoutedEventArgs e)
         {
@@ -262,22 +231,7 @@ namespace Pin
                 NotifyPropertyChanged();
             }
         }
-        private void UI_Btn_Menu_Click(object sender, RoutedEventArgs e)
-        {
-            UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen;
-            if (UI_Popup_Menu_IsOpen)
-            {
-                MouseOverController.isMouseOverMenu = true;
-
-                if (OnOpenMenu != null) OnOpenMenu(this, e);
-            }
-            else
-            {
-                MouseOverController.isMouseOverMenu = false;
-
-                if (OnCloseMenu != null) OnCloseMenu(this, e);
-            }
-        }
+        
 
         private void UI_Btn_Exit_Click(object sender, RoutedEventArgs e)
         {
@@ -299,27 +253,17 @@ namespace Pin
             }
             PinStatus = !PinStatus;
         }
-
-        private void UI_UserControl_DragEnter(object sender, DragEventArgs e)
-        {
-        }
-
-
-
-        private void UI_UserControl_DragLeave(object sender, DragEventArgs e)
-        {
-        }
-
+        
         public void WindowChangeState(MouseOverController.WindowState? wState = default(MouseOverController.WindowState?))
         {
             switch (wState)
             {
                 case MouseOverController.WindowState.Minimized:
-                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Collapsed;
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
-                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+                    UI_Grid_Maximized.Visibility = Visibility.Collapsed;
 
-                    UI_Grid_ProjectView.Visibility = Visibility.Hidden;
+                    UI_Grid_ProjectView.Visibility = Visibility.Collapsed;
                     UI_ProjectView_IsOpen = false;
 
                     UI_SizingSource = new BitmapImage(new Uri("images/OpenArrow.png", UriKind.Relative));
@@ -327,9 +271,9 @@ namespace Pin
                     break;
                 case MouseOverController.WindowState.Pinned:
                 case MouseOverController.WindowState.Normal:
-                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Collapsed;
 
-                    UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Collapsed;
                     UI_Grid_Maximized.Visibility = Visibility.Visible;
                     break;
                 case MouseOverController.WindowState.MinimizedOpen:
@@ -337,8 +281,8 @@ namespace Pin
 
                     UI_Grid_MinimizedOpen.Visibility = Visibility.Visible;
 
-                    UI_Grid_MinimizedClosed.Visibility = Visibility.Hidden;
-                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+                    UI_Grid_MinimizedClosed.Visibility = Visibility.Collapsed;
+                    UI_Grid_Maximized.Visibility = Visibility.Collapsed;
                     break;
                 case MouseOverController.WindowState.MinimizedDragging:
                     UI_Grid_ProjectView.Visibility = Visibility.Visible;
@@ -346,8 +290,8 @@ namespace Pin
 
                     UI_Grid_MinimizedClosed.Visibility = Visibility.Visible;
 
-                    UI_Grid_MinimizedOpen.Visibility = Visibility.Hidden;
-                    UI_Grid_Maximized.Visibility = Visibility.Hidden;
+                    UI_Grid_MinimizedOpen.Visibility = Visibility.Collapsed;
+                    UI_Grid_Maximized.Visibility = Visibility.Collapsed;
                     break;
             }
         }
@@ -361,30 +305,6 @@ namespace Pin
         {
             MouseOverController.isMoveOverWindow = false;
 
-        }
-
-        private void Popup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-        }
-
-        private void UI_Btn_MouseDown_DragOut(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if(SourcePaths != null)
-                DropDataHandler.dragDataOut(this, SourcePaths);
-        }
-
-        private void UI_Popup_Menu_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            UI_Popup_Menu_IsOpen = false;
-            MouseOverController.isMouseOverMenu = false;
-
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Reset();
-            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-            Application.Current.Shutdown();
         }
     }
 }

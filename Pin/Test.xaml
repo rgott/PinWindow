@@ -1,0 +1,15 @@
+﻿<Window x:Class="Pin.Test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pin.MenuContainer"
+        mc:Ignorable="d"
+        Title="Test" Height="300" Width="300">
+    <Grid>
+        <local:MinimizedOpen x:Name="UI_Grid_MinimizedOpen"/>
+        <local:Maximized x:Name="UI_Grid_Maximized"/>
+        <local:Minimized x:Name="UI_Grid_MinimizedClosed"/>
+        <local:ProjectView x:Name="UI_Grid_ProjectView"/>
+    </Grid>
+</Window>

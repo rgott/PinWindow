@@ -66,11 +66,11 @@ namespace Pin
         {
             get
             {
-                return _Project.ProjectName;
+                return _Project.Name;
             }
             set
             {
-                _Project.ProjectName = value;
+                _Project.Name = value;
                 NotifyPropertyChanged();
             }
         }
@@ -79,15 +79,15 @@ namespace Pin
         {
             get
             {
-                return _Project.ProjectPath;
+                return _Project.Path;
             }
             set
             {
-                _Project.ProjectPath = value;
+                _Project.Path = value;
                 NotifyPropertyChanged();
             }
         }
-        public SolidColorBrush FillColor
+        public Brush FillColor
         {
             get
             {

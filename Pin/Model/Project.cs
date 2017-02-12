@@ -11,37 +11,38 @@ using System.Xml.Serialization;
 namespace Pin.Model
 {
     [Serializable]
-    public class Project
+    public class Project : XmlSerializer, IProject
     {
-        public static implicit operator Project(string obj)
+        public static explicit operator Model.Project(string obj)
         {
-            return Project.Deserialize(obj);
+            return Deserialize<Model.Project>(obj);
         }
 
-        public static implicit operator string(Project obj)
+        public static explicit operator string(Project obj)
         {
             return obj.Serialize();
         }
 
         public int ID { get; set; }
-        public string ProjectName { get; set; }
-        public string ProjectPath { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
 
         [XmlElement(Type = typeof(XmlColor))]
-        public SolidColorBrush Color { get; set; }
+        public Brush Color { get; set; }
 
-        public Project()
+        /// <summary>
+        /// Used for Serialization
+        /// </summary>
+        public Project() { }
+
+        public Project(string Name, string Path, Brush Color)
         {
-
-        }
-
-        public Project(string ProjectName, string ProjectPath, SolidColorBrush Color)
-        {
-            this.ID = ID;
-            this.ProjectName = ProjectName;
-            this.ProjectPath = ProjectPath;
+            //this.ID = ID;
+            this.Name = Name;
+            this.Path = Path;
             this.Color = Color;
         }
+
 
         public override bool Equals(object obj)
         {
@@ -51,48 +52,18 @@ namespace Pin.Model
             }
             if (obj is string)
             {
-                return ProjectName.Equals(obj as string);
+                return Name.Equals(obj as string);
             }
             else if (obj is Project)
             {
-                return ProjectName.Equals((obj as Project).ProjectName);
+                return Name.Equals((obj as Project).Name);
             }
             return false;
         }
 
-
-
         public override int GetHashCode()
         {
-            return ProjectName.GetHashCode();
-        }
-
-        internal string Serialize()
-        {
-            StringBuilder xmlOutput = new StringBuilder();
-            XmlSerializer xmlSerializer = new XmlSerializer(GetType());
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = false;
-            settings.NewLineHandling = NewLineHandling.None;
-
-            using (XmlWriter writer = XmlWriter.Create(xmlOutput, settings))
-            {
-                xmlSerializer.Serialize(writer, this);
-                return xmlOutput.ToString();
-            }
-        }
-
-        internal static Project Deserialize(string objectData)
-        {
-            var serializer = new XmlSerializer(typeof(Project));
-            object result;
-
-            using (TextReader reader = new StringReader(objectData))
-            {
-                result = serializer.Deserialize(reader);
-            }
-            return result as Project;
+            return Name.GetHashCode();
         }
     }
 }

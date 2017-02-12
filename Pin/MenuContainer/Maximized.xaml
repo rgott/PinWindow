@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Pin.MenuContainer.Maximized"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pin.MenuContainer"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="100">
+    <Grid Background="Transparent">
+        <ToggleButton x:Name="UI_ToggleBtn_Tack" Background="White" Margin="60,0,0,0" Checked="UI_ToggleBtn_Tack_Checked" Unchecked="UI_ToggleBtn_Tack_Unchecked">
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Margin="0"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Left">
+                        <ContentPresenter x:Name="contentPresenter" 
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                            Content="{TemplateBinding Content}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"/>
+                        <Trigger Property="IsPressed" Value="True"/>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <Image Source="{StaticResource Tack-90deg}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </ToggleButton.Template>
+            <Image Source="{StaticResource Tack-45deg}"/>
+        </ToggleButton>
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Click="UI_Btn_Menu_Click">
+            <Image Source="{StaticResource Menu}"/>
+        </Button>
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Click="UI_Btn_Sizing_Click">
+            <Image Source="{StaticResource CloseArrow}"/>
+        </Button>
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="20,0,0,0" Click="UI_Btn_Exit_Click">
+            <Image Source="{StaticResource Exit}"/>
+        </Button>
+        <local:Minimized Margin="80,0,0,0"/>
+        <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" MouseLeave="UI_Popup_Menu_MouseLeave" Placement="MousePoint" Width="auto" Height="auto">
+            <Grid Background="White">
+                <Button Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
+            </Grid>
+        </Popup>
+    </Grid>
+</UserControl>

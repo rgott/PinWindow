@@ -27,7 +27,7 @@ namespace Pin
         /// <returns>Path of newly dropped file</returns>
         public static string[] dropData(Model.Project project, DragEventArgs e)
         {
-            if (String.IsNullOrEmpty(project.ProjectPath))
+            if (String.IsNullOrEmpty(project.Path))
             {
                 MessageBox.Show("Path Not set.");
                 return null;
@@ -47,10 +47,10 @@ namespace Pin
                         {
                             var fileNameIndex = matchValue.LastIndexOf('/') + 1;
                             var fileName = matchValue.Substring(fileNameIndex, matchValue.Length - fileNameIndex);
-                            DestinationPath = Path.Combine(project.ProjectPath, "_" + fileName);
+                            DestinationPath = Path.Combine(project.Path, "_" + fileName);
                             if (File.Exists(DestinationPath))
                             {
-                                DestinationPath = getCheckedRandomFileName(project.ProjectPath, fileName);
+                                DestinationPath = getCheckedRandomFileName(project.Path, fileName);
                             }
                             client.DownloadFile(matchValue, DestinationPath);
                         }
@@ -58,7 +58,7 @@ namespace Pin
                     else //if (matchValue.StartsWith("data")
                     { // contains a base 64 image
                         var extention = Regex.Match(matchValue, @"image\/(.*?);").Groups[1]?.Value; // finds the type of image (data:image/jpeg;...)
-                        DestinationPath = getCheckedRandomFileName(project.ProjectPath,"." + extention);
+                        DestinationPath = getCheckedRandomFileName(project.Path,"." + extention);
 
                         var base64 = Regex.Match(matchValue, "base64,(.*)").Groups[1]?.Value;
                         var bytes = Convert.FromBase64String(base64);
@@ -80,7 +80,7 @@ namespace Pin
                 {
                     foreach (string SourcePath in data)
                     {
-                        var DestinationPath = Path.Combine(project.ProjectPath, Path.GetFileName(SourcePath));
+                        var DestinationPath = Path.Combine(project.Path, Path.GetFileName(SourcePath));
                         //Console.WriteLine(String.Join(", ", item) + "\t=>\t" + DestinationPath);
                         try
                         {

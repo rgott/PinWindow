@@ -34,11 +34,11 @@ namespace Pin.ColorPicker
         }
 
 
-        public SolidColorBrush FillColor
+        public Brush FillColor
         {
             get
             {
-                return (SolidColorBrush)GetValue(FillColorProperty);
+                return (Brush)GetValue(FillColorProperty);
             }
             set
             {
