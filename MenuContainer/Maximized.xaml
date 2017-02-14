@@ -3,11 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="100">
     <Grid Background="Transparent">
-        <ToggleButton x:Name="UI_ToggleBtn_Tack" Background="White" Margin="60,0,0,0" Checked="UI_ToggleBtn_Tack_Checked" Unchecked="UI_ToggleBtn_Tack_Unchecked">
+        <ToggleButton x:Name="UI_ToggleBtn_Tack" Background="White" Margin="60,0,0,0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Checked">
+                    <i:InvokeCommandAction Command="{Binding CheckedBtnCmd}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Unchecked">
+                    <i:InvokeCommandAction Command="{Binding UncheckedBtnCmd}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <ToggleButton.Template>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border BorderBrush="{TemplateBinding BorderBrush}"
@@ -36,19 +45,19 @@
             </ToggleButton.Template>
             <Image Source="{StaticResource Tack-45deg}"/>
         </ToggleButton>
-        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Click="UI_Btn_Menu_Click">
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Command="{Binding MenuBtnCmd}">
             <Image Source="{StaticResource Menu}"/>
         </Button>
-        <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Click="UI_Btn_Sizing_Click">
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Command="{Binding SizingBtnCmd}">
             <Image Source="{StaticResource CloseArrow}"/>
         </Button>
-        <Button Background="White" Template="{StaticResource PinBtn}" Margin="20,0,0,0" Click="UI_Btn_Exit_Click">
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="20,0,0,0" Command="{Binding ExitBtnCmd}">
             <Image Source="{StaticResource Exit}"/>
         </Button>
         <local:Minimized Margin="80,0,0,0"/>
         <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" MouseLeave="UI_Popup_Menu_MouseLeave" Placement="MousePoint" Width="auto" Height="auto">
             <Grid Background="White">
-                <Button Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
+                <Button Command="{Binding CleanProjectsBtnCmd}" Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
             </Grid>
         </Popup>
     </Grid>

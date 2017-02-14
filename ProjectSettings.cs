@@ -17,6 +17,7 @@ namespace Pin
         public event EventHandler OnLoad;
         public void Load()
         {
+            if (_Projects == null) Properties.Settings.Default.Projects = new StringCollection();
             Projects = new List<ProjectViewModel>();
             foreach (string item in _Projects)
             {

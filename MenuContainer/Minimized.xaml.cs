@@ -20,24 +20,9 @@ namespace Pin.MenuContainer
     /// </summary>
     public partial class Minimized : UserControl
     {
-        public Brush FillColor
-        {
-            get { return (Brush)GetValue(FillColorProperty); }
-            set { SetValue(FillColorProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FillColorProperty =
-            DependencyProperty.Register("FillColor", typeof(Brush), typeof(Minimized), new PropertyMetadata(new SolidColorBrush(Colors.Orange)));
-
-
         public Minimized()
         {
-            DataContext = this;
             InitializeComponent();
         }
-
-        
-
     }
 }

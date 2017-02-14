@@ -14,9 +14,9 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <local:MinimizedOpen x:Name="UI_Grid_MinimizedOpen" FillColor="{Binding FillColor}" Style="{StaticResource ContainerStyle}"/>
-        <local:Maximized x:Name="UI_Grid_Maximized" FillColor="{Binding FillColor}" Style="{StaticResource ContainerStyle}"/>
-        <local:Minimized x:Name="UI_Grid_MinimizedClosed" FillColor="{Binding FillColor}" Style="{StaticResource ContainerStyle}" Visibility="Visible"/>
-        <local:ProjectView x:Name="UI_Grid_ProjectView" Style="{StaticResource ContainerStyle}"/>
+        <local:MinimizedOpen x:Name="UI_Grid_MinimizedOpen" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
+        <local:Maximized x:Name="UI_Grid_Maximized" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
+        <local:Minimized x:Name="UI_Grid_MinimizedClosed" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="Visible"/>
+        <local:ProjectView x:Name="UI_Grid_ProjectView" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
     </Grid>
 </UserControl>
