@@ -1,5 +1,4 @@
-﻿
-namespace Pin
+﻿namespace Pin
 {
     static class ClassExtensions
     {

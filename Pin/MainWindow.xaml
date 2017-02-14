@@ -34,7 +34,7 @@
             </Grid>
             <local:Project x:Name="UI_Project" Margin="0,20,0,0"/>
         </Grid>
-        <MenuContainer:Menu x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <MenuContainer:Menu x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" OnExit="UI_PinContainer_OnExit"/>
         <!--<PinContainer:Menu x:Name="UI_PinContainer" VerticalAlignment="Top" HorizontalAlignment="Left" 
                             OnCloseArrow="UI_PinContainer_OnCloseArrow" 
                             OnOpenArrow="UI_PinContainer_OnOpenArrow"

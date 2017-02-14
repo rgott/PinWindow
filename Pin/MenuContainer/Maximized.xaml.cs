@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pin.MenuContainer
 {
@@ -79,7 +69,7 @@ namespace Pin.MenuContainer
         public event RoutedEventHandler ExitClicked;
 
 
-        public delegate void WindowStateEventHandler(MouseOverController.WindowState requestState);
+        public delegate void WindowStateEventHandler(Pin.WindowState requestState);
         public event WindowStateEventHandler RequestChangeWindowState;
         private void UI_Btn_Sizing_Click(object sender, RoutedEventArgs e)
         {
@@ -94,7 +84,6 @@ namespace Pin.MenuContainer
         private void UI_Btn_Exit_Click(object sender, RoutedEventArgs e)
         {
             if (ExitClicked != null) ExitClicked(sender, e);
-            
         }
 
         private void UI_ToggleBtn_Tack_Checked(object sender, RoutedEventArgs e)

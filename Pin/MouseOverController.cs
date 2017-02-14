@@ -7,8 +7,6 @@ namespace Pin
 {
     public class MouseOverController
     {
-
-
         internal static bool isMoveOverWindow;
 
         public delegate void MouseLeaveMenuEventHandler(EventArgs e);
@@ -21,7 +19,7 @@ namespace Pin
 
         public static void Init()
         {
-            Win_State = MouseOverController.WindowState.Minimized;
+            Win_State = WindowState.Minimized;
             isPinned = false;
             isMouseOverMenu = false;
         }
@@ -82,25 +80,7 @@ namespace Pin
 
         public static bool CancellationRequested { get; set; }
 
-        public enum WindowState
-        {
-            Normal,
-            Pinned,
-            MinimizedOpen,
-            Minimized,
-            MinimizedDragging
-        }
-        public enum PinnedWindowState
-        {
-            open,
-            closed
-        }
-
-        public enum ActionEvent
-        {
-            Move = 0,
-            Copy = 1
-        }
+        
     }
 
 
