@@ -16,24 +16,24 @@ namespace Pin
             InitializeComponent();
             
             // load projects in form 
-            ProjectSettings.Instance.OnLoad += new System.EventHandler(delegate (object sender, System.EventArgs e)
+            ProjectViewModelList.Instance.OnLoad += new System.EventHandler(delegate (object sender, System.EventArgs e)
             {
-                foreach (ProjectViewModel item in ProjectSettings.Instance.Projects)
+                foreach (ProjectViewModel item in ProjectViewModelList.Instance.Projects)
                 {
                     projectPanel.Children.Add(newProject(item));
                 }
             });
 
-            ProjectSettings.Instance.OnAdd += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
+            ProjectViewModelList.Instance.OnAdd += new ProjectViewModelList.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
                 projectPanel.Children.Add(newProject(project));
             });
 
-            ProjectSettings.Instance.OnUpdate += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
+            ProjectViewModelList.Instance.OnUpdate += new ProjectViewModelList.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
             });
 
-            ProjectSettings.Instance.OnDelete += new ProjectSettings.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
+            ProjectViewModelList.Instance.OnDelete += new ProjectViewModelList.ProjectEventHandler(delegate (object sender, ProjectViewModel project)
             {
                 projectPanel.Children.Remove((sender as UserControl).Parent as UIElement);
             });
@@ -51,7 +51,7 @@ namespace Pin
 
             RButton.Content = projectItem;
 
-            if (ProjectSettings.Instance.isPrimaryProject(ViewModel.Project))
+            if (ProjectViewModelList.Instance.isPrimaryProject(ViewModel.Project))
             {
                 RButton.IsChecked = true;
             }
@@ -68,7 +68,7 @@ namespace Pin
                 if(RButtion.IsChecked == true)
                 {
                     var id = (RButtion.Content as ProjectItem);
-                    ProjectSettings.Instance.PrimaryProject = id.DataModel;
+                    ProjectViewModelList.Instance.PrimaryProject = id.DataModel;
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace Pin
                 UI_TxtBox_ProjectPath.Text.Replace('/', '\\'),
                 UI_ColorPicker_ColorSelectionBox.FillColor);
 
-            ProjectSettings.Instance.Add(this,ProjectModel);
+            ProjectViewModelList.Instance.Add(this,ProjectModel);
 
 
             popupToggle.IsOpen = false;

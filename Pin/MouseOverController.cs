@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Pin
 {
     public class MouseOverController
     {
+        public delegate bool MouseOverWindowHandler();
+        public static event MouseOverWindowHandler MouseOverWindow;
+
+
         internal static bool isMoveOverWindow;
 
         public delegate void MouseLeaveMenuEventHandler(EventArgs e);
@@ -66,7 +68,7 @@ namespace Pin
         {
             get
             {
-                return (bool)Application.Current.Properties["isMouseOverMenu"];
+                return (bool)Application.Current.Properties["isMouseOverMenu"] && !DoAllEqualsDesired<bool>(MouseOverWindow, false);
             }
             set
             {
@@ -80,8 +82,16 @@ namespace Pin
 
         public static bool CancellationRequested { get; set; }
 
-        
-    }
+        public static bool DoAllEqualsDesired<T>(Delegate del, T desired)
+        {
 
+            foreach (var item in del.GetInvocationList())
+            {
+                if(desired.Equals(item.DynamicInvoke()))
+                    return false;
+            }
+            return true;
+        }
+    }
 
 }

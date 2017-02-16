@@ -20,8 +20,10 @@
             <ToggleButton.Template>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderThickness="0"
                             Margin="0"
+                            Width="20"
+                            Height="20"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Left">
                         <ContentPresenter x:Name="contentPresenter" 
@@ -38,14 +40,20 @@
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <Image Source="{StaticResource Tack-45deg}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
                         <Trigger Property="IsChecked" Value="{x:Null}">
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </ToggleButton.Template>
-            <Image Source="{StaticResource Tack-45deg}"/>
         </ToggleButton>
-        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Command="{Binding MenuBtnCmd}">
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Click="Button_Click">
             <Image Source="{StaticResource Menu}"/>
         </Button>
         <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Command="{Binding SizingBtnCmd}">

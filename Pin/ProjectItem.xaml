@@ -7,6 +7,7 @@
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="400">
+    
     <UserControl.Resources>
         <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">
             <Border CornerRadius="3" Background="DarkGray" Height="15" Width="15">

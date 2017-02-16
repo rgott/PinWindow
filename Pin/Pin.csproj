@@ -124,11 +124,17 @@
     <Compile Include="ColorPicker\ColorSelectionBox.xaml.cs">
       <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Delegates.cs" />
     <Compile Include="DropDataHandler.cs" />
+    <Compile Include="MenuContainer\FrameworkElementAdorner.cs" />
+    <Compile Include="MenuContainer\FrameworkElementDropBehavior.cs" />
+    <Compile Include="MenuContainer\IDraggable.cs" />
+    <Compile Include="MenuContainer\IDroppable.cs" />
     <Compile Include="MenuContainer\IWindowController.cs" />
     <Compile Include="MenuContainer\Maximized.xaml.cs">
       <DependentUpon>Maximized.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MenuContainer\MenuItemViewModel.cs" />
     <Compile Include="MenuContainer\MenuViewModel.cs" />
     <Compile Include="MenuContainer\Minimized.xaml.cs">
       <DependentUpon>Minimized.xaml</DependentUpon>
@@ -146,7 +152,7 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="XmlSerializer.cs" />
     <Compile Include="ProjectViewModel.cs" />
-    <Compile Include="ProjectSettings.cs" />
+    <Compile Include="ProjectViewModelList.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />
     <Compile Include="MenuContainer\Menu.xaml.cs">

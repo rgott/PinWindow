@@ -1,23 +1,29 @@
-﻿using System;
-using System.ComponentModel;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
 namespace Pin
 {
-    public class ProjectViewModel : INotifyPropertyChanged
+    public class ProjectViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
+            RaisePropertyChanged(propertyName);
+        }
+        private bool _Vis_ProjectView = false;
+        public bool Vis_ProjectView
+        {
+            get
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                return _Vis_ProjectView;
+            }
+            set
+            {
+                _Vis_ProjectView = value;
+                RaisePropertyChanged();
             }
         }
-
-
         private Model.Project _Project;
         public Model.Project Project
         {
@@ -31,29 +37,27 @@ namespace Pin
                 UpdateAllProperties();
             }
         }
-        
 
         private delegate void Properties();
         Properties UpdateAllProperties;
         public ProjectViewModel(Model.Project project)
         {
             UpdateAllProperties = new Properties(
-                        () => NotifyPropertyChanged("ProjectName"));
+                                   () => NotifyPropertyChanged("ProjectName"));
             UpdateAllProperties += () => NotifyPropertyChanged("ProjectPath");
             UpdateAllProperties += () => NotifyPropertyChanged("FillColor");
 
             Project = project;
         }
 
-
         public void SaveProperties()
         {
-            ProjectSettings.Instance.Update(this,Project);
+            ProjectViewModelList.Instance.Update(this,Project);
         }
 
         public void DeleteProperties()
         {
-            ProjectSettings.Instance.Delete(this, Project);
+            ProjectViewModelList.Instance.Delete(this, Project);
         }
 
         public string ProjectName
@@ -106,5 +110,4 @@ namespace Pin
             }
         }
     }
-
 }
