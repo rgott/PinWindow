@@ -1,24 +1,24 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pin.Model;
 using System.Windows.Media;
-using static Pin.MouseOverController;
+using System.Linq;
 
 namespace Pin
 {
-    public class ProjectSettings
+    public class ProjectViewModelList : ViewModelBase
     {
         public delegate void ProjectEventHandler(object sender, ProjectViewModel project);
 
         public event EventHandler OnLoad;
+        
+        [Obsolete]
         public void Load()
         {
             if (_Projects == null) Properties.Settings.Default.Projects = new StringCollection();
-            Projects = new List<ProjectViewModel>();
+            Projects = new ObservableCollection<ProjectViewModel>();
             foreach (string item in _Projects)
             {
                 Projects.Add(new ProjectViewModel((Model.Project)item)); // deserialize all
@@ -28,13 +28,15 @@ namespace Pin
 
             if (OnLoad != null) OnLoad(this, EventArgs.Empty);
         }
-        private int NextID; 
+        private int NextID;
 
-        private static ProjectSettings _Instance = new ProjectSettings();
-        public static ProjectSettings Instance => _Instance;
-        private ProjectSettings()
+        [Obsolete]
+        private static ProjectViewModelList _Instance = new ProjectViewModelList();
+        [Obsolete]
+        public static ProjectViewModelList Instance => _Instance;
+        public ProjectViewModelList()
         {
-            Projects = new List<ProjectViewModel>();
+            Projects = new ObservableCollection<ProjectViewModel>();
             if (Properties.Settings.Default.Projects == null)
             {
                 Properties.Settings.Default.Projects = new StringCollection();
@@ -42,8 +44,8 @@ namespace Pin
             NextID = _Projects.Count;
         }
         
-        public StringCollection _Projects => Properties.Settings.Default.Projects;
-        public List<ProjectViewModel> Projects { get; set; }
+        private StringCollection _Projects => Properties.Settings.Default.Projects;
+        public IList<ProjectViewModel> Projects { get; set; }
 
 
 
@@ -118,18 +120,36 @@ namespace Pin
         public delegate void ProjectChangedEventHandler(ProjectViewModel project);
         public event ProjectChangedEventHandler PrimaryProjectChanged;
 
+                
+        private ProjectViewModel DefaultProjectViewModel => new ProjectViewModel(new Model.Project("", "", new SolidColorBrush(Colors.Orange)));
         public ProjectViewModel PrimaryProject
         {
             get
             {
-                return Projects?.Find(Model => Model.Project.ID == Properties.Settings.Default.PrimaryProjectId);
+                // never returns null
+                var vm = Projects?.FirstOrDefault(Model => Model.Project.ID == Properties.Settings.Default.PrimaryProjectId);
+                if (vm == null)
+                    vm = DefaultProjectViewModel;
+
+                return DefaultProjectViewModel;
             }
             set
             {
                 Properties.Settings.Default.PrimaryProjectId = value.Project.ID;
-                if (PrimaryProjectChanged != null) PrimaryProjectChanged(value);
 
+                if (PrimaryProjectChanged != null)
+                {
+
+                    if (value != null)
+                    {
+                        PrimaryProjectChanged(value);
+                    }
+                    else
+                    {
+                    }
+                }
             }
         }
+        
     }
 }

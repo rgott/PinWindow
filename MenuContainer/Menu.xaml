@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin.MenuContainer"
-             DragEnter="UserControl_DragEnter"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <UserControl.Resources>
         <Style x:Key="ContainerStyle" TargetType="UserControl">
@@ -12,11 +12,12 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
-        <local:MinimizedOpen x:Name="UI_Grid_MinimizedOpen" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
-        <local:Maximized x:Name="UI_Grid_Maximized" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
-        <local:Minimized x:Name="UI_Grid_MinimizedClosed" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="Visible"/>
-        <local:ProjectView x:Name="UI_Grid_ProjectView" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}"/>
+        <local:MinimizedOpen DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_MinimizedOpen,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:Maximized DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Maximized,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:Minimized DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Minimized,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:ProjectView x:Name="projectView" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_ProjectView, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>

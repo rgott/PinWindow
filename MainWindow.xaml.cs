@@ -33,8 +33,6 @@ namespace Pin
             }
         }
 
-
-
         private void OnMinimizedWindow(EventArgs e)
         {
             if (MinimizedWindow != null)
@@ -56,13 +54,21 @@ namespace Pin
 
         public MainWindow()
         {
-            MenuContainerBind = new MenuViewModel();
-            MenuContainerBind.OnExit += MenuContainerBind_OnExit;
-
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
             //Properties.Settings.Default.Upgrade();
-            
+
+            //ProjectViewModelList ProjectVML = new ProjectViewModelList();
+
+
+            var menuItemViewModel = new MenuItemViewModel();
+            menuItemViewModel.ChangedWindowState += MenuContainerBind_ChangedWindowState;
+            menuItemViewModel.OnUnPinned += MenuContainerBind_OnUnPinned;
+            menuItemViewModel.OnPinned += MenuContainerBind_OnPinned;
+            menuItemViewModel.OnExit += MenuContainerBind_OnExit;
+
+            MenuContainerBind = new MenuViewModel(menuItemViewModel);
+
             MouseOverController.Init();
             DataContext = this;
             InitializeComponent();
@@ -82,9 +88,25 @@ namespace Pin
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
         }
 
-        
+        private void MenuContainerBind_ChangedWindowState(WindowState? requestState)
+        {
+            WindowChangeState(requestState);
+        }
+
+        private void MenuContainerBind_OnUnPinned(object sender, EventArgs e)
+        {
+            WindowChangeState();
+        }
+
+        private void MenuContainerBind_OnPinned(object sender, EventArgs e)
+        {
+            WindowChangeState(Pin.WindowState.Pinned);
+        }
+
+
 
         #region Window Controller
+
         public void WindowChangeState(WindowState? wState = null)
         {
             if (wState == null)
@@ -109,7 +131,8 @@ namespace Pin
 
             Win_prev_State = MouseOverController.Win_State;
             MouseOverController.Win_State = (Pin.WindowState)wState;
-            UI_PinContainer.WindowChangeState(wState);
+
+            MenuContainerBind.Context.WindowChangeState(MouseOverController.Win_State);
             switch (wState)
             {
                 case Pin.WindowState.Pinned:
@@ -199,11 +222,11 @@ namespace Pin
                 var RButton = sender as RadioButton;
                 if (RButton.Name.Equals("UI_RadioButton_Copy"))
                 {
-                    ProjectSettings.Instance.setActionEvent(ActionEvent.Copy);
+                    ProjectViewModelList.Instance.setActionEvent(ActionEvent.Copy);
                 }
                 else if (RButton.Name.Equals("UI_RadioButton_Move"))
                 {
-                    ProjectSettings.Instance.setActionEvent(ActionEvent.Move);
+                    ProjectViewModelList.Instance.setActionEvent(ActionEvent.Move);
                 }
                 Properties.Settings.Default.Save();
             }
@@ -266,7 +289,7 @@ namespace Pin
             exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
             Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
 
-            ProjectSettings.Instance.Load();
+            ProjectViewModelList.Instance.Load();
         }
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
@@ -299,7 +322,7 @@ namespace Pin
 
         private void pinWindow_DragLeave(object sender, DragEventArgs e)
         {
-            if(MouseOverController.Win_State == Pin.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
+            if(MouseOverController.Win_State == Pin.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow && !MouseOverController.isMouseOverMenu)
             {
                 WindowChangeState(Pin.WindowState.Minimized);
             }
@@ -307,5 +330,9 @@ namespace Pin
 
         #endregion
 
+        private void UI_PinContainer_ChangedWindowState(WindowState? requestState)
+        {
+            WindowChangeState(requestState);
+        }
     }
 }
