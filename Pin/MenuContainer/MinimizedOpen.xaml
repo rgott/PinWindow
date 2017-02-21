@@ -6,7 +6,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="40">
+             d:DesignHeight="40" d:DesignWidth="250">
     <Grid>
         <Rectangle 
             Fill="{Binding UI_DragOut_Color,FallbackValue=Orange}"
@@ -28,5 +28,12 @@
             <Image Source="{StaticResource Exit}"/>
         </Button>
         <local:Minimized Margin="20,20,0,0" />
+        <ListView ItemsSource="{Binding ProjectList}" Margin="40,0,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:PinContainerProjectItem/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

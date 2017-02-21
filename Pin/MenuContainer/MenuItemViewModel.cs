@@ -11,7 +11,6 @@ namespace Pin.MenuContainer
     {
         #region Properties
 
-
         private string _UI_TextBlock_ActionEventType;
         public string UI_TextBlock_ActionEventType
         {
@@ -67,6 +66,7 @@ namespace Pin.MenuContainer
             set
             {
                 _SizingStatus = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -80,6 +80,20 @@ namespace Pin.MenuContainer
             set
             {
                 _UI_Popup_Menu_IsOpen = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ProjectViewModelList _Projectitems;
+        public ProjectViewModelList Projectitems
+        {
+            get
+            {
+                return _Projectitems;
+            }
+            set
+            {
+                _Projectitems = value;
                 RaisePropertyChanged();
             }
         }
@@ -168,7 +182,7 @@ namespace Pin.MenuContainer
         public RelayCommand CheckedBtnCmd { get; set; }
         public RelayCommand UncheckedBtnCmd { get; set; }
 
-        public MenuItemViewModel()
+        public MenuItemViewModel(ProjectViewModelList pList)
         {
             UncheckedBtnCmd = new RelayCommand(() => UncheckedBtn());
             CheckedBtnCmd = new RelayCommand(() => CheckedBtn());
@@ -187,6 +201,8 @@ namespace Pin.MenuContainer
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
             FillColor = new SolidColorBrush(Colors.Orange);
 
+            ProjectList = pList.Projects;
+
             ProjectViewModelList.Instance.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
             {
                 switch (e)
@@ -199,6 +215,8 @@ namespace Pin.MenuContainer
                         break;
                 }
             });
+
+            ProjectViewModelList.Instance.OnUpdate += Instance_OnUpdate;
 
             ProjectViewModelList.Instance.PrimaryProjectChanged += Instance_PrimaryProjectChanged;
 
@@ -235,7 +253,11 @@ namespace Pin.MenuContainer
 
         }
 
-        
+        private void Instance_OnUpdate(object sender, ProjectViewModel project)
+        {
+            RaisePropertyChanged("ProjectList");
+        }
+
         private void Instance_PrimaryProjectChanged(ProjectViewModel project)
         {
             FillColor = project.Project.Color;
@@ -286,7 +308,19 @@ namespace Pin.MenuContainer
             if (OnExit != null) OnExit(this, EventArgs.Empty);
         }
 
-        public ObservableCollection<ProjectViewModel> ProjectList { get; set; }
+        private ObservableCollection<ProjectViewModel> _ProjectList;
+        public ObservableCollection<ProjectViewModel> ProjectList
+        {
+            get
+            {
+                return _ProjectList;
+            }
+            set
+            {
+                _ProjectList = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #region PinContainerProjectItem
 

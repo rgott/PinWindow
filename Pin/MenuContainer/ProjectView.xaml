@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Pin"
+             xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel DragEnter="UI_UserControl_DragEnter" Background="White" DragLeave="UI_UserControl_DragLeave">
-        <!--<ListView>
+        <ListView ItemsSource="{Binding ProjectItems}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <local:PinContainerProjectItem/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>-->
+        </ListView>
         <StackPanel Margin="0,0,0,0" x:Name="UI_StackPanel_PinContainerProjects" Background="White">
             
         </StackPanel>

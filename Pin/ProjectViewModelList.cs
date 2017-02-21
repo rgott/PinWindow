@@ -45,7 +45,7 @@ namespace Pin
         }
         
         private StringCollection _Projects => Properties.Settings.Default.Projects;
-        public IList<ProjectViewModel> Projects { get; set; }
+        public ObservableCollection<ProjectViewModel> Projects { get; set; }
 
 
 
@@ -146,6 +146,7 @@ namespace Pin
                     }
                     else
                     {
+
                     }
                 }
             }

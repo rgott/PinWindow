@@ -29,12 +29,7 @@
             </Grid.RowDefinitions>
             <Border Background="#FF646769">
                 <Grid Margin="10" Grid.Row="0" VerticalAlignment="Top">
-                    <!--<Button Background="#FF646769" BorderBrush="#FF646769" HorizontalAlignment="Left">
-                        <Button.Content>
-                            <Image Source="images/menu.png"/>
-                        </Button.Content>
-                    </Button>-->
-                    <TextBlock Margin="0,0,0,0" FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
+                    <TextBlock FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
                     <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" Padding="0" Name="projects" Click="projects_Click">
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
@@ -51,7 +46,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ColorPicker:ColorSelectionBox x:Name="UI_ColorPicker_ColorSelectionBox" VerticalAlignment="Center" Margin="10,0,10,35"/>
+                                <ColorPicker:ColorSelectionBox x:Name="UI_ColorPicker_ColorSelectionBox" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
                                 <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

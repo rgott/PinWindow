@@ -54,14 +54,15 @@ namespace Pin
 
         public MainWindow()
         {
-            Properties.Settings.Default.Reset();
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Reset();
+            //Properties.Settings.Default.Save();
             //Properties.Settings.Default.Upgrade();
 
             //ProjectViewModelList ProjectVML = new ProjectViewModelList();
+            ProjectViewModelList list = new ProjectViewModelList();
+            
 
-
-            var menuItemViewModel = new MenuItemViewModel();
+            var menuItemViewModel = new MenuItemViewModel(list);
             menuItemViewModel.ChangedWindowState += MenuContainerBind_ChangedWindowState;
             menuItemViewModel.OnUnPinned += MenuContainerBind_OnUnPinned;
             menuItemViewModel.OnPinned += MenuContainerBind_OnPinned;
@@ -81,7 +82,7 @@ namespace Pin
                     UI_RadioButton_Move.IsChecked = true;
                     break;
                 case ActionEvent.Copy:
-                    UI_RadioButton_Move.IsChecked = true;
+                    UI_RadioButton_Move.IsChecked = false;
                     break;
             }
 
