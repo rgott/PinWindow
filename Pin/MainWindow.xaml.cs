@@ -12,6 +12,8 @@ using System.Windows.Interop;
 
 namespace Pin
 {
+    public delegate void WindowStateEventHandler(Pin.WindowState? requestState);
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

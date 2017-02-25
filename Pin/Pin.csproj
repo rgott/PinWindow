@@ -124,7 +124,6 @@
     <Compile Include="ColorPicker\ColorSelectionBox.xaml.cs">
       <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Delegates.cs" />
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\DisplayDropBehavior.cs" />
@@ -153,7 +152,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="XmlSerializer.cs" />
+    <Compile Include="CustomXmlSerializer.cs" />
     <Compile Include="ProjectViewModel.cs" />
     <Compile Include="ProjectViewModelList.cs" />
     <Compile Include="Model\XmlColor.cs" />

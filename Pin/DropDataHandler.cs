@@ -76,8 +76,7 @@ namespace Pin
                 return new string[] { DestinationPath };
             }
             return null;
-            //WebClient client = new WebClient();
-            //client.DownloadFile("data:image/jpeg;base64,/9j/4AAQSk...
+            // new WebClient().DownloadFile("data:image/jpeg;base64,/9j/4AAQSk...
         }
 
         public static string[] DropFileDrop(Model.Project project, DragEventArgs e)

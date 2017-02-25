@@ -38,7 +38,6 @@ namespace Pin
             }
         }
 
-        private delegate void Properties();
         public ProjectViewModel(Model.Project project)
         {
             Project = project;

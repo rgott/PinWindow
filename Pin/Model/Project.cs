@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace Pin.Model
 {
     [Serializable]
-    public class Project : XmlSerializer, IProject
+    public class Project : CustomXmlSerializer, IProject
     {
         public static explicit operator Model.Project(string obj)
         {
