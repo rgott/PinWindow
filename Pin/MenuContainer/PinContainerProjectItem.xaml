@@ -4,10 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Pin"
+             xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
              AllowDrop="True"
              d:DesignHeight="20" d:DesignWidth="20">
+    <i:Interaction.Behaviors>
+        <local:FrameworkElementDropBehavior DroppableProject="{Binding Project}"/>
+    </i:Interaction.Behaviors>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="DragEnter">
             <i:InvokeCommandAction Command="{Binding UC_DragEnterCmd}"/>

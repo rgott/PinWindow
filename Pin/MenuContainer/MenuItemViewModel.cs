@@ -7,9 +7,23 @@ using System.Windows.Media;
 
 namespace Pin.MenuContainer
 {
-    public class MenuItemViewModel : ViewModelBase, INotifyPropertyChanged
+    public class MenuItemViewModel : ViewModelBase
     {
         #region Properties
+        //depends on fill color
+        private ProjectViewModel _PrimaryProject;
+        public ProjectViewModel PrimaryProject
+        {
+            get
+            {
+                return _PrimaryProject;
+            }
+            set
+            {
+                _PrimaryProject = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private string _UI_TextBlock_ActionEventType;
         public string UI_TextBlock_ActionEventType
@@ -25,21 +39,6 @@ namespace Pin.MenuContainer
             }
         }
 
-
-        private Brush _FillColor;
-        public Brush FillColor
-        {
-            get
-            {
-                return _FillColor;
-            }
-            set
-            {
-                _FillColor = value;
-                RaisePropertyChanged();
-            }
-
-        }
 
         private bool _UI_ProjectView_IsOpen = false;
         public bool UI_ProjectView_IsOpen
@@ -111,6 +110,8 @@ namespace Pin.MenuContainer
                 RaisePropertyChanged();
             }
         }
+
+        #region Item Visibility
         private bool _Vis_Minimized = false;
         public bool Vis_Minimized
         {
@@ -153,7 +154,6 @@ namespace Pin.MenuContainer
             }
         }
 
-
         private bool _Vis_Maximized = false;
         public bool Vis_Maximized
         {
@@ -167,6 +167,7 @@ namespace Pin.MenuContainer
                 RaisePropertyChanged();
             }
         }
+        #endregion
         #endregion
 
         private bool PinStatus = false;
@@ -191,6 +192,7 @@ namespace Pin.MenuContainer
             ExitBtnCmd = new RelayCommand(() => ExitBtn());
             DragOutCmd = new RelayCommand(() => DragOut());
 
+
             //PinContainer
             UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
             UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
@@ -199,7 +201,6 @@ namespace Pin.MenuContainer
 
 
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
-            FillColor = new SolidColorBrush(Colors.Orange);
 
             ProjectList = pList.Projects;
 
@@ -220,37 +221,6 @@ namespace Pin.MenuContainer
 
             ProjectViewModelList.Instance.PrimaryProjectChanged += Instance_PrimaryProjectChanged;
 
-            //ProjectSettings.Instance.PrimaryProjectChanged += new ProjectSettings.ProjectChangedEventHandler(delegate (Model.Project project)
-            //{
-            //    //UI_StackPanel_PinContainerProjects.Children.Clear();
-
-            //    //var primaryProject = ProjectSettings.Instance.PrimaryProject;
-
-            //    //foreach (var item in ProjectSettings.Instance.Projects)
-            //    //{
-            //    //    if (primaryProject != null && primaryProject.Equals(item))
-            //    //    {
-            //    //        UI_StackPanel_PinContainerProjects.Children.Insert(0, new PinContainerProjectItem(item));
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        UI_StackPanel_PinContainerProjects.Children.Add(new PinContainerProjectItem(item));
-            //    //    }
-            //    //}
-            //    //if (UI_StackPanel_PinContainerProjects.Children.Count == 0)
-            //    //{
-            //    //    UI_TextBlock_FirstProject.Visibility = Visibility.Visible;
-            //    //}
-            //    //else
-            //    //{
-            //    //    UI_TextBlock_FirstProject.Visibility = Visibility.Collapsed;
-            //    //}
-
-            //    //UI_StackPanel_PinContainerProjects.UpdateLayout();
-
-            //    //FillColor = (project == null) ? new SolidColorBrush(Colors.Orange) : FillColor = project.Color;
-            //});
-
         }
 
         private void Instance_OnUpdate(object sender, ProjectViewModel project)
@@ -260,7 +230,7 @@ namespace Pin.MenuContainer
 
         private void Instance_PrimaryProjectChanged(ProjectViewModel project)
         {
-            FillColor = project.Project.Color;
+            PrimaryProject = project;
         }
 
         
@@ -275,8 +245,6 @@ namespace Pin.MenuContainer
             if (OnPinned != null) OnPinned(this, EventArgs.Empty);
             PinStatus = !PinStatus;
         }
-
-        
 
         private void MenuBtn()
         {
@@ -375,6 +343,11 @@ namespace Pin.MenuContainer
         
 
         public event WindowStateEventHandler ChangedWindowState;
+
+        /// <summary>
+        /// Executes events as well as windowchangestate method
+        /// </summary>
+        /// <param name="wState"></param>
         public void RaiseWindowChangeState(WindowState? wState = default(WindowState?))
         {
             if (ChangedWindowState != null) ChangedWindowState(wState);

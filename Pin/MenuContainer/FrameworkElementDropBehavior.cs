@@ -11,7 +11,6 @@ namespace Pin.MenuContainer
 {
     public class FrameworkElementDropBehavior : Behavior<FrameworkElement>
     {
-        private Type dataType;
         private FrameworkElementAdorner adorner;
 
         protected override void OnAttached()
@@ -20,75 +19,51 @@ namespace Pin.MenuContainer
 
             this.AssociatedObject.AllowDrop = true;
             this.AssociatedObject.DragEnter += AssociatedObject_DragEnter;
-            this.AssociatedObject.DragOver += AssociatedObject_DragOver;
             this.AssociatedObject.DragLeave += AssociatedObject_DragLeave;
             this.AssociatedObject.Drop += AssociatedObject_Drop;
         }
 
+        public ProjectViewModel DroppableProject
+        {
+            get { return (ProjectViewModel)GetValue(DroppableProjectProperty); }
+            set { SetValue(DroppableProjectProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DroppableProject.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DroppableProjectProperty =
+            DependencyProperty.Register("DroppableProject", typeof(ProjectViewModel), typeof(FrameworkElementDropBehavior));
+
         private void AssociatedObject_Drop(object sender, DragEventArgs e)
         {
-            if (dataType != null)
-            {
-                //if the data type can be dropped 
-                if (e.Data.GetDataPresent(dataType))
-                {
-                    //drop the data
-                    IDroppable target = this.AssociatedObject.DataContext as IDroppable;
-                    target.Drop(e.Data.GetData(dataType));
+            if (e.Data.GetFormats().contains(DataFormats.Html))
+            {// if html then from web retrieve and save or content
 
-                    //remove the data from the source
-                    IDraggable source = e.Data.GetData(dataType) as IDraggable;
-                    source.Remove(e.Data.GetData(dataType));
-                }
             }
+            else if (e.Data.GetFormats().contains(DataFormats.FileDrop))
+            {// file drop
+                DropDataHandler.dropData(DroppableProject.Project, e);
+            }
+
             if (this.adorner != null)
                 this.adorner.Remove();
 
             e.Handled = true;
-            return;
         }
 
         private void AssociatedObject_DragLeave(object sender, DragEventArgs e)
         {
+            this.SetDragDropEffects(e);
             if (this.adorner != null)
                 this.adorner.Remove();
-            e.Handled = true;
-        }
-
-        private void AssociatedObject_DragOver(object sender, DragEventArgs e)
-        {
-            if (dataType != null)
-            {
-                //if item can be dropped
-                if (e.Data.GetDataPresent(dataType))
-                {
-                    //give mouse effect
-                    this.SetDragDropEffects(e);
-                    //draw the dots
-                    if (this.adorner != null)
-                        this.adorner.Update();
-                }
-            }
             e.Handled = true;
         }
 
         private void AssociatedObject_DragEnter(object sender, DragEventArgs e)
         {
-            //if the DataContext implements IDropable, record the data type that can be dropped
-            if (this.dataType == null)
-            {
-                if (this.AssociatedObject.DataContext != null)
-                {
-                    IDroppable dropObject = this.AssociatedObject.DataContext as IDroppable;
-                    if (dropObject != null)
-                    {
-                        this.dataType = dropObject.DataType;
-                    }
-                }
-            }
-
+            this.SetDragDropEffects(e);
             if (this.adorner == null)
                 this.adorner = new FrameworkElementAdorner(sender as UIElement);
+
             e.Handled = true;
         }
 
@@ -96,8 +71,7 @@ namespace Pin.MenuContainer
         {
             e.Effects = DragDropEffects.None;  //default to None
 
-            //if the data type can be dropped 
-            if (e.Data.GetDataPresent(dataType))
+            if (e.Data.GetFormats().contains(DataFormats.Html) || e.Data.GetFormats().contains(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Move;
             }

@@ -28,9 +28,7 @@ namespace Pin
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
-            {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         private void OnMinimizedWindow(EventArgs e)
@@ -51,18 +49,16 @@ namespace Pin
                 NotifyPropertyChanged();
             }
         }
-
+        public ProjectViewModelList ProjectVML { get; set; }
         public MainWindow()
         {
             //Properties.Settings.Default.Reset();
             //Properties.Settings.Default.Save();
             //Properties.Settings.Default.Upgrade();
 
-            //ProjectViewModelList ProjectVML = new ProjectViewModelList();
-            ProjectViewModelList list = new ProjectViewModelList();
+            ProjectVML = new ProjectViewModelList(Properties.Settings.Default);
             
-
-            var menuItemViewModel = new MenuItemViewModel(list);
+            var menuItemViewModel = new MenuItemViewModel(ProjectVML);
             menuItemViewModel.ChangedWindowState += MenuContainerBind_ChangedWindowState;
             menuItemViewModel.OnUnPinned += MenuContainerBind_OnUnPinned;
             menuItemViewModel.OnPinned += MenuContainerBind_OnPinned;
@@ -315,12 +311,6 @@ namespace Pin
             }
         }
 
-        private void UI_pinWindow_DragEnter(object sender, DragEventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.MinimizedDragging);
-            DropDataHandler.setEffects(e);
-        }
-
         private void pinWindow_DragLeave(object sender, DragEventArgs e)
         {
             if(MouseOverController.Win_State == Pin.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow && !MouseOverController.isMouseOverMenu)
@@ -330,10 +320,5 @@ namespace Pin
         }
 
         #endregion
-
-        private void UI_PinContainer_ChangedWindowState(WindowState? requestState)
-        {
-            WindowChangeState(requestState);
-        }
     }
 }

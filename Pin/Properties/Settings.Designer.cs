@@ -108,13 +108,13 @@ namespace Pin.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int PrimaryProjectId {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PrimaryProjectName {
             get {
-                return ((int)(this["PrimaryProjectId"]));
+                return ((string)(this["PrimaryProjectName"]));
             }
             set {
-                this["PrimaryProjectId"] = value;
+                this["PrimaryProjectName"] = value;
             }
         }
         

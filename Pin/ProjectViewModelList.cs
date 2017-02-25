@@ -1,10 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Media;
 using System.Linq;
+using Pin.Properties;
 
 namespace Pin
 {
@@ -12,8 +12,19 @@ namespace Pin
     {
         public delegate void ProjectEventHandler(object sender, ProjectViewModel project);
 
+        public event ProjectEventHandler OnAdd;
+        public event ProjectEventHandler OnUpdate;
+        public event ProjectEventHandler OnDelete;
+
+        public delegate void ProjectChangedEventHandler(ProjectViewModel project);
+        public event ProjectChangedEventHandler PrimaryProjectChanged;
+
+        public delegate void ActionEventChangedEventHandler(ActionEvent actionevent);
+        public event ActionEventChangedEventHandler ActionEventChanged;
+
         public event EventHandler OnLoad;
-        
+
+        #region Rubbish
         [Obsolete]
         public void Load()
         {
@@ -28,31 +39,34 @@ namespace Pin
 
             if (OnLoad != null) OnLoad(this, EventArgs.Empty);
         }
-        private int NextID;
-
         [Obsolete]
-        private static ProjectViewModelList _Instance = new ProjectViewModelList();
+        private static ProjectViewModelList _Instance = new ProjectViewModelList(Properties.Settings.Default);
+        private Settings @default;
+
         [Obsolete]
         public static ProjectViewModelList Instance => _Instance;
-        public ProjectViewModelList()
-        {
-            Projects = new ObservableCollection<ProjectViewModel>();
-            if (Properties.Settings.Default.Projects == null)
-            {
-                Properties.Settings.Default.Projects = new StringCollection();
-            }
-            NextID = _Projects.Count;
-        }
-        
-        private StringCollection _Projects => Properties.Settings.Default.Projects;
+
+        #endregion
+
+        private StringCollection _Projects => Settings.Projects;
         public ObservableCollection<ProjectViewModel> Projects { get; set; }
-
-
-
-        public event ProjectEventHandler OnAdd;
-        public void Add(object sender, Model.Project Model)
+        public ISettings Settings { get; set; }
+        public ProjectViewModelList(ISettings Settings)
         {
-            Model.ID = NextID;
+            this.Settings = Settings;
+            if(_Projects == null) Settings.Projects = new StringCollection();
+            Projects = new ObservableCollection<ProjectViewModel>();
+
+            foreach (string item in _Projects)
+            {
+                Projects.Add(new ProjectViewModel((Model.Project)item)); // deserialize all
+            }
+        }
+
+        public bool Add(object sender, Model.Project Model)
+        {
+            if(Projects.FirstOrDefault(m => m.Project == Model) == null)
+                return false;
 
             var ViewModel = new ProjectViewModel(Model);
 
@@ -61,14 +75,15 @@ namespace Pin
 
             Save();
             if (OnAdd != null) OnAdd(sender, ViewModel);
+
+            return true;
         }
 
         private void Save()
         {
-            Properties.Settings.Default.Save();
+            Settings.Save();
         }
 
-        public event ProjectEventHandler OnUpdate;
         internal void Update(object sender, Model.Project Model)
         {
             var ViewModel = new ProjectViewModel(Model);
@@ -87,7 +102,6 @@ namespace Pin
             if (OnUpdate != null) OnUpdate(sender, ViewModel);    
         }
 
-        public event ProjectEventHandler OnDelete;
         internal void Delete(object sender, Model.Project Model)
         {
             var ViewModel = new ProjectViewModel(Model);
@@ -101,56 +115,37 @@ namespace Pin
             if (OnDelete != null) OnDelete(sender, ViewModel);
         }
 
-        internal bool isPrimaryProject(Model.Project project)
+        public bool isPrimaryProject(Model.Project project)
         {
-            return project.Equals(Properties.Settings.Default.PrimaryProjectId);
+            return project.Equals(Settings.PrimaryProjectName);
         }
-
-        public delegate void ActionEventChangedEventHandler(ActionEvent actionevent);
-        public event ActionEventChangedEventHandler ActionEventChanged;
 
         public void setActionEvent(ActionEvent actionevent)
         {
-            Properties.Settings.Default.ActionEvent = (int)actionevent;
-            Properties.Settings.Default.Save();
+            Settings.ActionEvent = (int)actionevent;
+            Settings.Save();
 
             if (ActionEventChanged != null) ActionEventChanged(actionevent);
         }
 
-        public delegate void ProjectChangedEventHandler(ProjectViewModel project);
-        public event ProjectChangedEventHandler PrimaryProjectChanged;
-
-                
         private ProjectViewModel DefaultProjectViewModel => new ProjectViewModel(new Model.Project("", "", new SolidColorBrush(Colors.Orange)));
         public ProjectViewModel PrimaryProject
         {
             get
             {
-                // never returns null
-                var vm = Projects?.FirstOrDefault(Model => Model.Project.ID == Properties.Settings.Default.PrimaryProjectId);
+                var vm = Projects?.FirstOrDefault(Model => Model.ProjectName == Settings.PrimaryProjectName);
                 if (vm == null)
                     vm = DefaultProjectViewModel;
 
-                return DefaultProjectViewModel;
+                return vm;
             }
             set
             {
-                Properties.Settings.Default.PrimaryProjectId = value.Project.ID;
+                Settings.PrimaryProjectName = value.Project.Name;
 
                 if (PrimaryProjectChanged != null)
-                {
-
-                    if (value != null)
-                    {
-                        PrimaryProjectChanged(value);
-                    }
-                    else
-                    {
-
-                    }
-                }
+                    PrimaryProjectChanged(value);
             }
         }
-        
     }
 }

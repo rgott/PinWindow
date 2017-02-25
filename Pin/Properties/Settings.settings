@@ -23,8 +23,8 @@
     <Setting Name="WINDOW_STATE_MINIMIZEDPINNED_HEIGHT" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
-    <Setting Name="PrimaryProjectId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+    <Setting Name="PrimaryProjectName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ActionEvent" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>

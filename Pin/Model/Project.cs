@@ -23,7 +23,6 @@ namespace Pin.Model
             return obj.Serialize();
         }
 
-        public int ID { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
 
@@ -33,11 +32,10 @@ namespace Pin.Model
         /// <summary>
         /// Used for Serialization
         /// </summary>
-        public Project() { }
+        protected Project() { }
 
         public Project(string Name, string Path, Brush Color)
         {
-            //this.ID = ID;
             this.Name = Name;
             this.Path = Path;
             this.Color = Color;
@@ -46,10 +44,6 @@ namespace Pin.Model
 
         public override bool Equals(object obj)
         {
-            if(obj is int)
-            {
-                return ID == obj as int?;
-            }
             if (obj is string)
             {
                 return Name.Equals(obj as string);

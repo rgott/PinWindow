@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Pin.MenuContainer"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
+    <i:Interaction.Behaviors>
+        <local:DisplayDropBehavior DragEnter="{Binding DragEnter}" DragLeave="{Binding DragLeave}" Drop="{Binding Drop}"/>
+    </i:Interaction.Behaviors>
     <UserControl.Resources>
         <Style x:Key="ContainerStyle" TargetType="UserControl">
             <Setter Property="Visibility" Value="Collapsed"/>

@@ -34,19 +34,13 @@ namespace Pin
             set
             {
                 _Project = value;
-                UpdateAllProperties();
+                RaisePropertyChanged();
             }
         }
 
         private delegate void Properties();
-        Properties UpdateAllProperties;
         public ProjectViewModel(Model.Project project)
         {
-            UpdateAllProperties = new Properties(
-                                   () => NotifyPropertyChanged("ProjectName"));
-            UpdateAllProperties += () => NotifyPropertyChanged("ProjectPath");
-            UpdateAllProperties += () => NotifyPropertyChanged("FillColor");
-
             Project = project;
         }
 
