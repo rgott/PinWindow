@@ -59,7 +59,8 @@ namespace Pin
             //Properties.Settings.Default.Upgrade();
 
             ProjectVML = new ProjectViewModelList(Properties.Settings.Default);
-            
+
+
             var menuItemViewModel = new MenuItemViewModel(ProjectVML);
             menuItemViewModel.ChangedWindowState += MenuContainerBind_ChangedWindowState;
             menuItemViewModel.OnUnPinned += MenuContainerBind_OnUnPinned;
@@ -221,11 +222,11 @@ namespace Pin
                 var RButton = sender as RadioButton;
                 if (RButton.Name.Equals("UI_RadioButton_Copy"))
                 {
-                    ProjectViewModelList.Instance.setActionEvent(ActionEvent.Copy);
+                    ProjectVML.setActionEvent(ActionEvent.Copy);
                 }
                 else if (RButton.Name.Equals("UI_RadioButton_Move"))
                 {
-                    ProjectViewModelList.Instance.setActionEvent(ActionEvent.Move);
+                    ProjectVML.setActionEvent(ActionEvent.Move);
                 }
                 Properties.Settings.Default.Save();
             }
@@ -287,8 +288,6 @@ namespace Pin
             // add to style that it is a tool window so it does not show in the task view (alt + tab)
             exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
             Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
-
-            ProjectViewModelList.Instance.Load();
         }
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)

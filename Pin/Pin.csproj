@@ -117,7 +117,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClassExtensions.cs" />
     <Compile Include="ColorPicker\PickerSelectionPlane.xaml.cs">
       <DependentUpon>PickerSelectionPlane.xaml</DependentUpon>
     </Compile>
@@ -127,11 +126,10 @@
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\DisplayDropBehavior.cs" />
-    <Compile Include="MenuContainer\FrameworkElementAdorner.cs" />
+    <Compile Include="MenuContainer\FrameWorkElementAdorner.cs" />
     <Compile Include="MenuContainer\FrameworkElementDropBehavior.cs" />
     <Compile Include="MenuContainer\IDraggable.cs" />
     <Compile Include="MenuContainer\IDroppable.cs" />
-    <Compile Include="MenuContainer\IWindowController.cs" />
     <Compile Include="MenuContainer\Maximized.xaml.cs">
       <DependentUpon>Maximized.xaml</DependentUpon>
     </Compile>

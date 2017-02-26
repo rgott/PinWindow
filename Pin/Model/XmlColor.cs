@@ -2,6 +2,9 @@
 
 namespace Pin.Model
 {
+    /// <summary>
+    /// Used to store brush value as xml
+    /// </summary>
     public class XmlColor
     {
         private Brush _Brush;

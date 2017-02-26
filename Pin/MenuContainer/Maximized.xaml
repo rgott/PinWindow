@@ -53,7 +53,7 @@
                 </ControlTemplate>
             </ToggleButton.Template>
         </ToggleButton>
-        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Click="Button_Click">
+        <Button Background="White" Template="{StaticResource PinBtn}" Margin="40,0,0,0" Command="{Binding Menu_Click}">
             <Image Source="{StaticResource Menu}"/>
         </Button>
         <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Command="{Binding SizingBtnCmd}">
@@ -63,7 +63,15 @@
             <Image Source="{StaticResource Exit}"/>
         </Button>
         <local:Minimized Margin="80,0,0,0"/>
-        <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" MouseLeave="UI_Popup_Menu_MouseLeave" Placement="MousePoint" Width="auto" Height="auto">
+        <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" Placement="MousePoint" Width="auto" Height="auto">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeave">
+                    <i:InvokeCommandAction Command="{Binding MouseOverFalseCmd}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding UI_Popup_Menu_ClickCmd}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <Grid Background="White">
                 <Button Command="{Binding CleanProjectsBtnCmd}" Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
             </Grid>

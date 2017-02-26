@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Linq;
 
 namespace Pin
 {
@@ -28,11 +29,11 @@ namespace Pin
                 return null;
             }
 
-            if (e.Data.GetFormats().contains(DataFormats.Html))
+            if (e.Data.GetFormats().Contains(DataFormats.Html))
             {// if html then from web retrieve and save or content
                 return DropHtml(project, e);
             }
-            else if(e.Data.GetFormats().contains(DataFormats.FileDrop))
+            else if(e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {// file drop
                 return DropFileDrop(project, e);
             }
@@ -126,7 +127,6 @@ namespace Pin
             return null;
         }
 
-
         /// <summary>
         /// Finds a random name for a file that does not exist
         /// </summary>
@@ -163,8 +163,8 @@ namespace Pin
 
         public static void setEffects(DragEventArgs e)
         {
-            if (e.Data.GetFormats().contains(DataFormats.Html)
-                && e.Data.GetFormats().contains(DataFormats.FileDrop))
+            if (e.Data.GetFormats().Contains(DataFormats.Html)
+                && e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {
                 e.Effects = getEffects((ActionEvent)Properties.Settings.Default.ActionEvent);
             }

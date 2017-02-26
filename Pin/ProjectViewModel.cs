@@ -43,16 +43,6 @@ namespace Pin
             Project = project;
         }
 
-        public void SaveProperties()
-        {
-            ProjectViewModelList.Instance.Update(this,Project);
-        }
-
-        public void DeleteProperties()
-        {
-            ProjectViewModelList.Instance.Delete(this, Project);
-        }
-
         public string ProjectName
         {
             get

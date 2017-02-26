@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="20" Height="20" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left">
-
     <Border Background="Transparent" IsHitTestVisible="True">
         <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding PrimaryProject.FillColor,FallbackValue=Orange,UpdateSourceTrigger=PropertyChanged}" />
     </Border>

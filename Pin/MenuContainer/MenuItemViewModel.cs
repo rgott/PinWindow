@@ -2,8 +2,8 @@
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Media;
+using Forms = System.Windows.Forms;
 
 namespace Pin.MenuContainer
 {
@@ -79,20 +79,6 @@ namespace Pin.MenuContainer
             set
             {
                 _UI_Popup_Menu_IsOpen = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ProjectViewModelList _Projectitems;
-        public ProjectViewModelList Projectitems
-        {
-            get
-            {
-                return _Projectitems;
-            }
-            set
-            {
-                _Projectitems = value;
                 RaisePropertyChanged();
             }
         }
@@ -175,7 +161,7 @@ namespace Pin.MenuContainer
         public event EventHandler OnUnPinned;
 
         public event EventHandler OnExit;
-
+        
         public RelayCommand SizingBtnCmd { get; set; }
         public RelayCommand ExitBtnCmd { get; set; }
         public RelayCommand DragOutCmd { get; set; }
@@ -183,28 +169,40 @@ namespace Pin.MenuContainer
         public RelayCommand CheckedBtnCmd { get; set; }
         public RelayCommand UncheckedBtnCmd { get; set; }
 
+        public RelayCommand AddProject_ClickCmd { get; set; }
+
+
+        public RelayCommand MouseOverFalseCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = false);
+        public RelayCommand MouseOverTrueCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = true);
+
+        public RelayCommand UI_Popup_Menu { get; set; }
+
+        public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
         public MenuItemViewModel(ProjectViewModelList pList)
         {
-            UncheckedBtnCmd = new RelayCommand(() => UncheckedBtn());
-            CheckedBtnCmd = new RelayCommand(() => CheckedBtn());
-            SizingBtnCmd = new RelayCommand(() => SizingBtn());
-            MenuBtnCmd = new RelayCommand(() => MenuBtn());
-            ExitBtnCmd = new RelayCommand(() => ExitBtn());
-            DragOutCmd = new RelayCommand(() => DragOut());
+            UncheckedBtnCmd = new RelayCommand(UncheckedBtn);
+            CheckedBtnCmd = new RelayCommand(CheckedBtn);
+            SizingBtnCmd = new RelayCommand(SizingBtn);
+            MenuBtnCmd = new RelayCommand(MenuBtn);
+            ExitBtnCmd = new RelayCommand(ExitBtn);
+            DragOutCmd = new RelayCommand(DragOut);
 
+            UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
+            UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
 
+            AddProject_ClickCmd = new RelayCommand(AddProject_Click);
+            UI_Btn_FolderBrowse_ClickCmd = new RelayCommand(UI_Btn_FolderBrowse_Click);
             //PinContainer
             UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
             UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
             UC_DropCmd = new RelayCommand(() => UC_Drop());
             UC_MouseEnterCmd = new RelayCommand(() => UC_MouseEnter());
 
-
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
 
-            ProjectList = pList.Projects;
+            ProjectList = pList;
 
-            ProjectViewModelList.Instance.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
+            pList.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
             {
                 switch (e)
                 {
@@ -217,23 +215,107 @@ namespace Pin.MenuContainer
                 }
             });
 
-            ProjectViewModelList.Instance.OnUpdate += Instance_OnUpdate;
-
-            ProjectViewModelList.Instance.PrimaryProjectChanged += Instance_PrimaryProjectChanged;
-
         }
-
-        private void Instance_OnUpdate(object sender, ProjectViewModel project)
+        public delegate void ProjectItemDropEventHandler(object sender, Model.Project project, string[] sourcePaths);
+        public event ProjectItemDropEventHandler ProjectItemDropped;
+        public RelayCommand UI_Btn_FolderBrowse_ClickCmd { get; set; } 
+        private void UI_Btn_FolderBrowse_Click()
         {
-            RaisePropertyChanged("ProjectList");
+            Forms.FolderBrowserDialog path = new Forms.FolderBrowserDialog();
+            path.ShowDialog();
+
+            // change current version
+            UI_TxtBox_ProjectPath = path.SelectedPath;
         }
 
-        private void Instance_PrimaryProjectChanged(ProjectViewModel project)
+        private string _UI_TxtBox_ProjectName;
+        public string UI_TxtBox_ProjectName
         {
-            PrimaryProject = project;
+            get
+            {
+                return _UI_TxtBox_ProjectName;
+            }
+            set
+            {
+                _UI_TxtBox_ProjectName = value;
+                RaisePropertyChanged();
+            }
         }
 
-        
+        private string _UI_TxtBox_ProjectPath;
+        public string UI_TxtBox_ProjectPath
+        {
+            get
+            {
+                return _UI_TxtBox_ProjectPath;
+            }
+            set
+            {
+                _UI_TxtBox_ProjectPath = value.Replace('/', '\\');
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private Brush _UI_ColorPicker_ColorSelectionBox;
+        public Brush UI_ColorPicker_ColorSelectionBox
+        {
+            get
+            {
+                return _UI_ColorPicker_ColorSelectionBox;
+            }
+            set
+            {
+                _UI_ColorPicker_ColorSelectionBox = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _popupToggle_IsChecked;
+        public bool popupToggle_IsChecked
+        {
+            get
+            {
+                return _popupToggle_IsChecked;
+            }
+            set
+            {
+                _popupToggle_IsChecked = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private string _addP_Text = "+";
+        public string addP_Text
+        {
+            get
+            {
+                return _addP_Text;
+            }
+            set
+            {
+                _addP_Text = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private void AddProject_Click()
+        {
+            var ProjectModel = new Model.Project(
+                UI_TxtBox_ProjectName,
+                UI_TxtBox_ProjectPath,
+                UI_ColorPicker_ColorSelectionBox);
+
+            ProjectList.Add(this, ProjectModel);
+
+            popupToggle_IsChecked = false;
+            addP_Text = "+";
+            UI_TxtBox_ProjectName = "";
+            UI_TxtBox_ProjectPath = "";
+            MouseOverController.isProjectOpen = false;
+        }
+
         private void UncheckedBtn()
         {
             if (OnUnPinned != null) OnUnPinned(this, EventArgs.Empty);
@@ -276,8 +358,8 @@ namespace Pin.MenuContainer
             if (OnExit != null) OnExit(this, EventArgs.Empty);
         }
 
-        private ObservableCollection<ProjectViewModel> _ProjectList;
-        public ObservableCollection<ProjectViewModel> ProjectList
+        private ProjectViewModelList _ProjectList;
+        public ProjectViewModelList ProjectList
         {
             get
             {

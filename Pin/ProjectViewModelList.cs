@@ -41,7 +41,6 @@ namespace Pin
         }
         [Obsolete]
         private static ProjectViewModelList _Instance = new ProjectViewModelList(Properties.Settings.Default);
-        private Settings @default;
 
         [Obsolete]
         public static ProjectViewModelList Instance => _Instance;
@@ -73,16 +72,12 @@ namespace Pin
             Projects.Add(ViewModel);
             _Projects.Add((string)Model);
 
-            Save();
+            Settings.Save();
             if (OnAdd != null) OnAdd(sender, ViewModel);
 
             return true;
         }
 
-        private void Save()
-        {
-            Settings.Save();
-        }
 
         internal void Update(object sender, Model.Project Model)
         {
@@ -98,7 +93,7 @@ namespace Pin
                 PrimaryProject = ViewModel;
             }
 
-            Save();
+            Settings.Save();
             if (OnUpdate != null) OnUpdate(sender, ViewModel);    
         }
 
@@ -111,7 +106,7 @@ namespace Pin
             Projects.RemoveAt(index);
             _Projects.RemoveAt(index);
 
-            Save();
+            Settings.Save();
             if (OnDelete != null) OnDelete(sender, ViewModel);
         }
 

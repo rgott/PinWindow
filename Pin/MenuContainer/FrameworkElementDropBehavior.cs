@@ -35,11 +35,11 @@ namespace Pin.MenuContainer
 
         private void AssociatedObject_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetFormats().contains(DataFormats.Html))
+            if (e.Data.GetFormats().Contains(DataFormats.Html))
             {// if html then from web retrieve and save or content
 
             }
-            else if (e.Data.GetFormats().contains(DataFormats.FileDrop))
+            else if (e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {// file drop
                 DropDataHandler.dropData(DroppableProject.Project, e);
             }
@@ -71,7 +71,7 @@ namespace Pin.MenuContainer
         {
             e.Effects = DragDropEffects.None;  //default to None
 
-            if (e.Data.GetFormats().contains(DataFormats.Html) || e.Data.GetFormats().contains(DataFormats.FileDrop))
+            if (e.Data.GetFormats().Contains(DataFormats.Html) || e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Move;
             }

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.IO;
-using System.Text;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Serialization;
@@ -29,16 +24,19 @@ namespace Pin.Model
         [XmlElement(Type = typeof(XmlColor))]
         public Brush Color { get; set; }
 
+        public bool IsPrimary { get; set; }
+
         /// <summary>
         /// Used for Serialization
         /// </summary>
         protected Project() { }
 
-        public Project(string Name, string Path, Brush Color)
+        public Project(string Name, string Path, Brush Color, bool IsPrimary = false)
         {
             this.Name = Name;
             this.Path = Path;
             this.Color = Color;
+            this.IsPrimary = IsPrimary;
         }
 
 

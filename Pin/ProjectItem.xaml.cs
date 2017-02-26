@@ -35,7 +35,6 @@ namespace Pin
         private void UI_Btn_Save_Click(object sender, RoutedEventArgs e)
         {
             DataModel.FillColor = UI_ColorSelectionBox.FillColor;
-            DataModel.SaveProperties();
             UI_Btn_Cancel_Click(sender, e); // revert to previous state
         }
 
@@ -82,7 +81,6 @@ namespace Pin
 
         private void UI_MenuItem_Delete_Click(object sender, RoutedEventArgs e)
         {
-            DataModel.DeleteProperties();
         }
     }
 }

@@ -36,16 +36,16 @@
                                 <Setter Property="Foreground" Value="White"/>
                             </Style>
                         </ToggleButton.Style>
-                        <TextBlock Name="addP" VerticalAlignment="Center" HorizontalAlignment="Center" Text="+"/>
+                        <TextBlock Name="addP" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding addP_Text}"/>
                     </ToggleButton>
-                    <Popup Name="popupToggle" IsOpen="{Binding IsChecked, ElementName=projects}" MouseEnter="popupToggle_MouseEnter" Placement="Left" HorizontalOffset="280" VerticalOffset="29">
+                    <Popup Name="popupToggle" IsOpen="{Binding popupToggle_IsChecked, ElementName=projects}" Placement="Left" HorizontalOffset="280" VerticalOffset="29">
                         <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1">
                             <Grid Width="280" Background="#FF646769" Height="91">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ColorPicker:ColorSelectionBox x:Name="UI_ColorPicker_ColorSelectionBox" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
+                                <ColorPicker:ColorSelectionBox FillColor="{Binding UI_ColorPicker_ColorSelectionBox}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
                                 <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -53,7 +53,7 @@
                                         <ColumnDefinition Width="10"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
-                                    <TextBox Name="UI_TxtBox_ProjectName" Grid.Column="1"/>
+                                    <TextBox Text="{Binding UI_TxtBox_ProjectName}" Grid.Column="1"/>
                                 </Grid>
                                 <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
@@ -63,20 +63,24 @@
                                         <ColumnDefinition Width="10"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
-                                    <TextBox Name="UI_TxtBox_ProjectPath" Grid.Column="1"/>
-                                    <Button x:Name="UI_Btn_FolderBrowse" Click="UI_Btn_FolderBrowse_Click" Grid.Column="2">Browse</Button>
+                                    <TextBox Text="{Binding UI_TxtBox_ProjectPath}" Grid.Column="1"/>
+                                    <Button x:Name="UI_Btn_FolderBrowse" Command="{Binding UI_Btn_FolderBrowse_ClickCmd}" Grid.Column="2">Browse</Button>
                                 </Grid>
-                                <Button Name="UI_Btn_AddProject" Click="UI_Btn_AddProject_Click" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
+                                <Button Name="UI_Btn_AddProject" Command="{Binding AddProject_ClickCmd}" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
                             </Grid>
                         </Border>
                     </Popup>
                 </Grid>
             </Border>
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-                <StackPanel Name="projectPanel">
-                    <!-- Dynamic content is filled here -->
-                </StackPanel>
-            </ScrollViewer>
+            <ListBox Grid.Row="1" Template="{StaticResource ListViewProjects}" SelectedItem="{Binding PrimaryProject}" ItemsSource="{Binding ProjectList.Projects}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton Template="{StaticResource StyledRadioButton}" Checked="RButton_Checked">
+                            <local:ProjectItem/>
+                        </RadioButton>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </Grid>
 </UserControl>
