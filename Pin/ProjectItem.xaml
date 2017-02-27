@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Pin"
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="400">
+             d:DesignHeight="50" d:DesignWidth="400">
     
     <UserControl.Resources>
         <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">

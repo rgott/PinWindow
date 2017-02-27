@@ -21,7 +21,6 @@ namespace Pin
         }
         public ProjectItem()
         {
-            DataContext = DataModel = new ProjectViewModel(new Model.Project("Blah","Blah",new SolidColorBrush(Colors.Blue)));
             InitializeComponent();
 
             UI_ColorSelectionBox.FillColor = new System.Windows.Media.SolidColorBrush(Colors.Red);

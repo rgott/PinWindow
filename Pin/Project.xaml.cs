@@ -19,10 +19,6 @@ namespace Pin
 
         private void RButton_Checked(object sender, RoutedEventArgs e)
         {
-            if(sender is RadioButton)
-            {
-                
-            }
         }
 
         private void projects_Click(object sender, RoutedEventArgs e)
