@@ -124,6 +124,8 @@
       <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="DropDataHandler.cs" />
+    <Compile Include="IMainWindow.cs" />
+    <Compile Include="IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\DisplayDropBehavior.cs" />
     <Compile Include="MenuContainer\FrameWorkElementAdorner.cs" />
@@ -141,6 +143,8 @@
     <Compile Include="MenuContainer\MinimizedOpen.xaml.cs">
       <DependentUpon>MinimizedOpen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectFactory.cs" />
+    <Compile Include="ProjectViewModel.cs" />
     <Compile Include="Model\IProject.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="MenuContainer\ProjectView.xaml.cs">
@@ -151,7 +155,6 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="CustomXmlSerializer.cs" />
-    <Compile Include="ProjectViewModel.cs" />
     <Compile Include="ProjectViewModelList.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />

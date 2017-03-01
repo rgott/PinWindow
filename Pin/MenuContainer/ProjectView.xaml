@@ -5,21 +5,35 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin.MenuContainer"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <StackPanel DragEnter="UI_UserControl_DragEnter" Background="Transparent" DragLeave="UI_UserControl_DragLeave" >
-        <ListBox Template="{StaticResource ListViewProjects}" Background="Black" ItemsSource="{Binding ProjectList.Projects}">
+        <ListBox x:Name="LstBx" Template="{StaticResource ListViewProjects}" Background="Black" ItemsSource="{Binding ProjectList.Projects}" Margin="0">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="Border" SnapsToDevicePixels="true">
+                                    <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <local:PinContainerProjectItem/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <!--<StackPanel Margin="0,0,0,0" x:Name="UI_StackPanel_PinContainerProjects" Background="White">
-            
-        </StackPanel>-->
-        <TextBlock x:Name="UI_TextBlock_FirstProject" Text="Add a project first" Padding="10" Background="{StaticResource MainAppThemeColor}"  Foreground="{StaticResource MainTextColor}" FontSize="15"/>
-        <Popup x:Name="UIPOPUP" IsOpen="{Binding UI_ProjectView_IsOpen}" Placement="Bottom" DragEnter="UI_UserControl_DragEnter" DragLeave="UI_UserControl_DragLeave" MouseMove="UI_TextBlock_FirstProject_MouseMove">
+        <TextBlock x:Name="UI_TextBlock_FirstProject" Margin="6" Text="Add a project first" Visibility="{Binding LstBx.Items.Count}" Padding="10" Background="{StaticResource MainAppThemeColor}"  Foreground="{StaticResource MainTextColor}" FontSize="15"/>
+        <Popup x:Name="UIPOPUP" IsOpen="{Binding UI_ProjectView_IsOpenm,FallbackValue=true}" Placement="Bottom" DragEnter="UI_UserControl_DragEnter" DragLeave="UI_UserControl_DragLeave" MouseMove="UI_TextBlock_FirstProject_MouseMove">
             <Border Margin="0,0,0,0" Padding="3" Background="{StaticResource MainAppThemeColor}" BorderBrush="DarkBlue" BorderThickness="1">
                 <TextBlock Text="{Binding UI_TextBlock_ActionEventType,FallbackValue=Move}" Foreground="{StaticResource MainTextColor}"/>
             </Border>

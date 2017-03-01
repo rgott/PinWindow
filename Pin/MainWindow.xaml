@@ -31,9 +31,8 @@
                     </UniformGrid>
                 </Border>
             </Grid>
-            <local:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind}" Margin="0,20,0,0"/>
+            <local:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind.Context}" Margin="0,20,0,0"/>
         </Grid>
-            
         <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using Pin.MenuContainer;
+using Pin.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +24,15 @@ namespace Pin.MenuContainer
             this.AssociatedObject.Drop += AssociatedObject_Drop;
         }
 
-        public ProjectViewModel DroppableProject
+        public IProject DroppableProject
         {
-            get { return (ProjectViewModel)GetValue(DroppableProjectProperty); }
+            get { return (IProject)GetValue(DroppableProjectProperty); }
             set { SetValue(DroppableProjectProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for DroppableProject.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DroppableProjectProperty =
-            DependencyProperty.Register("DroppableProject", typeof(ProjectViewModel), typeof(FrameworkElementDropBehavior));
+            DependencyProperty.Register("DroppableProject", typeof(IProject), typeof(FrameworkElementDropBehavior));
 
         private void AssociatedObject_Drop(object sender, DragEventArgs e)
         {
@@ -41,7 +42,7 @@ namespace Pin.MenuContainer
             }
             else if (e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {// file drop
-                DropDataHandler.dropData(DroppableProject.Project, e);
+                DropDataHandler.dropData(DroppableProject, e);
             }
 
             if (this.adorner != null)

@@ -17,7 +17,7 @@ namespace Pin
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window, INotifyPropertyChanged , IMainWindow
     {
         public delegate void MinimizedWindowEventHandler(EventArgs e);
 
@@ -51,6 +51,22 @@ namespace Pin
                 NotifyPropertyChanged();
             }
         }
+
+
+        private MenuItemViewModel _MenuItemContainerBinding;
+        public MenuItemViewModel MenuItemContainerBinding
+        {
+            get
+            {
+                return _MenuItemContainerBinding;
+            }
+            set
+            {
+                _MenuItemContainerBinding = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public ProjectViewModelList ProjectVML { get; set; }
         public MainWindow()
         {
@@ -58,16 +74,15 @@ namespace Pin
             //Properties.Settings.Default.Save();
             //Properties.Settings.Default.Upgrade();
 
+            Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
+            Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
+
             ProjectVML = new ProjectViewModelList(Properties.Settings.Default);
 
 
-            var menuItemViewModel = new MenuItemViewModel(ProjectVML);
-            menuItemViewModel.ChangedWindowState += MenuContainerBind_ChangedWindowState;
-            menuItemViewModel.OnUnPinned += MenuContainerBind_OnUnPinned;
-            menuItemViewModel.OnPinned += MenuContainerBind_OnPinned;
-            menuItemViewModel.OnExit += MenuContainerBind_OnExit;
+            MenuItemContainerBinding = new MenuItemViewModel(this, ProjectVML);
 
-            MenuContainerBind = new MenuViewModel(menuItemViewModel);
+            MenuContainerBind = new MenuViewModel(MenuItemContainerBinding);
 
             MouseOverController.Init();
             DataContext = this;
@@ -88,22 +103,6 @@ namespace Pin
             MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
         }
 
-        private void MenuContainerBind_ChangedWindowState(WindowState? requestState)
-        {
-            WindowChangeState(requestState);
-        }
-
-        private void MenuContainerBind_OnUnPinned(object sender, EventArgs e)
-        {
-            WindowChangeState();
-        }
-
-        private void MenuContainerBind_OnPinned(object sender, EventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.Pinned);
-        }
-
-
 
         #region Window Controller
 
@@ -115,11 +114,7 @@ namespace Pin
                 {
                     wState = Pin.WindowState.Pinned;
                 }
-                else if (MouseOverController.Win_State == Pin.WindowState.Minimized)
-                {
-                    wState = Pin.WindowState.Normal;
-                }
-                else if (MouseOverController.Win_State == Pin.WindowState.Pinned)
+                else if (MouseOverController.Win_State == Pin.WindowState.Minimized || MouseOverController.Win_State == Pin.WindowState.Pinned)
                 {
                     wState = Pin.WindowState.Normal;
                 }
@@ -135,10 +130,9 @@ namespace Pin
             MenuContainerBind.Context.WindowChangeState(MouseOverController.Win_State);
             switch (wState)
             {
+                // remove width and height changes
                 case Pin.WindowState.Pinned:
                     MouseOverController.isPinned = true;
-                    Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
-                    Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
                     border.Visibility = Visibility.Visible;
                     break;
                 case Pin.WindowState.Normal:
@@ -159,7 +153,7 @@ namespace Pin
                     break;
                 case Pin.WindowState.MinimizedDragging:
                     border.Visibility = Visibility.Hidden;
-                    Width = 1000;
+                    Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
                     Height = 1000;
                     break;
             }
@@ -232,51 +226,6 @@ namespace Pin
             }
         }
 
-        #region PinContainer Events
-        private void UI_PinContainer_OnCloseArrow(object sender, EventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.Minimized);
-        }
-
-        private void UI_PinContainer_OnOpenArrow(object sender, EventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.Normal);
-        }
-
-        private void UI_PinContainer_OnCloseMenu(object sender, EventArgs e)
-        {
-            // TODO: create menu
-        }
-
-        private void UI_PinContainer_OnOpenMenu(object sender, EventArgs e)
-        {
-            // TODO: create menu
-        }
-
-        private void UI_PinContainer_OnUnPinned(object sender, EventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.Normal);
-        }
-
-        private void UI_PinContainer_OnPinned(object sender, EventArgs e)
-        {
-            WindowChangeState(Pin.WindowState.Pinned);
-        }
-
-        private void UI_PinContainer_OnExit(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.Save();
-
-            Close();
-        }
-        private void MenuContainerBind_OnExit(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.Save();
-
-            Close();
-        }
-        #endregion
-
         #region Window Events
         private void pinWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -318,6 +267,13 @@ namespace Pin
             {
                 WindowChangeState(Pin.WindowState.Minimized);
             }
+        }
+
+        public void onExit()
+        {
+            Properties.Settings.Default.Save();
+
+            Close();
         }
 
         #endregion

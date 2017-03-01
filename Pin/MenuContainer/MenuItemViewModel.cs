@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Pin.Model;
 using System;
-using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
 
@@ -9,18 +9,80 @@ namespace Pin.MenuContainer
 {
     public class MenuItemViewModel : ViewModelBase
     {
+        private bool PinStatus = false;
+
+        public RelayCommand SizingBtnCmd { get; set; }
+        public RelayCommand ExitBtnCmd { get; set; }
+        public RelayCommand DragOutCmd { get; set; }
+        public RelayCommand CheckedBtnCmd { get; set; }
+        public RelayCommand UncheckedBtnCmd { get; set; }
+
+        public RelayCommand AddProject_ClickCmd { get; set; }
+
+        public RelayCommand MouseOverFalseCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = false);
+        public RelayCommand MouseOverTrueCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = true);
+
+
+        public RelayCommand UI_Popup_Menu { get; set; }
+
+        public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
+
+        private bool UI_Popup_Menu_IsOpen = false;
+        public IMainWindow Window { get; set; }
+
+        public RelayCommand DeleteProject { get; set; }
+
+        public MenuItemViewModel(IMainWindow window, ProjectViewModelList pList)
+        {
+            UncheckedBtnCmd = new RelayCommand(UncheckedBtn);
+            CheckedBtnCmd = new RelayCommand(CheckedBtn);
+            SizingBtnCmd = new RelayCommand(SizingBtn);
+            ExitBtnCmd = new RelayCommand(window.onExit);
+            DragOutCmd = new RelayCommand(DragOut);
+            this.Window = window;
+            UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
+            UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
+            AddProject_ClickCmd = new RelayCommand(AddProject_Click);
+            UI_Btn_FolderBrowse_ClickCmd = new RelayCommand(UI_Btn_FolderBrowse_Click);
+            //PinContainer
+            UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
+            UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
+            UC_DropCmd = new RelayCommand(() => UC_Drop());
+            UC_MouseEnterCmd = new RelayCommand(() => UC_MouseEnter());
+
+            UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
+
+            ProjectList = pList;
+            DeleteProject = new RelayCommand(() => ProjectList.Delete(SelectedProject));
+            pList.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
+            {
+                switch (e)
+                {
+                    case ActionEvent.Copy:
+                        UI_TextBlock_ActionEventType = "Copy";
+                        break;
+                    case ActionEvent.Move:
+                        UI_TextBlock_ActionEventType = "Move";
+                        break;
+                }
+            });
+
+        }
+
+        
+
+
         #region Properties
-        //depends on fill color
-        private ProjectViewModel _PrimaryProject;
-        public ProjectViewModel PrimaryProject
+        private IProject _SelectedProject;
+        public IProject SelectedProject
         {
             get
             {
-                return _PrimaryProject;
+                return _SelectedProject;
             }
             set
             {
-                _PrimaryProject = value;
+                _SelectedProject = value;
                 RaisePropertyChanged();
             }
         }
@@ -35,50 +97,6 @@ namespace Pin.MenuContainer
             set
             {
                 _UI_TextBlock_ActionEventType = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        private bool _UI_ProjectView_IsOpen = false;
-        public bool UI_ProjectView_IsOpen
-        {
-            get
-            {
-                return _UI_ProjectView_IsOpen;
-            }
-
-            set
-            {
-                _UI_ProjectView_IsOpen = value;
-                RaisePropertyChanged();
-            }
-        }
-        private bool _SizingStatus;
-
-        public bool SizingStatus
-        {
-            get
-            {
-                return _SizingStatus;
-            }
-            set
-            {
-                _SizingStatus = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool _UI_Popup_Menu_IsOpen = false;
-        public bool UI_Popup_Menu_IsOpen
-        {
-            get
-            {
-                return _UI_Popup_Menu_IsOpen;
-            }
-            set
-            {
-                _UI_Popup_Menu_IsOpen = value;
                 RaisePropertyChanged();
             }
         }
@@ -156,68 +174,9 @@ namespace Pin.MenuContainer
         #endregion
         #endregion
 
-        private bool PinStatus = false;
-        public event EventHandler OnPinned;
-        public event EventHandler OnUnPinned;
-
-        public event EventHandler OnExit;
-        
-        public RelayCommand SizingBtnCmd { get; set; }
-        public RelayCommand ExitBtnCmd { get; set; }
-        public RelayCommand DragOutCmd { get; set; }
-        public RelayCommand MenuBtnCmd { get; set; }
-        public RelayCommand CheckedBtnCmd { get; set; }
-        public RelayCommand UncheckedBtnCmd { get; set; }
-
-        public RelayCommand AddProject_ClickCmd { get; set; }
-
-
-        public RelayCommand MouseOverFalseCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = false);
-        public RelayCommand MouseOverTrueCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = true);
-
-        public RelayCommand UI_Popup_Menu { get; set; }
-
-        public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
-        public MenuItemViewModel(ProjectViewModelList pList)
-        {
-            UncheckedBtnCmd = new RelayCommand(UncheckedBtn);
-            CheckedBtnCmd = new RelayCommand(CheckedBtn);
-            SizingBtnCmd = new RelayCommand(SizingBtn);
-            MenuBtnCmd = new RelayCommand(MenuBtn);
-            ExitBtnCmd = new RelayCommand(ExitBtn);
-            DragOutCmd = new RelayCommand(DragOut);
-
-            UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
-            UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
-
-            AddProject_ClickCmd = new RelayCommand(AddProject_Click);
-            UI_Btn_FolderBrowse_ClickCmd = new RelayCommand(UI_Btn_FolderBrowse_Click);
-            //PinContainer
-            UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
-            UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
-            UC_DropCmd = new RelayCommand(() => UC_Drop());
-            UC_MouseEnterCmd = new RelayCommand(() => UC_MouseEnter());
-
-            UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
-
-            ProjectList = pList;
-
-            pList.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
-            {
-                switch (e)
-                {
-                    case ActionEvent.Copy:
-                        UI_TextBlock_ActionEventType = "Copy";
-                        break;
-                    case ActionEvent.Move:
-                        UI_TextBlock_ActionEventType = "Move";
-                        break;
-                }
-            });
-
-        }
-        public delegate void ProjectItemDropEventHandler(object sender, Model.Project project, string[] sourcePaths);
-        public event ProjectItemDropEventHandler ProjectItemDropped;
+       
+        //public delegate void ProjectItemDropEventHandler(object sender, Model.Project project, string[] sourcePaths);
+        //public event ProjectItemDropEventHandler ProjectItemDropped;
         public RelayCommand UI_Btn_FolderBrowse_ClickCmd { get; set; } 
         private void UI_Btn_FolderBrowse_Click()
         {
@@ -307,7 +266,7 @@ namespace Pin.MenuContainer
                 UI_TxtBox_ProjectPath,
                 UI_ColorPicker_ColorSelectionBox);
 
-            ProjectList.Add(this, ProjectModel);
+            ProjectList.Add(ProjectModel);
 
             popupToggle_IsChecked = false;
             addP_Text = "+";
@@ -318,32 +277,14 @@ namespace Pin.MenuContainer
 
         private void UncheckedBtn()
         {
-            if (OnUnPinned != null) OnUnPinned(this, EventArgs.Empty);
+            Window.WindowChangeState(WindowState.Pinned);
             PinStatus = !PinStatus;
         }
 
         private void CheckedBtn()
         {
-            if (OnPinned != null) OnPinned(this, EventArgs.Empty);
+            Window.WindowChangeState(WindowState.Pinned);
             PinStatus = !PinStatus;
-        }
-
-        private void MenuBtn()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SizingBtn()
-        {
-            SizingStatus = !SizingStatus;
-            if (SizingStatus)
-            { // show expanded
-                RaiseWindowChangeState(WindowState.Normal);
-            }
-            else
-            { // show minimized open
-                RaiseWindowChangeState(WindowState.MinimizedOpen);
-            }
         }
 
         string[] lastDraggedIn;
@@ -353,27 +294,7 @@ namespace Pin.MenuContainer
             DropDataHandler.dragDataOut(null, lastDraggedIn);
         }
 
-        private void ExitBtn()
-        {
-            if (OnExit != null) OnExit(this, EventArgs.Empty);
-        }
-
-        private ProjectViewModelList _ProjectList;
-        public ProjectViewModelList ProjectList
-        {
-            get
-            {
-                return _ProjectList;
-            }
-            set
-            {
-                _ProjectList = value;
-                RaisePropertyChanged();
-            }
-        }
-
         #region PinContainerProjectItem
-
 
         private bool _popup_isOpen;
         public bool popup_isOpen
@@ -422,18 +343,37 @@ namespace Pin.MenuContainer
 
         #endregion
 
-        
-
-        public event WindowStateEventHandler ChangedWindowState;
-
-        /// <summary>
-        /// Executes events as well as windowchangestate method
-        /// </summary>
-        /// <param name="wState"></param>
-        public void RaiseWindowChangeState(WindowState? wState = default(WindowState?))
+        private ProjectViewModelList _ProjectList;
+        public ProjectViewModelList ProjectList
         {
-            if (ChangedWindowState != null) ChangedWindowState(wState);
-            WindowChangeState(wState);
+            get
+            {
+                return _ProjectList;
+            }
+            set
+            {
+                _ProjectList = value;
+                RaisePropertyChanged();
+            }
+        }
+        
+        bool SizingStatus = false;
+        private void SizingBtn()
+        {
+            SizingStatus = !SizingStatus;
+            if (SizingStatus)
+            { // show expanded
+                Window.WindowChangeState(WindowState.Normal);
+            }
+            else
+            { // show minimized open
+                Window.WindowChangeState(WindowState.MinimizedOpen);
+            }
+        }
+
+        internal void RaiseWindowChangeState(WindowState minimizedDragging)
+        {
+            Window.WindowChangeState(minimizedDragging);
         }
 
         public void WindowChangeState(WindowState? wState = default(WindowState?))
@@ -462,6 +402,5 @@ namespace Pin.MenuContainer
                     break;
             }
         }
-
     }
 }

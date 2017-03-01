@@ -42,7 +42,6 @@ namespace Pin.MenuContainer
             MouseOverController.isMouseOverMenu = true;
 
         }
-
         private void UI_TextBlock_FirstProject_MouseMove(object sender, MouseEventArgs e)
         {
             MouseOverController.isMouseOverMenu = true;

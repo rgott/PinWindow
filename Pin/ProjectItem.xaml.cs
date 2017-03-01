@@ -3,6 +3,7 @@ using Forms = System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Pin.Model;
 
 namespace Pin
 {
@@ -11,13 +12,13 @@ namespace Pin
     /// </summary>
     public partial class ProjectItem : UserControl
     {
-        public ProjectViewModel DataModel { get; set; }
-        public ProjectItem(ProjectViewModel project)
+        public IProject Project { get; set; }
+        public ProjectItem(IProject project)
         {
-            DataContext = DataModel = project;
+            DataContext = Project = project;
             InitializeComponent();
 
-            UI_ColorSelectionBox.FillColor = project.Project.Color;
+            UI_ColorSelectionBox.FillColor = project.Color;
         }
         public ProjectItem()
         {
@@ -28,22 +29,21 @@ namespace Pin
 
         private void UI_OpenWithExplorer_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", DataModel.ProjectPath));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", Project.Path));
         }
 
         private void UI_Btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            DataModel.FillColor = UI_ColorSelectionBox.FillColor;
             UI_Btn_Cancel_Click(sender, e); // revert to previous state
         }
 
         private void UI_Btn_Browse_Click(object sender, RoutedEventArgs e)
         {
-            Forms.FolderBrowserDialog path = new Forms.FolderBrowserDialog();
-            path.ShowDialog();
+            Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
+            userGeneratedPath.ShowDialog();
 
             // change current version
-            DataModel.ProjectPath = path.SelectedPath;
+            Project.Path = userGeneratedPath.SelectedPath;
         }
 
         private void UI_Btn_Cancel_Click(object sender, RoutedEventArgs e)
@@ -57,7 +57,6 @@ namespace Pin
             UI_Grid_Edit.Visibility = Visibility.Visible;
             UI_Grid_View.Visibility = Visibility.Hidden;
         }
-
         private void UI_ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
             MouseOverController.isMouseOverMenu = true;

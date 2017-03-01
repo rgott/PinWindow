@@ -21,7 +21,7 @@ namespace Pin
         /// <param name="project"></param>
         /// <param name="e"></param>
         /// <returns>Path of newly dropped file</returns>
-        public static string[] dropData(Model.Project project, DragEventArgs e)
+        public static string[] dropData(Model.IProject project, DragEventArgs e)
         {
             if (String.IsNullOrEmpty(project.Path))
             {
@@ -40,7 +40,7 @@ namespace Pin
             return null;
         }
 
-        private static string[] DropHtml(Model.Project project, DragEventArgs e)
+        private static string[] DropHtml(Model.IProject project, DragEventArgs e)
         {
             var match = Regex.Match((string)e.Data.GetData(DataFormats.Html), "src=\"(.*?)\""); // find source of dropped image
             if (match.Groups.Count >= 2)
@@ -80,7 +80,7 @@ namespace Pin
             // new WebClient().DownloadFile("data:image/jpeg;base64,/9j/4AAQSk...
         }
 
-        public static string[] DropFileDrop(Model.Project project, DragEventArgs e)
+        public static string[] DropFileDrop(Model.IProject project, DragEventArgs e)
         {
             Array data = ((IDataObject)e.Data).GetData(DataFormats.FileDrop) as Array;
             if (data != null)

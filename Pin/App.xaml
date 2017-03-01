@@ -99,18 +99,12 @@
             </Border>
         </ControlTemplate>
         <ControlTemplate x:Key="ListViewProjects" TargetType="ListBox">
-            <Border Name="Border" BorderBrush="{StaticResource UNDEFINED}">
-                <ScrollViewer Focusable="false">
-                    <StackPanel IsItemsHost="True"/>
+            <Border Name="Border" Margin="0" HorizontalAlignment="Stretch">
+                <ScrollViewer Focusable="false" HorizontalAlignment="Stretch">
+                    <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch"/>
                 </ScrollViewer>
             </Border>
             <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled" Value="false">
-                    <Setter TargetName="Border" Property="Background"
-                    Value="Transparent" />
-                    <Setter TargetName="Border" Property="BorderBrush"
-                    Value="Transparent" />
-                </Trigger>
                 <Trigger Property="IsGrouping" Value="true">
                     <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                 </Trigger>

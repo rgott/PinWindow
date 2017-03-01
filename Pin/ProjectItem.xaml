@@ -13,7 +13,6 @@
             <Border CornerRadius="3" Background="DarkGray" Height="15" Width="15">
                 <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
             </Border>
-
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                 </Trigger>
@@ -24,17 +23,17 @@
     </UserControl.Resources>
     <Border VerticalAlignment="Center" Padding="5,5">
         <Border.ContextMenu>
-            <ContextMenu x:Name="UI_ContextMenu" Opened="UI_ContextMenu_Opened" Closed="UI_ContextMenu_Closed" MouseEnter="UI_ContextMenu_MouseEnter" MouseLeave="UI_ContextMenu_MouseLeave"> 
-                <MenuItem x:Name="UI_MenuItem_OpenWithExplorer" Header="Open with Explorer" Click="UI_OpenWithExplorer_Click"/>
+            <ContextMenu x:Name="UI_ContextMenu" Opened="UI_ContextMenu_Opened" Closed="UI_ContextMenu_Closed" MouseEnter="UI_ContextMenu_MouseEnter" MouseLeave="UI_ContextMenu_MouseLeave">
+                <MenuItem x:Name="UI_MenuItem_OpenWithExplorer" Header="Open with Explorer" Command="{Binding OpenWithExplorer}"/>
                 <MenuItem x:Name="UI_MenuItem_Edit" Header="Edit" Click="UI_MenuItem_Edit_Click"/>
-                <MenuItem x:Name="UI_MenuItem_Delete" Header="Delete" Click="UI_MenuItem_Delete_Click"/>
+                <MenuItem x:Name="UI_MenuItem_Delete" Header="Delete" Command="{Binding DeleteProject}"/>
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
             <Grid x:Name="UI_Grid_View" Visibility="Visible">
-                <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding FillColor,UpdateSourceTrigger=PropertyChanged}" Margin="5,0,5,0" Width="10" Height="10" HorizontalAlignment="Left"/>
+                <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding Color,FallbackValue=orange}" Margin="5,0,5,0" Width="10" Height="10" HorizontalAlignment="Left"/>
 
-                <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Text="{Binding ProjectName,FallbackValue=ProjectName}"/>
+                <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Text="{Binding Name,FallbackValue=ProjectName}"/>
                 <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" x:Name="UI_Btn_OpenExplorer" Click="UI_OpenWithExplorer_Click" Margin="0,0,5,0" Padding="0" HorizontalAlignment="Right">
                     <Border Margin="2">
                         <Image Source="/images/Folder.png"/>
@@ -52,9 +51,9 @@
                     <ColumnDefinition Width="45"/>
                     <ColumnDefinition Width="45"/>
                 </Grid.ColumnDefinitions>
-                <ColorPicker:ColorSelectionBox x:Name="UI_ColorSelectionBox" FillColor="{Binding FillColor,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
-                <TextBox x:Name="UI_TextBox_ProjectName" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding ProjectName}"/>
-                <TextBox x:Name="UI_TextBox_Path" Grid.Row="1" Grid.Column="1" Text="{Binding ProjectPath}"/>
+                <ColorPicker:ColorSelectionBox x:Name="UI_ColorSelectionBox" FillColor="{Binding Color}" Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
+                <TextBox x:Name="UI_TextBox_ProjectName" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name}"/>
+                <TextBox x:Name="UI_TextBox_Path" Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
                 <Button x:Name="UI_Btn_Cancel" Grid.Column="3" Grid.Row="0" Template="{StaticResource SaveBtn}" Click="UI_Btn_Cancel_Click">Cancel</Button>
                 <Button x:Name="UI_Btn_Browse" Grid.Column="2" Grid.Row="1" Template="{StaticResource SaveBtn}" Click="UI_Btn_Browse_Click">Browse</Button>
                 <Button x:Name="UI_Btn_Save" Grid.Column="3" Grid.Row="1" Template="{StaticResource SaveBtn}" Click="UI_Btn_Save_Click">Save</Button>

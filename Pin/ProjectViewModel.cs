@@ -1,31 +1,35 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Pin.Model;
 using System;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Forms = System.Windows.Forms;
 
 namespace Pin
 {
-    public class ProjectViewModel : ViewModelBase
+    public class ProjectViewModel : ViewModelBase, IProjectViewModel
     {
-        protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        public ProjectViewModel(IProject Project)
         {
-            RaisePropertyChanged(propertyName);
+            this.Project = Project;
+            OpenWithExplorer = new RelayCommand(OpenWithExplorerCmd);
         }
-        private bool _Vis_ProjectView = false;
-        public bool Vis_ProjectView
+        public RelayCommand OpenWithExplorer { get; set; }
+        private void OpenWithExplorerCmd()
         {
-            get
-            {
-                return _Vis_ProjectView;
-            }
-            set
-            {
-                _Vis_ProjectView = value;
-                RaisePropertyChanged();
-            }
+            Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
+            userGeneratedPath.ShowDialog();
+
+            // change current version
+            Project.Path = userGeneratedPath.SelectedPath;
         }
-        private Model.Project _Project;
-        public Model.Project Project
+
+
+        private Model.IProject _Project;
+        public Model.IProject Project
         {
             get
             {
@@ -38,58 +42,17 @@ namespace Pin
             }
         }
 
-        public ProjectViewModel(Model.Project project)
-        {
-            Project = project;
-        }
-
-        public string ProjectName
+        private bool _ShowEditor = false;
+        public bool ShowEditor
         {
             get
             {
-                return _Project.Name;
+                return _ShowEditor;
             }
             set
             {
-                _Project.Name = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string ProjectPath
-        {
-            get
-            {
-                return _Project.Path;
-            }
-            set
-            {
-                _Project.Path = value;
-                NotifyPropertyChanged();
-            }
-        }
-        public Brush FillColor
-        {
-            get
-            {
-                return _Project.Color;
-            }
-            set
-            {
-                _Project.Color = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(obj is ProjectViewModel)
-            {
-                return Project.Equals(((ProjectViewModel)obj).Project);
-            }
-            else
-            {
-                return Project.Equals(obj);
+                _ShowEditor = value;
+                RaisePropertyChanged();
             }
         }
     }

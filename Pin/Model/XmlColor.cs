@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 
 namespace Pin.Model
 {
@@ -17,7 +18,14 @@ namespace Pin.Model
             }
             set
             {
-                _Brush = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString(value);
+                if (String.IsNullOrEmpty(value))
+                {// TODO: better default color
+                    _Brush = new SolidColorBrush(Colors.Orange);
+                }
+                else
+                {
+                    _Brush = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString(value);
+                }
             }
         }
 

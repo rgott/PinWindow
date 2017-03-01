@@ -10,5 +10,6 @@ namespace Pin.Model
         string Path { get; set; }
         Brush Color { get; set; }
         bool IsPrimary { get; set; }
+        string Serialize();
     }
 }
