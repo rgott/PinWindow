@@ -11,6 +11,5 @@ namespace Pin
     {
         void WindowChangeState(WindowState? wState = null);
         void onExit();
-
     }
 }

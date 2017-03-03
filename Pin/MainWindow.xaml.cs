@@ -77,7 +77,7 @@ namespace Pin
             Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
             Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
 
-            ProjectVML = new ProjectViewModelList(Properties.Settings.Default);
+            ProjectVML = new ProjectViewModelList(this, Properties.Settings.Default);
 
 
             MenuItemContainerBinding = new MenuItemViewModel(this, ProjectVML);

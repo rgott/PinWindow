@@ -63,7 +63,7 @@ namespace Pin
             }
         }
 
-
+        [Obsolete]
         public static bool isMouseOverMenu
         {
             get

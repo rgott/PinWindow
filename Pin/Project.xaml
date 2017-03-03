@@ -8,6 +8,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <ControlTemplate x:Key="Template_Project_Open" TargetType="ToggleButton">
             <Border CornerRadius="5" Background="{TemplateBinding Background}" Height="20" Width="20">
                 <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
@@ -29,7 +30,7 @@
             <Border Background="#FF646769">
                 <Grid Margin="10" Grid.Row="0" VerticalAlignment="Top">
                     <TextBlock FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
-                    <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" Padding="0" Name="projects" Click="projects_Click">
+                    <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" Padding="0" Name="projects" Command="{Binding ProjectAddClick}">
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
                                 <Setter Property="Background" Value="DarkGray"/>
@@ -38,40 +39,9 @@
                         </ToggleButton.Style>
                         <TextBlock Name="addP" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding addP_Text,FallbackValue=+}"/>
                     </ToggleButton>
-                    <Popup Name="popupToggle" IsOpen="{Binding popupToggle_IsChecked}" Placement="Left" HorizontalOffset="280" VerticalOffset="29">
-                        <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1">
-                            <Grid Width="280" Background="#FF646769" Height="91">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ColorPicker:ColorSelectionBox FillColor="{Binding UI_ColorPicker_ColorSelectionBox}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
-                                <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="10"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
-                                    <TextBox Text="{Binding UI_TxtBox_ProjectName}" Grid.Column="1"/>
-                                </Grid>
-                                <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
-                                    <TextBox Text="{Binding UI_TxtBox_ProjectPath}" Grid.Column="1"/>
-                                    <Button x:Name="UI_Btn_FolderBrowse" Command="{Binding UI_Btn_FolderBrowse_ClickCmd}" Grid.Column="2">Browse</Button>
-                                </Grid>
-                                <Button Name="UI_Btn_AddProject" Command="{Binding AddProject_ClickCmd}" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
-                            </Grid>
-                        </Border>
-                    </Popup>
                 </Grid>
             </Border>
+            
             <ListBox Grid.Row="1" Template="{StaticResource ListViewProjects}" SelectionMode="Single" SelectedItem="{Binding SelectedProject,Mode=TwoWay}" ItemsSource="{Binding ProjectList.Projects}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -111,6 +81,40 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
+            <!--Top of all others-->
+            <Grid Visibility="{Binding popupToggle_IsChecked,Converter={StaticResource BoolToVisibility}}" Grid.Row="1" VerticalAlignment="Top">
+                <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1" Width="280" Height="91">
+                    <Grid  Background="#FF646769" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ColorPicker:ColorSelectionBox DataContext="{Binding ColorSelectionBoxContext}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
+                        <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
+                            <TextBox Text="{Binding UI_TxtBox_ProjectName}" Grid.Column="1"/>
+                        </Grid>
+                        <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="10"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
+                            <TextBox Text="{Binding Add_ProjectPath}" Grid.Column="1"/>
+                            <Button x:Name="UI_Btn_FolderBrowse" Command="{Binding ChangeDirectory}" Grid.Column="2">Browse</Button>
+                        </Grid>
+                        <Button Command="{Binding AddProject_ClickCmd}" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

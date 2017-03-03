@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="400">
     
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <local:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisibility"/>
+
         <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">
             <Border CornerRadius="3" Background="DarkGray" Height="15" Width="15">
                 <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
@@ -21,26 +25,34 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </UserControl.Resources>
-    <Border VerticalAlignment="Center" Padding="5,5">
+    <Border VerticalAlignment="Center" Height="50">
         <Border.ContextMenu>
-            <ContextMenu x:Name="UI_ContextMenu" Opened="UI_ContextMenu_Opened" Closed="UI_ContextMenu_Closed" MouseEnter="UI_ContextMenu_MouseEnter" MouseLeave="UI_ContextMenu_MouseLeave">
-                <MenuItem x:Name="UI_MenuItem_OpenWithExplorer" Header="Open with Explorer" Command="{Binding OpenWithExplorer}"/>
-                <MenuItem x:Name="UI_MenuItem_Edit" Header="Edit" Click="UI_MenuItem_Edit_Click"/>
-                <MenuItem x:Name="UI_MenuItem_Delete" Header="Delete" Command="{Binding DeleteProject}"/>
+            <ContextMenu x:Name="UI_ContextMenu">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Opened">
+                        <i:InvokeCommandAction Command="{Binding PauseWindowChange}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Closed">
+                        <i:InvokeCommandAction Command="{Binding ResumeWindowChange}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <MenuItem Header="Open with Explorer" Command="{Binding OpenWithExplorer}"/>
+                <MenuItem Header="Edit" Command="{Binding EditBtn}"/>
+                <MenuItem Header="Delete" Command="{Binding DeleteProject}"/>
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
-            <Grid x:Name="UI_Grid_View" Visibility="Visible">
-                <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding Color,FallbackValue=orange}" Margin="5,0,5,0" Width="10" Height="10" HorizontalAlignment="Left"/>
+            <Grid x:Name="UI_Grid_View" Visibility="{Binding ShowEditor,Converter={StaticResource InvertedBoolToVisibility},FallbackValue=Visibile}">
+                <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding Project.Color,FallbackValue=orange}" Margin="0,0,0,0" Width="15" HorizontalAlignment="Left"/>
 
-                <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" Text="{Binding Name,FallbackValue=ProjectName}"/>
-                <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" x:Name="UI_Btn_OpenExplorer" Click="UI_OpenWithExplorer_Click" Margin="0,0,5,0" Padding="0" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center" Margin="25,0,0,0" Text="{Binding Project.Name,FallbackValue=ProjectName}"/>
+                <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" Command="{Binding OpenWithExplorer}" Margin="0,0,5,0" HorizontalAlignment="Right">
                     <Border Margin="2">
                         <Image Source="/images/Folder.png"/>
                     </Border>
                 </Button>
             </Grid>
-            <Grid x:Name="UI_Grid_Edit" Width="275" Visibility="Hidden">
+            <Grid VerticalAlignment="Center" Visibility="{Binding ShowEditor,Converter={StaticResource BoolToVisibility},FallbackValue=Hidden}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -51,12 +63,12 @@
                     <ColumnDefinition Width="45"/>
                     <ColumnDefinition Width="45"/>
                 </Grid.ColumnDefinitions>
-                <ColorPicker:ColorSelectionBox x:Name="UI_ColorSelectionBox" FillColor="{Binding Color}" Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
-                <TextBox x:Name="UI_TextBox_ProjectName" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name}"/>
-                <TextBox x:Name="UI_TextBox_Path" Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
-                <Button x:Name="UI_Btn_Cancel" Grid.Column="3" Grid.Row="0" Template="{StaticResource SaveBtn}" Click="UI_Btn_Cancel_Click">Cancel</Button>
-                <Button x:Name="UI_Btn_Browse" Grid.Column="2" Grid.Row="1" Template="{StaticResource SaveBtn}" Click="UI_Btn_Browse_Click">Browse</Button>
-                <Button x:Name="UI_Btn_Save" Grid.Column="3" Grid.Row="1" Template="{StaticResource SaveBtn}" Click="UI_Btn_Save_Click">Save</Button>
+                <ColorPicker:ColorSelectionBox FillColor="{Binding Color}" Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
+                <TextBox Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
+                <Button Grid.Column="3" Grid.Row="0" Template="{StaticResource SaveBtn}" Command="{Binding CancelEditorBtn}">Cancel</Button>
+                <Button Grid.Column="2" Grid.Row="1" Template="{StaticResource SaveBtn}" Command="{Binding ChangeDirectory}">Browse</Button>
+                <Button Grid.Column="3" Grid.Row="1" Template="{StaticResource SaveBtn}" Command="{Binding SaveEditorSettings}">Save</Button>
             </Grid>
         </Grid>
     </Border>

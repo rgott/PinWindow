@@ -27,10 +27,7 @@ namespace Pin.ColorPicker
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 
@@ -49,7 +46,7 @@ namespace Pin.ColorPicker
 
         // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FillColorProperty =
-            DependencyProperty.Register("FillColor", typeof(SolidColorBrush), typeof(ColorSelectionBox), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
+            DependencyProperty.Register("FillColor", typeof(Brush), typeof(ColorSelectionBox), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
 
 
 
@@ -67,9 +64,6 @@ namespace Pin.ColorPicker
         }
 
 
-        private void UI_Popup_PickerPlane_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
         private void UI_Btn_ProjectColor_Click(object sender, RoutedEventArgs e)
         {
             UI_Popup_PickerPlane.IsOpen = true;

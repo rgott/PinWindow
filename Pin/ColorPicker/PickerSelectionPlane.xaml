@@ -15,7 +15,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="17"/>
         </Grid.RowDefinitions>
-        <Grid Name="ColorSelectionGrid" Grid.Column="0" MouseMove="ColorSelectionGrid_MouseMove" MouseDown="ColorSelectionGrid_MouseDown">
+        <Grid Grid.Column="0" MouseMove="ColorSelectionGrid_MouseMove" MouseDown="ColorSelectionGrid_MouseDown">
             <Rectangle Name="PrimaryFillColor" Fill="Red"/>
             <Rectangle>
                 <Rectangle.Fill>

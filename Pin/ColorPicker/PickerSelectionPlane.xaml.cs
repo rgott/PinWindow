@@ -14,20 +14,13 @@ namespace Pin.ColorPicker
     /// </summary>
     public partial class PickerSelectionPlane : UserControl , INotifyPropertyChanged
     {
-        [DllImport("user32.dll")]
-        static extern IntPtr GetDC(IntPtr hwnd);
+        
 
-        [DllImport("user32.dll")]
-        static extern Int32 ReleaseDC(IntPtr hwnd, IntPtr hdc);
-
-        [DllImport("gdi32.dll")]
-        static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
-
-        public SolidColorBrush FillColor
+        public Brush FillColor
         {
             get
             {
-                return (SolidColorBrush)GetValue(FillColorProperty);
+                return (Brush)GetValue(FillColorProperty);
             }
             set
             {
@@ -38,7 +31,7 @@ namespace Pin.ColorPicker
 
         // Using a DependencyProperty as the backing store for FillColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FillColorProperty =
-            DependencyProperty.Register("FillColor", typeof(SolidColorBrush), typeof(PickerSelectionPlane), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
+            DependencyProperty.Register("FillColor", typeof(Brush), typeof(PickerSelectionPlane), new PropertyMetadata(new SolidColorBrush(Colors.Red)));
 
 
 

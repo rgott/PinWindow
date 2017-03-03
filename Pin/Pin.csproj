@@ -117,6 +117,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorPicker\ColorSelectionViewModel.cs" />
     <Compile Include="ColorPicker\PickerSelectionPlane.xaml.cs">
       <DependentUpon>PickerSelectionPlane.xaml</DependentUpon>
     </Compile>
@@ -125,6 +126,7 @@
     </Compile>
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="IMainWindow.cs" />
+    <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\DisplayDropBehavior.cs" />

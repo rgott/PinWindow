@@ -10,7 +10,7 @@ namespace Pin.Tests
         [TestInitialize]
         public void T()
         {
-            model = new ProjectViewModelList(new TestSettings());
+            model = new ProjectViewModelList(null,new TestSettings());
         }
 
         [TestMethod]

@@ -7,11 +7,11 @@ namespace Pin
 {
     public static class ProjectFactory
     {
-        public static IProjectViewModel getViewModelFromModel(IProject Project)
+        public static IProjectViewModel getViewModelFromModel(ProjectViewModelList ProjectVM,IMainWindow Window,IProject Project)
         {
-            return new ProjectViewModel(Project);
+            return new ProjectViewModel(ProjectVM, Window, Project);
         }
 
-        public static readonly IProject DefaultProject = new Model.Project("", "", new SolidColorBrush(Colors.Orange), false);
+        public static readonly IProject DefaultProject = new Model.Project("", "", new SolidColorBrush(Colors.Orange));
     }
 }

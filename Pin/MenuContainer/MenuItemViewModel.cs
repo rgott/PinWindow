@@ -22,7 +22,7 @@ namespace Pin.MenuContainer
         public RelayCommand MouseOverFalseCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = false);
         public RelayCommand MouseOverTrueCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = true);
 
-
+        public RelayCommand ProjectAddClick { get; set; }
         public RelayCommand UI_Popup_Menu { get; set; }
 
         public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
@@ -43,15 +43,14 @@ namespace Pin.MenuContainer
             UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             AddProject_ClickCmd = new RelayCommand(AddProject_Click);
-            UI_Btn_FolderBrowse_ClickCmd = new RelayCommand(UI_Btn_FolderBrowse_Click);
             //PinContainer
             UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
             UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
             UC_DropCmd = new RelayCommand(() => UC_Drop());
             UC_MouseEnterCmd = new RelayCommand(() => UC_MouseEnter());
-
+            ProjectAddClick = new RelayCommand(ProjectAddClickCmd);
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
-
+            ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
             ProjectList = pList;
             DeleteProject = new RelayCommand(() => ProjectList.Delete(SelectedProject));
             pList.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
@@ -69,8 +68,42 @@ namespace Pin.MenuContainer
 
         }
 
-        
+        private string _Add_ProjectPath;
+        public string Add_ProjectPath
+        {
+            get
+            {
+                return _Add_ProjectPath;
+            }
+            set
+            {
+                _Add_ProjectPath = value;
+                RaisePropertyChanged();
+            }
+        }
+        public RelayCommand ChangeDirectory { get; set; }
+        private void ChangeDirectoryCmd()
+        {
+            Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
+            userGeneratedPath.ShowDialog();
 
+            // change current version
+            Add_ProjectPath = userGeneratedPath.SelectedPath;
+        }
+
+        private void ProjectAddClickCmd()
+        {
+            // TODO: do x => + convertion with xaml logic
+            if (popupToggle_IsChecked)
+            {
+                addP_Text = "x";
+            }
+            else
+            {
+                addP_Text = "+";
+            }
+            popupToggle_IsChecked = !popupToggle_IsChecked;
+        }
 
         #region Properties
         private IProject _SelectedProject;
@@ -177,15 +210,6 @@ namespace Pin.MenuContainer
        
         //public delegate void ProjectItemDropEventHandler(object sender, Model.Project project, string[] sourcePaths);
         //public event ProjectItemDropEventHandler ProjectItemDropped;
-        public RelayCommand UI_Btn_FolderBrowse_ClickCmd { get; set; } 
-        private void UI_Btn_FolderBrowse_Click()
-        {
-            Forms.FolderBrowserDialog path = new Forms.FolderBrowserDialog();
-            path.ShowDialog();
-
-            // change current version
-            UI_TxtBox_ProjectPath = path.SelectedPath;
-        }
 
         private string _UI_TxtBox_ProjectName;
         public string UI_TxtBox_ProjectName
@@ -215,6 +239,19 @@ namespace Pin.MenuContainer
             }
         }
 
+        private Brush _Add_ProjectColor;
+        public Brush Add_ProjectColor
+        {
+            get
+            {
+                return _Add_ProjectColor;
+            }
+            set
+            {
+                _Add_ProjectColor = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private Brush _UI_ColorPicker_ColorSelectionBox;
         public Brush UI_ColorPicker_ColorSelectionBox
@@ -263,16 +300,16 @@ namespace Pin.MenuContainer
         {
             var ProjectModel = new Model.Project(
                 UI_TxtBox_ProjectName,
-                UI_TxtBox_ProjectPath,
-                UI_ColorPicker_ColorSelectionBox);
+                Add_ProjectPath,
+                Add_ProjectColor);
 
             ProjectList.Add(ProjectModel);
 
             popupToggle_IsChecked = false;
             addP_Text = "+";
             UI_TxtBox_ProjectName = "";
-            UI_TxtBox_ProjectPath = "";
-            MouseOverController.isProjectOpen = false;
+            Add_ProjectPath = "";
+
         }
 
         private void UncheckedBtn()

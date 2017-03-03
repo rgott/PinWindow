@@ -17,7 +17,7 @@ namespace Pin.Tests
         [TestMethod]
         public void ProjectViewModelList()
         {
-            model = new ProjectViewModelList(new TestSettings());
+            model = new ProjectViewModelList(null,new TestSettings());
 
             Assert.AreEqual(1, model.Projects.Count);
         }

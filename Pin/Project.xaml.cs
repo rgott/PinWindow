@@ -14,30 +14,7 @@ namespace Pin
         public Project()
         {
             InitializeComponent();
-            
         }
-
-        private void RButton_Checked(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void projects_Click(object sender, RoutedEventArgs e)
-        {
-            if(projects.IsChecked == true)
-            {
-                addP.Text = "x";
-                popupToggle.IsOpen = true;
-                MouseOverController.isProjectOpen = true;
-            }
-            else
-            {
-                addP.Text = "+";
-                popupToggle.IsOpen = false;
-                MouseOverController.isProjectOpen = false;
-            }
-        }
-
-        
     }
 }
 

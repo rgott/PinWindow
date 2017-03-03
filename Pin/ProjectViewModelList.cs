@@ -11,11 +11,14 @@ namespace Pin
     public class ProjectViewModelList : ViewModelBase
     {
         public ISettings Settings { get; set; }
+        public IMainWindow Window { get; set; }
 
         public ObservableCollection<IProjectViewModel> Projects { get; set; } = new ObservableCollection<IProjectViewModel>();
-        public ProjectViewModelList(ISettings Settings)
+        public ProjectViewModelList(IMainWindow Window,ISettings Settings)
         {
             this.Settings = Settings;
+            this.Window = Window;
+
             if (Settings.Projects == null)
             {
                 Settings.Projects = new StringCollection();
@@ -25,7 +28,7 @@ namespace Pin
                 // load into viewable object
                 foreach (string item in Settings.Projects)
                 {
-                    Projects.Add(ProjectFactory.getViewModelFromModel(CustomXmlSerializer.Deserialize<IProject>(item))); 
+                    Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, CustomXmlSerializer.Deserialize<Model.Project>(item))); 
                 }
             }
         }
@@ -36,25 +39,36 @@ namespace Pin
             if(Projects.Count(currentProject => currentProject == Project) != 0)
                 return false;
 
-            Projects.Add(ProjectFactory.getViewModelFromModel(Project));
+            Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Project));
             Settings.Projects.Add(Project.Serialize());
 
             Settings.Save();
             return true;
         }
 
-
-        internal void Change(IProject Project)
+        internal IProjectViewModel find(IProject project)
         {
-            var ProjectVM = ProjectFactory.getViewModelFromModel(Project);
+            return Projects.FirstOrDefault(m => m.Project == project);
+        }
 
-            var index = Projects.IndexOf(ProjectVM);
-            Projects[index] = ProjectVM;
-            Settings.Projects[index] = Project.Serialize();
 
-            if(Project.IsPrimary)
+        internal void Change(IProject OldProject, IProject NewProject)
+        {
+            var OldProjectVM = ProjectFactory.getViewModelFromModel(this, Window, OldProject);
+            var NewProjectVM = ProjectFactory.getViewModelFromModel(this, Window, NewProject);
+
+            Change(OldProjectVM, NewProjectVM);
+        }
+
+        internal void Change(IProjectViewModel OldProjectVM, IProjectViewModel NewProjectVM)
+        {
+            var index = Projects.IndexOf(OldProjectVM);
+            Projects[index] = NewProjectVM;
+            Settings.Projects[index] = NewProjectVM.Project.Serialize();
+
+            if (NewProjectVM.Project.Name.Equals(Settings.PrimaryProjectName))
             {
-                PrimaryProject = ProjectVM;
+                PrimaryProject = NewProjectVM;
             }
 
             Settings.Save();
@@ -62,7 +76,7 @@ namespace Pin
 
         internal void Delete(Model.IProject Model)
         {
-            var index = Projects.IndexOf(ProjectFactory.getViewModelFromModel(Model));
+            var index = Projects.IndexOf(ProjectFactory.getViewModelFromModel(this, Window, Model));
 
             Projects.RemoveAt(index);
             Settings.Projects.RemoveAt(index);
@@ -88,7 +102,7 @@ namespace Pin
         {
             get
             {
-                return Projects?.FirstOrDefault(Model => Model.Project.IsPrimary) ?? ProjectFactory.getViewModelFromModel(ProjectFactory.DefaultProject);
+                return Projects?.FirstOrDefault(Model => Model.Project.Name == Settings.PrimaryProjectName) ?? ProjectFactory.getViewModelFromModel(this, Window, ProjectFactory.DefaultProject);
             }
             set
             {
