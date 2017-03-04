@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Pin.ColorPicker
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ColorSelectionBox.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ColorSelectionBox : UserControl
     {
-        public MainWindow()
+        public ColorSelectionBox()
         {
             InitializeComponent();
         }

@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight;assembly=GalaSoft.MvvmLight"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
@@ -15,8 +17,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="17"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Column="0" MouseMove="ColorSelectionGrid_MouseMove" MouseDown="ColorSelectionGrid_MouseDown">
-            <Rectangle Name="PrimaryFillColor" Fill="Red"/>
+        <Grid Grid.Column="0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseMove">
+                    <i:InvokeCommandAction Command="{Binding ColorSelectionGrid_MouseMove}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding ColorSelectionGrid_MouseDown}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Rectangle Fill="{Binding PrimaryFillColor}"/>
             <Rectangle>
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -33,12 +43,21 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Grid Name="ColorSelectionGridColorFinder" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-5">
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="{Binding ColorSelectionGridColorFinder}">
                 <Ellipse Stroke="Black" StrokeThickness="1" Margin="1" />
                 <Ellipse Width="10" Height="10" Stroke="White" StrokeThickness="1" />
             </Grid>
         </Grid>
-        <Grid Name="MajorColorSelectorPlane" Grid.Column="1" MouseDown="MajorColorSelectorPlane_MouseDown" Margin="1,0,0,0" MouseMove="MajorColorSelectorPlane_MouseMove">
+        <Grid Name="MajorColorSelectorPlane" Grid.Column="1" Margin="{Binding MajorColorSelector}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseMove">
+                    <!--<cmd:-->
+                    <i:InvokeCommandAction Command="{Binding MajorColorSelectorPlane_MouseMove}" CommandParameter="{Binding}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding MajorColorSelectorPlane_MouseDown}" CommandParameter="{Binding}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <Rectangle>
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -52,14 +71,14 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Grid Name="MajorColorSelector" Margin="0,0,0,0">
+            <Grid Margin="0,0,0,0">
                 <Polygon Points="0 -5,5 0,0 5" Fill="Black"/>
                 <Polygon HorizontalAlignment="Right" Points="5 -5,0 0,5 5" Fill="Black"/>
             </Grid>
         </Grid>
 
         <Grid Grid.Row="1" Margin="0,1,0,0">
-            <Rectangle Name="UI_Rectangle_FillColor" Margin="0,0,-25,0" Fill="{Binding FillColor,UpdateSourceTrigger=PropertyChanged}"/>
+            <Rectangle Margin="0,0,-25,0" Fill="{Binding Color}"/>
         </Grid>
     </Grid>
 </UserControl>

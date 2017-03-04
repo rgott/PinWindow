@@ -41,14 +41,6 @@ namespace Pin.ColorPicker {
     public partial class PickerSelectionPlane : System.Windows.Controls.UserControl, System.Windows.Markup.IComponentConnector {
         
         
-        #line 18 "..\..\..\ColorPicker\PickerSelectionPlane.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.Grid ColorSelectionGrid;
-        
-        #line default
-        #line hidden
-        
-        
         #line 19 "..\..\..\ColorPicker\PickerSelectionPlane.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Shapes.Rectangle PrimaryFillColor;
@@ -119,16 +111,15 @@ namespace Pin.ColorPicker {
             switch (connectionId)
             {
             case 1:
-            this.ColorSelectionGrid = ((System.Windows.Controls.Grid)(target));
             
             #line 18 "..\..\..\ColorPicker\PickerSelectionPlane.xaml"
-            this.ColorSelectionGrid.MouseMove += new System.Windows.Input.MouseEventHandler(this.ColorSelectionGrid_MouseMove);
+            ((System.Windows.Controls.Grid)(target)).MouseMove += new System.Windows.Input.MouseEventHandler(this.ColorSelectionGrid_MouseMove);
             
             #line default
             #line hidden
             
             #line 18 "..\..\..\ColorPicker\PickerSelectionPlane.xaml"
-            this.ColorSelectionGrid.MouseDown += new System.Windows.Input.MouseButtonEventHandler(this.ColorSelectionGrid_MouseDown);
+            ((System.Windows.Controls.Grid)(target)).MouseDown += new System.Windows.Input.MouseButtonEventHandler(this.ColorSelectionGrid_MouseDown);
             
             #line default
             #line hidden

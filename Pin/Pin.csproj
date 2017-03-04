@@ -117,13 +117,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ColorPicker\ColorSelectionViewModel.cs" />
-    <Compile Include="ColorPicker\PickerSelectionPlane.xaml.cs">
-      <DependentUpon>PickerSelectionPlane.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ColorPicker\ColorSelectionBox.xaml.cs">
-      <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="IMainWindow.cs" />
     <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
@@ -173,14 +166,6 @@
       <DependentUpon>ProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32.cs" />
-    <Page Include="ColorPicker\PickerSelectionPlane.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ColorPicker\ColorSelectionBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -273,6 +258,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pin.ColorPicker\Pin.ColorPicker.csproj">
+      <Project>{270a4943-eb0f-4457-b1c1-c7bbaf2f54dd}</Project>
+      <Name>Pin.ColorPicker</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

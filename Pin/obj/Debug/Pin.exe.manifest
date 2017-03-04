@@ -102,14 +102,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pin.exe" size="101792">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pin.exe" size="104352">
       <assemblyIdentity name="Pin" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>0Jtx4fbhq7ZihqfBnc/9kOWkOKXcaAD4woxCOxY4LNA=</dsig:DigestValue>
+        <dsig:DigestValue>3J4BSIGG5p/YvK/gEOqaCK66xNpw78G9Bqw1fBnVtzc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
