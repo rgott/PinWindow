@@ -30,15 +30,18 @@ namespace Pin.ColorPicker
                 RaisePropertyChanged();
             }
         }
+
         private Color ColorSelection(Point screenPoint)
         {
             IntPtr hdc = Win32.GetDC(IntPtr.Zero);
             uint color = Win32.GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
             Win32.ReleaseDC(IntPtr.Zero, hdc);
-            byte a = (byte)(color >> 24);
+
             byte r = (byte)(color >> 0);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 16);
+
+            // ignore any alpha channel (want non transparent colors)
             return System.Windows.Media.Color.FromArgb(255, r, g, b);
         }
 
@@ -131,7 +134,7 @@ namespace Pin.ColorPicker
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Point tmpPoint;
+                Win32.POINT tmpPoint;
                 Win32.GetCursorPos(out tmpPoint);
 
                 PrimaryColor = new SolidColorBrush(ColorSelection(tmpPoint));
@@ -141,7 +144,7 @@ namespace Pin.ColorPicker
 
         private void MajorColorSelectorPlane_MouseDownCmd()
         {
-            Point tmpPoint;
+            Win32.POINT tmpPoint;
             Win32.GetCursorPos(out tmpPoint);
 
             Color = new SolidColorBrush(ColorSelection(tmpPoint));
@@ -152,7 +155,7 @@ namespace Pin.ColorPicker
 
         private void ColorSelectionGrid_MouseDownCmd()
         {
-            Point tmpPoint;
+            Win32.POINT tmpPoint;
             Win32.GetCursorPos(out tmpPoint);
             
             ColorSelectionGridColorFinder = new Thickness(Mouse.GetPosition(Mouse.DirectlyOver).X - 5, Mouse.GetPosition(Mouse.DirectlyOver).Y - 5, 0, 0);
@@ -163,7 +166,7 @@ namespace Pin.ColorPicker
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Point tmpPoint;
+                Win32.POINT tmpPoint;
                 Win32.GetCursorPos(out tmpPoint);
 
                 Point mousPos = Mouse.GetPosition(Mouse.DirectlyOver);

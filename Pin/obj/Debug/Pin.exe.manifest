@@ -109,19 +109,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>irPBsMz9nirpYgBLgzLvm39l21H+gN4ZbvJ0EFu8x8I=</dsig:DigestValue>
+        <dsig:DigestValue>IplN/h0G2/SmN1ZJ0uj1bFT1H9f91AbS3uHGdqqfXpU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pin.ColorPicker.exe" size="22016">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pin.ColorPicker.exe" size="22528">
       <assemblyIdentity name="Pin.ColorPicker" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2ct/gFQKf5Ssn/A9xrTwVhzme/VIpPXGEzaMNpaI3VU=</dsig:DigestValue>
+        <dsig:DigestValue>jUU3mw/eW+RHyAO6KFJJ76C7R28hqHIfESKp30rF5Wo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
