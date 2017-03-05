@@ -15,3 +15,5 @@ C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\Microsoft.Pra
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\GalaSoft.MvvmLight.Extras.pdb
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\GalaSoft.MvvmLight.Extras.xml
+C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\Pin.ColorPicker.exe
+C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin.Tests\bin\Debug\Pin.ColorPicker.pdb

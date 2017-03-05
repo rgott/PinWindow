@@ -1,5 +1,3 @@
-C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\ColorPicker\PickerSelectionPlane.g.cs
-C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\ColorPicker\ColorSelectionBox.g.cs
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MainWindow.g.cs
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MenuContainer\Maximized.g.cs
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MenuContainer\Minimized.g.cs
@@ -20,8 +18,6 @@ C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\Pin.pdb
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\NLog.dll
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\NLog.xml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\App.baml
-C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\ColorPicker\PickerSelectionPlane.baml
-C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\ColorPicker\ColorSelectionBox.baml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MainWindow.baml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MenuContainer\Maximized.baml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\MenuContainer\Minimized.baml
@@ -52,3 +48,5 @@ C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\GalaSoft.MvvmLight.
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\obj\Debug\Pin.csprojResolveAssemblyReference.cache
+C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\Pin.ColorPicker.exe
+C:\Users\Rob\Source\Visual Studio\Projects\Pin\Pin\bin\Debug\Pin.ColorPicker.pdb

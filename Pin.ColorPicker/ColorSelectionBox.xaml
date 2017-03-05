@@ -5,23 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:Pin.ColorPicker"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="30" d:DesignWidth="30">
     <Grid>
-        <Button Background="{Binding Color,FallbackValue=Orange}" Margin="0" Command="{Binding Color_Click}"/>
+        <Button Background="{Binding Color,FallbackValue=Orange}" Template="{StaticResource StyledButton}" Margin="0" Command="{Binding Color_Click}"/>
 
-        <Popup Placement="Center" Width="130" Height="130">
+        <Popup IsOpen="{Binding ColorSelection_isOpen}" Placement="MousePoint">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseEnter">
                     <i:InvokeCommandAction Command="{Binding PickerPlane_MouseEnter}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <Grid>
+            <Grid Width="150" Height="150">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="23"/>
                 </Grid.RowDefinitions>
-                <local:PickerSelectionPlane DataContext="{Binding PickerSelectionPlaneContext}"/>
+                <local:PickerSelectionPlane DataContext="{Binding}"/>
                 <Button Command="{Binding Done_Click}" Grid.Row="1">Done</Button>
             </Grid>
         </Popup>

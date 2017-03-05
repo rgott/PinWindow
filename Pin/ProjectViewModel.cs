@@ -40,12 +40,12 @@ namespace Pin
         public RelayCommand PauseWindowChange { get; private set; }
         private void PauseWindowChangeCmd()
         {
-            // TODO: pause window change in iwindow
-            // HOWDO: lock each pause with the this object to make sure the unpauser is the same as the pauser
+            Window.PauseState(this);
         }
         public RelayCommand ResumeWindowChange { get; private set; }
         private void ResumeWindowChangeCmd()
         {
+            Window.ResumeState(this);
             // TODO: resume window change in iwindow
         }
 

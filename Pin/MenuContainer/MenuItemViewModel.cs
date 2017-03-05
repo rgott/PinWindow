@@ -1,7 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Pin.ColorPicker;
 using Pin.Model;
 using System;
+using System.Windows.Input;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
 
@@ -26,7 +28,8 @@ namespace Pin.MenuContainer
         public RelayCommand UI_Popup_Menu { get; set; }
 
         public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
-
+        public ICommand ResumeWindow { get; set; }
+        public ICommand PauseWindow { get; set; }
         private bool UI_Popup_Menu_IsOpen = false;
         public IMainWindow Window { get; set; }
 
@@ -43,6 +46,9 @@ namespace Pin.MenuContainer
             UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             AddProject_ClickCmd = new RelayCommand(AddProject_Click);
+
+            ColorSelectionContext = new ColorSelectionViewModel((c) => { Color = c; }, ColorSelectionContext_PopupIsOpenChanged);
+
             //PinContainer
             UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
             UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
@@ -68,6 +74,31 @@ namespace Pin.MenuContainer
 
         }
 
+        private void ColorSelectionContext_PopupIsOpenChanged(bool obj)
+        {
+            if(obj)
+            {
+                Window.PauseState(this);
+            }
+            else
+            {
+                Window.ResumeState(this);
+            }
+        }
+
+        private ColorSelectionViewModel _ColorSelectionContext;
+        public ColorSelectionViewModel ColorSelectionContext
+        {
+            get
+            {
+                return _ColorSelectionContext;
+            }
+            set
+            {
+                _ColorSelectionContext = value;
+                RaisePropertyChanged();
+            }
+        }
         private string _Add_ProjectPath;
         public string Add_ProjectPath
         {
@@ -96,11 +127,13 @@ namespace Pin.MenuContainer
             // TODO: do x => + convertion with xaml logic
             if (popupToggle_IsChecked)
             {
-                addP_Text = "x";
+                addP_Text = "+";
+                Window.ResumeState(this);
             }
             else
             {
-                addP_Text = "+";
+                addP_Text = "x";
+                Window.PauseState(this);
             }
             popupToggle_IsChecked = !popupToggle_IsChecked;
         }
@@ -134,6 +167,19 @@ namespace Pin.MenuContainer
             }
         }
 
+        private Brush _Color;
+        public Brush Color
+        {
+            get
+            {
+                return _Color;
+            }
+            set
+            {
+                _Color = value;
+                RaisePropertyChanged();
+            }
+        }
         public SolidColorBrush _UI_DragOut_Color { get; set; }
         public SolidColorBrush UI_DragOut_Color
         {
@@ -239,34 +285,7 @@ namespace Pin.MenuContainer
             }
         }
 
-        private Brush _Add_ProjectColor;
-        public Brush Add_ProjectColor
-        {
-            get
-            {
-                return _Add_ProjectColor;
-            }
-            set
-            {
-                _Add_ProjectColor = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private Brush _UI_ColorPicker_ColorSelectionBox;
-        public Brush UI_ColorPicker_ColorSelectionBox
-        {
-            get
-            {
-                return _UI_ColorPicker_ColorSelectionBox;
-            }
-            set
-            {
-                _UI_ColorPicker_ColorSelectionBox = value;
-                RaisePropertyChanged();
-            }
-        }
-
+        
         private bool _popupToggle_IsChecked;
         public bool popupToggle_IsChecked
         {
@@ -301,12 +320,13 @@ namespace Pin.MenuContainer
             var ProjectModel = new Model.Project(
                 UI_TxtBox_ProjectName,
                 Add_ProjectPath,
-                Add_ProjectColor);
+                Color);
 
             ProjectList.Add(ProjectModel);
 
             popupToggle_IsChecked = false;
             addP_Text = "+";
+            Window.ResumeState(this);
             UI_TxtBox_ProjectName = "";
             Add_ProjectPath = "";
 

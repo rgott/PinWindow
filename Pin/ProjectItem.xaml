@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pin"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:ColorPicker="clr-namespace:Pin.ColorPicker"
+             xmlns:ColorPicker="clr-namespace:Pin.ColorPicker;assembly=Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="400">
     
@@ -63,7 +63,7 @@
                     <ColumnDefinition Width="45"/>
                     <ColumnDefinition Width="45"/>
                 </Grid.ColumnDefinitions>
-                <ColorPicker:ColorSelectionBox FillColor="{Binding Color}" Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
+                <ColorPicker:ColorSelectionBox Margin="0,0,0,0" Width="10" Height="10" Grid.RowSpan="2"/>
                 <TextBox Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
                 <Button Grid.Column="3" Grid.Row="0" Template="{StaticResource SaveBtn}" Command="{Binding CancelEditorBtn}">Cancel</Button>

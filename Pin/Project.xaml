@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Pin"
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker;assembly=Pin.ColorPicker"
              mc:Ignorable="d"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
@@ -41,7 +42,7 @@
                     </ToggleButton>
                 </Grid>
             </Border>
-            
+             
             <ListBox Grid.Row="1" Template="{StaticResource ListViewProjects}" SelectionMode="Single" SelectedItem="{Binding SelectedProject,Mode=TwoWay}" ItemsSource="{Binding ProjectList.Projects}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -90,7 +91,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ColorPicker:ColorSelectionBox DataContext="{Binding ColorSelectionBoxContext}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
+                        <ColorPicker:ColorSelectionBox DataContext="{Binding ColorSelectionContext}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
+
                         <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>

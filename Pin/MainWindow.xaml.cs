@@ -1,6 +1,8 @@
 ﻿using Pin.MenuContainer;
 using Pin.ViewModel;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -108,6 +110,9 @@ namespace Pin
 
         public void WindowChangeState(WindowState? wState = null)
         {
+            // if state is locked do not change state
+            if (WindowStateLocks.Count != 0) return;
+
             if (wState == null)
             { // setoppositestate
                 if (MouseOverController.Win_State == Pin.WindowState.Normal && MouseOverController.isPinned)
@@ -241,7 +246,6 @@ namespace Pin
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
         {
-            MouseOverController.isMoveOverWindow = true;
             if (MouseOverController.Win_State == Pin.WindowState.Minimized)
             {
                 WindowChangeState(Pin.WindowState.MinimizedOpen);
@@ -250,7 +254,6 @@ namespace Pin
 
         private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
-            MouseOverController.isMoveOverWindow = false;
             if (MouseOverController.Win_State == Pin.WindowState.MinimizedDragging && !MouseOverController.isMoveOverWindow)
             {
                 WindowChangeState(Pin.WindowState.Minimized);
@@ -274,6 +277,17 @@ namespace Pin
             Properties.Settings.Default.Save();
 
             Close();
+        }
+
+        List<object> WindowStateLocks = new List<object>();
+        public void PauseState(object lockingObject)
+        {
+            WindowStateLocks.Add(lockingObject);
+        }
+
+        public void ResumeState(object lockingObject)
+        {
+            WindowStateLocks.Remove(lockingObject);
         }
 
         #endregion

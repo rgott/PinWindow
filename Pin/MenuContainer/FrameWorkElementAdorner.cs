@@ -29,7 +29,7 @@ namespace Pin.MenuContainer
         {
             Rect adornedElementRect = new Rect(this.AdornedElement.DesiredSize);
 
-            SolidColorBrush renderBrush = new SolidColorBrush(Colors.Red);
+            SolidColorBrush renderBrush = new SolidColorBrush(Colors.Blue);
             renderBrush.Opacity = 0.5;
             Pen renderPen = new Pen(new SolidColorBrush(Colors.White), 1.5);
             double renderRadius = 5.0;

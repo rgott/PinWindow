@@ -8,9 +8,9 @@
              mc:Ignorable="d" 
              AllowDrop="True"
              d:DesignHeight="20" d:DesignWidth="20">
-    <i:Interaction.Behaviors>
+    <!--<i:Interaction.Behaviors>
         <local:FrameworkElementDropBehavior DroppableProject="{Binding Project}"/>
-    </i:Interaction.Behaviors>
+    </i:Interaction.Behaviors>-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="DragEnter">
             <i:InvokeCommandAction Command="{Binding UC_DragEnterCmd}"/>
