@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Pin"
+        xmlns:Project="clr-namespace:Pin.ProjectContainer"
         xmlns:MenuContainer="clr-namespace:Pin.MenuContainer"
         mc:Ignorable="d"
         x:Name="pinWindow"
@@ -31,7 +31,7 @@
                     </UniformGrid>
                 </Border>
             </Grid>
-            <local:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind.Context}" Margin="0,20,0,0"/>
+            <Project:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind.Context}" Margin="0,20,0,0"/>
         </Grid>
         <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>

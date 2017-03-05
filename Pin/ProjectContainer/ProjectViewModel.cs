@@ -4,6 +4,7 @@ using Pin.Model;
 using System.Linq;
 using Forms = System.Windows.Forms;
 using System;
+using Pin.ColorPicker;
 
 namespace Pin
 {
@@ -19,43 +20,40 @@ namespace Pin
             OrigionalProject = Project;
             this.ProjectVM = ProjectVM;
 
-            DeleteProject = new RelayCommand(DeleteProjectCmd);
+            ColorSelectionContext = new ColorSelectionViewModel((brush) => Project.Color = brush, ColorSelectionContext_PopupisOpenChanged);
+
+            DeleteProject = new RelayCommand(() => ProjectVM.Delete(OrigionalProject));
             OpenWithExplorer = new RelayCommand(OpenWithExplorerCmd);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
             SaveEditorSettings = new RelayCommand(SaveEditorSettingsCmd);
             CancelEditorBtn = new RelayCommand(CancelEditorBtnCmd);
-            EditBtn = new RelayCommand(EditBtnCmd);
-            PauseWindowChange = new RelayCommand(PauseWindowChangeCmd);
-            ResumeWindowChange = new RelayCommand(ResumeWindowChangeCmd);
+            EditBtn = new RelayCommand(() => ShowEditor = true);
+            PauseWindowChange = new RelayCommand(() => Window.PauseState(this));
+            ResumeWindowChange = new RelayCommand(() => Window.ResumeState(this));
         }
 
-        
+        private void ColorSelectionContext_PopupisOpenChanged(bool obj)
+        {
+            if(obj)
+            {
+                Window.PauseState(this);
+            }
+            else
+            {
+                Window.ResumeState(this);
+            }
+        }
 
         public RelayCommand DeleteProject { get; private set; }
-        private void DeleteProjectCmd()
-        {
-            ProjectVM.Delete(OrigionalProject);
-        }
+
+        public ColorSelectionViewModel ColorSelectionContext { get; set; }
+
 
         public RelayCommand PauseWindowChange { get; private set; }
-        private void PauseWindowChangeCmd()
-        {
-            Window.PauseState(this);
-        }
         public RelayCommand ResumeWindowChange { get; private set; }
-        private void ResumeWindowChangeCmd()
-        {
-            Window.ResumeState(this);
-            // TODO: resume window change in iwindow
-        }
-
         public RelayCommand EditBtn { get; private set; }
-        private void EditBtnCmd()
-        {
-            ShowEditor = true;
-        }
-
         public RelayCommand CancelEditorBtn { get; private set; }
+
         private void CancelEditorBtnCmd()
         {
             Project = OrigionalProject.Clone() as IProject; // reset any changes
@@ -80,6 +78,7 @@ namespace Pin
             // change current version
             Project.Path = userGeneratedPath.SelectedPath;
         }
+
         public RelayCommand OpenWithExplorer { get; set; }
         private void OpenWithExplorerCmd()
         {
@@ -122,10 +121,12 @@ namespace Pin
             }
             return false;
         }
+
         public bool Equals(IProject project)
         {
             return OrigionalProject.Equals(Project);
         }
+
         public bool Equals(IProjectViewModel obj)
         {
             return OrigionalProject.Equals(obj.OrigionalProject);

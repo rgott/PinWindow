@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Pin.ProjectContainer.ProjectItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pin.ProjectContainer"
+             xmlns:Pin="clr-namespace:Pin"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <Pin:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisibility"/>
+
+    </UserControl.Resources>
+    <Grid x:Name="UI_Grid_View" >
+        <Button x:Name="UI_Btn_ProjectColor" Template="{StaticResource StyledButton}" Background="{Binding Project.Color,FallbackValue=orange}" Margin="0,0,0,0" Width="15" HorizontalAlignment="Left"/>
+
+        <TextBlock VerticalAlignment="Center" Margin="25,0,0,0" Text="{Binding Project.Name,FallbackValue=ProjectName}"/>
+        <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" Command="{Binding OpenWithExplorer}" Margin="0,0,5,0" HorizontalAlignment="Right">
+            <Border Margin="2">
+                <Image Source="/images/Folder.png"/>
+            </Border>
+        </Button>
+    </Grid>
+</UserControl>

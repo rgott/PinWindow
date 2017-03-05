@@ -120,7 +120,7 @@
     <Compile Include="DropDataHandler.cs" />
     <Compile Include="IMainWindow.cs" />
     <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
-    <Compile Include="IProjectViewModel.cs" />
+    <Compile Include="ProjectContainer\IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\DisplayDropBehavior.cs" />
     <Compile Include="MenuContainer\FrameWorkElementAdorner.cs" />
@@ -138,8 +138,14 @@
     <Compile Include="MenuContainer\MinimizedOpen.xaml.cs">
       <DependentUpon>MinimizedOpen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProjectFactory.cs" />
-    <Compile Include="ProjectViewModel.cs" />
+    <Compile Include="ProjectContainer\ProjectFactory.cs" />
+    <Compile Include="ProjectContainer\ProjectItemEdit.xaml.cs">
+      <DependentUpon>ProjectItemEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectContainer\ProjectItemView.xaml.cs">
+      <DependentUpon>ProjectItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectContainer\ProjectViewModel.cs" />
     <Compile Include="Model\IProject.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="MenuContainer\ProjectView.xaml.cs">
@@ -150,7 +156,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="CustomXmlSerializer.cs" />
-    <Compile Include="ProjectViewModelList.cs" />
+    <Compile Include="ProjectContainer\ProjectViewModelList.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />
     <Compile Include="MenuContainer\Menu.xaml.cs">
@@ -159,10 +165,10 @@
     <Compile Include="MenuContainer\PinContainerProjectItem.xaml.cs">
       <DependentUpon>PinContainerProjectItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Project.xaml.cs">
+    <Compile Include="ProjectContainer\Project.xaml.cs">
       <DependentUpon>Project.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProjectItem.xaml.cs">
+    <Compile Include="ProjectContainer\ProjectItem.xaml.cs">
       <DependentUpon>ProjectItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32.cs" />
@@ -198,15 +204,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Project.xaml">
+    <Page Include="ProjectContainer\Project.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ProjectItem.xaml">
+    <Page Include="ProjectContainer\ProjectItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MenuContainer\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectContainer\ProjectItemEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectContainer\ProjectItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -265,6 +279,7 @@
       <Name>Pin.ColorPicker</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

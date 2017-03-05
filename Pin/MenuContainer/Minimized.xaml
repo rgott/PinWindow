@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="20" Height="20" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left">
     <Border Background="Transparent" IsHitTestVisible="True">
-        <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding SelectedProject.Color,FallbackValue=Orange}" />
+        <Polygon AllowDrop="True" Points="0,0 0,20, 20,0" Fill="{Binding SelectedProject.Project.Color,FallbackValue=Orange}" />
     </Border>
 </UserControl>

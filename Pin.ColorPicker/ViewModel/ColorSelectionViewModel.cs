@@ -85,6 +85,12 @@ namespace Pin.ColorPicker
         public ColorSelectionViewModel PickerSelectionPlaneContext { get; set; }
         public Action<Brush> ColorChanged { get; set; }
         public Action<bool> PopupIsOpenChanged { get; set; }
+
+        /// <summary>
+        /// The color box of the selected color
+        /// </summary>
+        /// <param name="ColorChanged">Fired when the user has finished selecting a color (pressed done)</param>
+        /// <param name="PopupIsOpenChanged"></param>
         public ColorSelectionViewModel(Action<Brush> ColorChanged,Action<bool> PopupIsOpenChanged)
         {
             this.ColorChanged = ColorChanged;

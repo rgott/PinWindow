@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Pin
+namespace Pin.ProjectContainer
 {
     /// <summary>
     /// Interaction logic for ProjectItem.xaml

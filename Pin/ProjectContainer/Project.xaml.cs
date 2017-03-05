@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using Forms = System.Windows.Forms;
 using System.Windows.Input;
 
-namespace Pin
+namespace Pin.ProjectContainer
 {
     /// <summary>
     /// Interaction logic for Project.xaml

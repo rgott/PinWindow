@@ -8,7 +8,7 @@ namespace Pin
         public delegate bool MouseOverWindowHandler();
         public static event MouseOverWindowHandler MouseOverWindow;
 
-
+        [Obsolete]
         internal static bool isMoveOverWindow;
 
         public delegate void MouseLeaveMenuEventHandler(EventArgs e);
@@ -38,6 +38,7 @@ namespace Pin
             }
 
         }
+
         public static bool isPinned
         {
             get
@@ -51,6 +52,7 @@ namespace Pin
 
         }
         private static bool _isProjectOpen = false;
+        [Obsolete]
         public static bool isProjectOpen
         {
             get
@@ -79,9 +81,9 @@ namespace Pin
                 }
             }
         }
-
+        [Obsolete]
         public static bool CancellationRequested { get; set; }
-
+        [Obsolete]
         public static bool DoAllEqualsDesired<T>(Delegate del, T desired)
         {
 

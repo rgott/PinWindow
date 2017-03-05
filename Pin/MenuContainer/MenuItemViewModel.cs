@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using Pin.ColorPicker;
 using Pin.Model;
 using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
@@ -21,19 +22,15 @@ namespace Pin.MenuContainer
 
         public RelayCommand AddProject_ClickCmd { get; set; }
 
-        public RelayCommand MouseOverFalseCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = false);
-        public RelayCommand MouseOverTrueCmd => new RelayCommand(() => MouseOverController.isMouseOverMenu = true);
+        public RelayCommand ResumeWindow { get; set; }
+        public RelayCommand PauseWindow { get; set; }
 
         public RelayCommand ProjectAddClick { get; set; }
         public RelayCommand UI_Popup_Menu { get; set; }
 
         public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
-        public ICommand ResumeWindow { get; set; }
-        public ICommand PauseWindow { get; set; }
         private bool UI_Popup_Menu_IsOpen = false;
         public IMainWindow Window { get; set; }
-
-        public RelayCommand DeleteProject { get; set; }
 
         public MenuItemViewModel(IMainWindow window, ProjectViewModelList pList)
         {
@@ -47,6 +44,9 @@ namespace Pin.MenuContainer
             UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             AddProject_ClickCmd = new RelayCommand(AddProject_Click);
 
+            ResumeWindow = new RelayCommand(() => Window.ResumeState(this));
+            PauseWindow = new RelayCommand(() => Window.ResumeState(this));
+
             ColorSelectionContext = new ColorSelectionViewModel((c) => { Color = c; }, ColorSelectionContext_PopupIsOpenChanged);
 
             //PinContainer
@@ -58,7 +58,6 @@ namespace Pin.MenuContainer
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
             ProjectList = pList;
-            DeleteProject = new RelayCommand(() => ProjectList.Delete(SelectedProject));
             pList.ActionEventChanged += new ProjectViewModelList.ActionEventChangedEventHandler(delegate (ActionEvent e)
             {
                 switch (e)
@@ -108,7 +107,7 @@ namespace Pin.MenuContainer
             }
             set
             {
-                _Add_ProjectPath = value;
+                _Add_ProjectPath = value.Replace('/', '\\');
                 RaisePropertyChanged();
             }
         }
@@ -116,10 +115,15 @@ namespace Pin.MenuContainer
         private void ChangeDirectoryCmd()
         {
             Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
+
+            Window.PauseState(userGeneratedPath);// pause window while searching a directory
             userGeneratedPath.ShowDialog();
+            Window.ResumeState(userGeneratedPath);
 
             // change current version
-            Add_ProjectPath = userGeneratedPath.SelectedPath;
+            if (!String.IsNullOrEmpty(userGeneratedPath.SelectedPath))
+                Add_ProjectPath = userGeneratedPath.SelectedPath;
+
         }
 
         private void ProjectAddClickCmd()
@@ -139,8 +143,8 @@ namespace Pin.MenuContainer
         }
 
         #region Properties
-        private IProject _SelectedProject;
-        public IProject SelectedProject
+        private IProjectViewModel _SelectedProject;
+        public IProjectViewModel SelectedProject
         {
             get
             {
@@ -271,21 +275,6 @@ namespace Pin.MenuContainer
             }
         }
 
-        private string _UI_TxtBox_ProjectPath;
-        public string UI_TxtBox_ProjectPath
-        {
-            get
-            {
-                return _UI_TxtBox_ProjectPath;
-            }
-            set
-            {
-                _UI_TxtBox_ProjectPath = value.Replace('/', '\\');
-                RaisePropertyChanged();
-            }
-        }
-
-        
         private bool _popupToggle_IsChecked;
         public bool popupToggle_IsChecked
         {
@@ -366,8 +355,20 @@ namespace Pin.MenuContainer
                 RaisePropertyChanged();
             }
         }
+        private readonly DragEventHandler _DragEnter;
+        private void DragEnterCmd(object sender, DragEventArgs e)
+        {
+            popup_isOpen = true;
+            Window.PauseState(this);
+        }
 
-
+        private readonly DragEventHandler _DragLeave;
+        private void DragLeaveCmd(object sender, DragEventArgs e)
+        {
+            popup_isOpen = false;
+            Window.ResumeState(this);
+        }
+        public DragEventHandler DragLeave => _DragLeave;
 
         public RelayCommand UC_DragEnterCmd { get; set; }
         public RelayCommand UC_DropCmd { get; set; }
