@@ -28,7 +28,7 @@ namespace Pin
                 // load into viewable object
                 foreach (string item in Settings.Projects)
                 {
-                    Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, CustomXmlSerializer.Deserialize<Model.Project>(item))); 
+                    Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Model.Project.Deserialize<Model.Project>(item))); 
                 }
             }
         }

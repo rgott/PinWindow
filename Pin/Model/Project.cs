@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Serialization;
@@ -9,13 +11,13 @@ using System.Xml.Serialization;
 namespace Pin.Model
 {
     [Serializable]
-    public class Project : CustomXmlSerializer, IProject , INotifyPropertyChanged
+    [XmlInclude(typeof(XmlBrushConverter))]
+    public class Project : IProject , INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public static explicit operator Model.Project(string obj)
@@ -27,7 +29,6 @@ namespace Pin.Model
         {
             return obj.Serialize();
         }
-
 
         private string _Name;
         public string Name
@@ -42,7 +43,6 @@ namespace Pin.Model
                 NotifyPropertyChanged();
             }
         }
-
 
         private string _Path;
         public string Path
@@ -59,7 +59,7 @@ namespace Pin.Model
         }
 
         private Brush _Color;
-        [XmlElement(Type = typeof(XmlColor))]
+        [XmlElement(Type = typeof(XmlBrushConverter))]
         public Brush Color
         {
             get
@@ -87,11 +87,7 @@ namespace Pin.Model
 
         public override bool Equals(object obj)
         {
-            if (obj is string)
-            {
-                return Name.Equals(obj as string);
-            }
-            else if (obj is Project)
+            if (obj is Project)
             {
                 return Name.Equals((obj as Project).Name);
             }
@@ -107,5 +103,32 @@ namespace Pin.Model
         {
             return new Project(Name, Path, Color);
         }
+
+        public string Serialize()
+        {
+            var settings = new XmlWriterSettings();
+            settings.Indent = false;
+            settings.NewLineHandling = NewLineHandling.None;
+
+            var xmlOutput = new StringBuilder();
+            using (var writer = XmlWriter.Create(xmlOutput, settings))
+            {
+                var serializer = new XmlSerializer(GetType());
+
+                serializer.Serialize(writer, this);
+                return xmlOutput.ToString();
+            }
+        }
+
+        public static T Deserialize<T>(string objectData)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+
+            using (var reader = new StringReader(objectData))
+            {
+                return (T)serializer.Deserialize(reader);
+            }
+        }
+
     }
 }

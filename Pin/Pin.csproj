@@ -91,6 +91,9 @@
       <HintPath>..\packages\NLog.4.4.2\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -152,9 +155,8 @@
     <Compile Include="Enum States.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="Model\CustomXmlSerializer.cs" />
     <Compile Include="ProjectContainer\ProjectViewModelList.cs" />
-    <Compile Include="Model\XmlColor.cs" />
+    <Compile Include="Model\XmlBrushConverter.cs" />
     <Compile Include="MouseOverController.cs" />
     <Compile Include="MenuContainer\Menu.xaml.cs">
       <DependentUpon>Menu.xaml</DependentUpon>

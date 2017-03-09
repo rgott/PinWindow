@@ -55,4 +55,5 @@ using System.Windows;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: InternalsVisibleTo("Pin.Tests1")]
 [assembly: InternalsVisibleTo("Pin.Explorables")]
+[assembly: InternalsVisibleTo("Pin.Tests")]
 
