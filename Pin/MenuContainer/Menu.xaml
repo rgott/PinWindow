@@ -7,8 +7,16 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" d:DesignWidth="300" Height="100">
     <i:Interaction.Behaviors>
-        <local:DisplayDropBehavior DragEnter="{Binding DragEnter}" DragLeave="{Binding DragLeave}" Drop="{Binding Drop}"/>
+        <local:MenuContainerDropBehavior/>
     </i:Interaction.Behaviors>
+        <i:Interaction.Triggers>
+        <i:EventTrigger EventName="DragEnter">
+            <i:InvokeCommandAction Command="{Binding DragEnter}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragLeave">
+            <i:InvokeCommandAction Command="{Binding DragLeave}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <Style x:Key="ContainerStyle" TargetType="UserControl">
             <Setter Property="Visibility" Value="Collapsed"/>
@@ -18,9 +26,9 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
-        <local:MinimizedOpen DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_MinimizedOpen,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
-        <local:Maximized DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Maximized,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
-        <local:Minimized DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Minimized,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
-        <local:ProjectView x:Name="projectView" DataContext="{Binding Context}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_ProjectView, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:MinimizedOpen DataContext="{Binding}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_MinimizedOpen,FallbackValue=collapsed,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:Maximized DataContext="{Binding}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Maximized,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:Minimized DataContext="{Binding}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_Minimized,FallbackValue=collapsed,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
+        <local:ProjectView x:Name="projectView" DataContext="{Binding}" Style="{StaticResource ContainerStyle}" Visibility="{Binding Vis_ProjectView,FallbackValue=collapsed, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>

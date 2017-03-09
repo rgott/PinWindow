@@ -3,13 +3,11 @@ using System.Windows;
 
 namespace Pin
 {
+    [Obsolete]
     public class MouseOverController
     {
         public delegate bool MouseOverWindowHandler();
         public static event MouseOverWindowHandler MouseOverWindow;
-
-        [Obsolete]
-        internal static bool isMoveOverWindow;
 
         public delegate void MouseLeaveMenuEventHandler(EventArgs e);
         public static event MouseLeaveMenuEventHandler MouseLeaveMenu;
@@ -23,7 +21,6 @@ namespace Pin
         {
             Win_State = WindowState.Minimized;
             isPinned = false;
-            isMouseOverMenu = false;
         }
 
         public static WindowState Win_State
@@ -81,8 +78,6 @@ namespace Pin
                 }
             }
         }
-        [Obsolete]
-        public static bool CancellationRequested { get; set; }
         [Obsolete]
         public static bool DoAllEqualsDesired<T>(Delegate del, T desired)
         {

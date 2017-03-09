@@ -46,13 +46,13 @@ namespace Pin
             return true;
         }
 
-        internal IProjectViewModel find(IProject project)
+        public IProjectViewModel find(IProject project)
         {
             return Projects.FirstOrDefault(m => m.Project == project);
         }
 
 
-        internal void Change(IProject OldProject, IProject NewProject)
+        public void Change(IProject OldProject, IProject NewProject)
         {
             var OldProjectVM = ProjectFactory.getViewModelFromModel(this, Window, OldProject);
             var NewProjectVM = ProjectFactory.getViewModelFromModel(this, Window, NewProject);
@@ -60,7 +60,7 @@ namespace Pin
             Change(OldProjectVM, NewProjectVM);
         }
 
-        internal void Change(IProjectViewModel OldProjectVM, IProjectViewModel NewProjectVM)
+        public void Change(IProjectViewModel OldProjectVM, IProjectViewModel NewProjectVM)
         {
             var index = Projects.IndexOf(OldProjectVM);
             Projects[index] = NewProjectVM;
@@ -74,7 +74,7 @@ namespace Pin
             Settings.Save();
         }
 
-        internal void Delete(Model.IProject Model)
+        public void Delete(Model.IProject Model)
         {
             var index = Projects.IndexOf(ProjectFactory.getViewModelFromModel(this, Window, Model));
 
@@ -102,7 +102,8 @@ namespace Pin
         {
             get
             {
-                return Projects?.FirstOrDefault(Model => Model.Project.Name == Settings.PrimaryProjectName) ?? ProjectFactory.getViewModelFromModel(this, Window, ProjectFactory.DefaultProject);
+                return Projects?.FirstOrDefault(Model => Model.Project.Name == Settings.PrimaryProjectName) 
+                    ?? ProjectFactory.getViewModelFromModel(this, Window, ProjectFactory.DefaultProject);
             }
             set
             {

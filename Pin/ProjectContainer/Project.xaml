@@ -82,7 +82,7 @@
             
             <!--Top of all others-->
             <Grid Visibility="{Binding popupToggle_IsChecked,Converter={StaticResource BoolToVisibility}}" Grid.Row="1" VerticalAlignment="Top">
-                <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1" Width="280" Height="91">
+                <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1" Margin="10,0,10,0" Height="91">
                     <Grid  Background="#FF646769" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>

@@ -9,6 +9,9 @@
              xmlns:ColorPicker="clr-namespace:Pin.ColorPicker;assembly=Pin.ColorPicker"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="400">
+    <i:Interaction.Behaviors>
+        <local:ProjectDropBehavior ProjectVM="{Binding}"/>
+    </i:Interaction.Behaviors>
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>

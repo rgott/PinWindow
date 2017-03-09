@@ -1,19 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Linq;
+using System.Windows.Interactivity;
 
-namespace Pin
+namespace Pin.ProjectContainer
 {
-    public class DropDataHandler
+    public class ProjectDropBehavior : Behavior<FrameworkElement>
     {
-        public static void dragDataOut(DependencyObject source,string[] filesToDrag)
+        public IProjectViewModel ProjectVM
         {
-            var data = new DataObject(DataFormats.FileDrop, filesToDrag);
-            DragDrop.DoDragDrop(source, data, getEffects((ActionEvent)Properties.Settings.Default.ActionEvent));
+            get { return (IProjectViewModel)GetValue(ProjectVMProperty); }
+            set { SetValue(ProjectVMProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for ProjectVM.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ProjectVMProperty =
+            DependencyProperty.Register("ProjectVM", typeof(IProjectViewModel), typeof(ProjectDropBehavior));
+
+
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+
+            this.AssociatedObject.AllowDrop = true;
+            this.AssociatedObject.DragEnter += DragEnterCmd;
+            this.AssociatedObject.DragLeave += DragLeaveCmd;
+            this.AssociatedObject.Drop += DropCmd;
+        }
+
+        protected virtual void DragEnterCmd(object sender, DragEventArgs e)
+        {
+            //Window.WindowChangeState(WindowState.MinimizedDragging);
+        }
+
+        protected virtual void DragLeaveCmd(object sender, DragEventArgs e)
+        {
+            //Window.WindowChangeState(WindowState.Minimized);
+        }
+
+        protected virtual void DropCmd(object sender, DragEventArgs e)
+        {
+            dropData(ProjectVM.Project, e);
+        }
+
 
         /// <summary>
         /// 
@@ -33,12 +66,16 @@ namespace Pin
             {// if html then from web retrieve and save or content
                 return DropHtml(project, e);
             }
-            else if(e.Data.GetFormats().Contains(DataFormats.FileDrop))
+            else if (e.Data.GetFormats().Contains(DataFormats.FileDrop))
             {// file drop
                 return DropFileDrop(project, e);
             }
             return null;
         }
+
+
+
+
 
         private static string[] DropHtml(Model.IProject project, DragEventArgs e)
         {
@@ -88,7 +125,7 @@ namespace Pin
                 foreach (string SourcePath in data)
                 {
                     var DestinationPath = Path.Combine(project.Path, Path.GetFileName(SourcePath));
-                    //Console.WriteLine(String.Join(", ", item) + "\t=>\t" + DestinationPath);
+
                     try
                     {
                         if (Directory.Exists(DestinationPath))
@@ -127,16 +164,17 @@ namespace Pin
             return null;
         }
 
+
         /// <summary>
         /// Finds a random name for a file that does not exist
         /// </summary>
         /// <param name="path">Directory where file will be located</param>
         /// <param name="ext">File extention. must contain the leading period.</param>
         /// <returns></returns>
-        private static string getCheckedRandomFileName(string path,string ext)
+        private static string getCheckedRandomFileName(string path, string ext)
         {
             string fileName;
-            while(File.Exists(fileName = Path.Combine(path,Path.GetRandomFileName().Replace(".","") + ext))) { }
+            while (File.Exists(fileName = Path.Combine(path, Path.GetRandomFileName().Replace(".", "") + ext))) { }
             return fileName;
         }
 
@@ -160,25 +198,5 @@ namespace Pin
                 File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
         }
 
-
-        public static void setEffects(DragEventArgs e)
-        {
-            if (e.Data.GetFormats().Contains(DataFormats.Html)
-                && e.Data.GetFormats().Contains(DataFormats.FileDrop))
-            {
-                e.Effects = getEffects((ActionEvent)Properties.Settings.Default.ActionEvent);
-            }
-        }
-        public static DragDropEffects getEffects(ActionEvent e)
-        {
-            switch (e)
-            {
-                case ActionEvent.Move:
-                    return DragDropEffects.Move;
-                case ActionEvent.Copy:
-                    return DragDropEffects.Copy;
-            }
-            return DragDropEffects.None;
-        }
     }
 }

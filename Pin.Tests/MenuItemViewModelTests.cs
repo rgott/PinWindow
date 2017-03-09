@@ -11,15 +11,16 @@ using System.Windows.Media;
 namespace Pin.Tests
 {
     [TestClass]
-    public class ProjectViewModelListTests
+    public class MenuItemViewModelTests
     {
-        ProjectViewModelList model;
-        [TestMethod]
+        MenuItemViewModel Model;
+
+        [TestInitialize]
         public void ProjectViewModelList()
         {
-            model = new ProjectViewModelList(null,new TestSettings());
+            ProjectViewModelList ProjModel = new ProjectViewModelList(new BlankTestWindow(), new BlankTestSettings());
 
-            Assert.AreEqual(1, model.Projects.Count);
+            Model = new MenuItemViewModel(new BlankTestWindow(), ProjModel);
         }
     }
 }

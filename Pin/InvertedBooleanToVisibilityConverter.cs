@@ -19,5 +19,4 @@ namespace Pin
             return (Visibility)value != Visibility.Visible;
         }
     }
-    
 }

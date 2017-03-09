@@ -117,27 +117,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DropDataHandler.cs" />
     <Compile Include="IMainWindow.cs" />
     <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
+    <Compile Include="MenuContainer\MenuContainerDropBehavior.cs" />
+    <Compile Include="ProjectContainer\DragOutBehavior.cs" />
     <Compile Include="ProjectContainer\IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="MenuContainer\DisplayDropBehavior.cs" />
     <Compile Include="MenuContainer\FrameWorkElementAdorner.cs" />
-    <Compile Include="MenuContainer\FrameworkElementDropBehavior.cs" />
-    <Compile Include="MenuContainer\IDraggable.cs" />
-    <Compile Include="MenuContainer\IDroppable.cs" />
     <Compile Include="MenuContainer\Maximized.xaml.cs">
       <DependentUpon>Maximized.xaml</DependentUpon>
     </Compile>
     <Compile Include="MenuContainer\MenuItemViewModel.cs" />
-    <Compile Include="MenuContainer\MenuViewModel.cs" />
     <Compile Include="MenuContainer\Minimized.xaml.cs">
       <DependentUpon>Minimized.xaml</DependentUpon>
     </Compile>
     <Compile Include="MenuContainer\MinimizedOpen.xaml.cs">
       <DependentUpon>MinimizedOpen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectContainer\ProjectContainerDropBehavior.cs" />
+    <Compile Include="ProjectContainer\ProjectDropBehavior.cs" />
     <Compile Include="ProjectContainer\ProjectFactory.cs" />
     <Compile Include="ProjectContainer\ProjectItemEdit.xaml.cs">
       <DependentUpon>ProjectItemEdit.xaml</DependentUpon>
@@ -153,9 +151,8 @@
     </Compile>
     <Compile Include="Enum States.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="CustomXmlSerializer.cs" />
+    <Compile Include="Model\CustomXmlSerializer.cs" />
     <Compile Include="ProjectContainer\ProjectViewModelList.cs" />
     <Compile Include="Model\XmlColor.cs" />
     <Compile Include="MouseOverController.cs" />

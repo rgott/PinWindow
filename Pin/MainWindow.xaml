@@ -20,7 +20,7 @@
         Left="0" Top="0"
         Loaded="pinWindow_Loaded"
         IsHitTestVisible="True"
-        Title="MainWindow" Height="370" Width="525">
+        Title="MainWindow" Width="348" Height="279">
     <Grid>
         <Grid Name="border">
             <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
@@ -31,7 +31,7 @@
                     </UniformGrid>
                 </Border>
             </Grid>
-            <Project:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind.Context}" Margin="0,20,0,0"/>
+            <Project:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind}" Margin="0,20,0,0"/>
         </Grid>
         <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>

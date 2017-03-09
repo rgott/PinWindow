@@ -1,10 +1,13 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using Pin.Model;
 using System.Linq;
 using Forms = System.Windows.Forms;
 using System;
 using Pin.ColorPicker;
+using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Pin
 {
@@ -30,6 +33,7 @@ namespace Pin
             EditBtn = new RelayCommand(() => ShowEditor = true);
             PauseWindowChange = new RelayCommand(() => Window.PauseState(this));
             ResumeWindowChange = new RelayCommand(() => Window.ResumeState(this));
+
         }
 
         private void ColorSelectionContext_PopupisOpenChanged(bool obj)
@@ -72,8 +76,12 @@ namespace Pin
         public RelayCommand ChangeDirectory { get; set; }
         private void ChangeDirectoryCmd()
         {
+            Window.PauseState(this);
+
             Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
             userGeneratedPath.ShowDialog();
+
+            Window.ResumeState(this);
 
             // change current version
             Project.Path = userGeneratedPath.SelectedPath;
@@ -112,6 +120,24 @@ namespace Pin
                 RaisePropertyChanged();
             }
         }
+
+        private bool _ShowInfo;
+
+        public bool ShowInfo
+        {
+            get
+            {
+                return _ShowInfo;
+            }
+            set
+            {
+                _ShowInfo = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public Queue<string[]> FileToDrop { get; set; } = new Queue<string[]>();
+
 
         public override bool Equals(object obj)
         {

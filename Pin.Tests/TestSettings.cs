@@ -8,15 +8,13 @@ using System.Windows.Media;
 
 namespace Pin.Tests
 {
-    public class TestSettings : ISettings
+    public class BlankTestSettings : ISettings
     {
-        public TestSettings()
+        public BlankTestSettings()
         {
             ActionEvent = (int)Pin.ActionEvent.Move;
             var projectCollection = new StringCollection();
-            var p = new Model.Project("NAME", "PATH", new SolidColorBrush(Colors.Purple));
 
-            projectCollection.Add(p.Serialize());
             Projects = projectCollection;
         }
 

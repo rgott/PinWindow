@@ -8,7 +8,9 @@
         <SolidColorBrush x:Key="PopupBackground" Color="#FF848789" />
         <SolidColorBrush x:Key="PopupTextColor" Color="White" />
         <SolidColorBrush x:Key="UNDEFINED" Color="Pink" />
-      
+
+        <SolidColorBrush x:Key="NullProjectColor" Color="Orange"/>
+
         <BitmapImage x:Key="Menu" UriSource="./images/menu.png" />
         <BitmapImage x:Key="Exit" UriSource="./images/Exit.png" />
         <BitmapImage x:Key="CloseArrow" UriSource="./images/CloseArrow.png" />
@@ -99,9 +101,9 @@
             </Border>
         </ControlTemplate>
         <ControlTemplate x:Key="ListViewProjects" TargetType="ListBox">
-            <Border Name="Border" Margin="0" HorizontalAlignment="Stretch">
-                <ScrollViewer Focusable="false" HorizontalAlignment="Stretch">
-                    <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch"/>
+            <Border Name="Border">
+                <ScrollViewer Focusable="false" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel IsItemsHost="True"/>
                 </ScrollViewer>
             </Border>
             <ControlTemplate.Triggers>
@@ -110,6 +112,9 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        <Style TargetType="ListBox">
+        </Style>
+        
 
         <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">
             <Border CornerRadius="3" Background="DarkGray" Height="15" Width="15">

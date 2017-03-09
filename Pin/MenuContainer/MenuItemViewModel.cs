@@ -10,13 +10,12 @@ using Forms = System.Windows.Forms;
 
 namespace Pin.MenuContainer
 {
-    public class MenuItemViewModel : ViewModelBase
+    public class MenuItemViewModel : ViewModelBase , IMainWindow
     {
         private bool PinStatus = false;
 
         public RelayCommand SizingBtnCmd { get; set; }
         public RelayCommand ExitBtnCmd { get; set; }
-        public RelayCommand DragOutCmd { get; set; }
         public RelayCommand CheckedBtnCmd { get; set; }
         public RelayCommand UncheckedBtnCmd { get; set; }
 
@@ -38,8 +37,9 @@ namespace Pin.MenuContainer
             CheckedBtnCmd = new RelayCommand(CheckedBtn);
             SizingBtnCmd = new RelayCommand(SizingBtn);
             ExitBtnCmd = new RelayCommand(window.onExit);
-            DragOutCmd = new RelayCommand(DragOut);
+            
             this.Window = window;
+
             UI_Popup_Menu_ClickCmd = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             UI_Popup_Menu = new RelayCommand(() => { UI_Popup_Menu_IsOpen = !UI_Popup_Menu_IsOpen; });
             AddProject_ClickCmd = new RelayCommand(AddProject_Click);
@@ -49,11 +49,6 @@ namespace Pin.MenuContainer
 
             ColorSelectionContext = new ColorSelectionViewModel((c) => { Color = c; }, ColorSelectionContext_PopupIsOpenChanged);
 
-            //PinContainer
-            UC_DragEnterCmd = new RelayCommand(() => UC_DragEnter());
-            UC_DragLeaveCmd = new RelayCommand(() => UC_DragLeave());
-            UC_DropCmd = new RelayCommand(() => UC_Drop());
-            UC_MouseEnterCmd = new RelayCommand(() => UC_MouseEnter());
             ProjectAddClick = new RelayCommand(ProjectAddClickCmd);
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
@@ -70,7 +65,6 @@ namespace Pin.MenuContainer
                         break;
                 }
             });
-
         }
 
         private void ColorSelectionContext_PopupIsOpenChanged(bool obj)
@@ -333,14 +327,6 @@ namespace Pin.MenuContainer
             PinStatus = !PinStatus;
         }
 
-        string[] lastDraggedIn;
-        private void DragOut()
-        {
-            // TODO: change null
-            DropDataHandler.dragDataOut(null, lastDraggedIn);
-        }
-
-        #region PinContainerProjectItem
 
         private bool _popup_isOpen;
         public bool popup_isOpen
@@ -355,51 +341,6 @@ namespace Pin.MenuContainer
                 RaisePropertyChanged();
             }
         }
-        private readonly DragEventHandler _DragEnter;
-        private void DragEnterCmd(object sender, DragEventArgs e)
-        {
-            popup_isOpen = true;
-            Window.PauseState(this);
-        }
-
-        private readonly DragEventHandler _DragLeave;
-        private void DragLeaveCmd(object sender, DragEventArgs e)
-        {
-            popup_isOpen = false;
-            Window.ResumeState(this);
-        }
-        public DragEventHandler DragLeave => _DragLeave;
-
-        public RelayCommand UC_DragEnterCmd { get; set; }
-        public RelayCommand UC_DropCmd { get; set; }
-        public RelayCommand UC_DragLeaveCmd { get; set; }
-        public RelayCommand UC_MouseEnterCmd { get; set; }
-
-
-        private void UC_DragLeave()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UC_Drop()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UC_MouseEnter()
-        {
-            throw new NotImplementedException();
-        }
-
-        //TODO: change to a behavior
-        private void UC_DragEnter()
-        {
-            //e.Effects = DragDropEffects.Copy;
-            //isPopupOpen = true;
-            //e.Handled = true;
-        }
-
-        #endregion
 
         private ProjectViewModelList _ProjectList;
         public ProjectViewModelList ProjectList
@@ -459,6 +400,21 @@ namespace Pin.MenuContainer
                     Vis_Minimized = true;
                     break;
             }
+        }
+
+        public void onExit()
+        {
+            Window.onExit();
+        }
+
+        public void PauseState(object lockingObject)
+        {
+            Window.PauseState(lockingObject);
+        }
+
+        public void ResumeState(object lockingObject)
+        {
+            Window.ResumeState(lockingObject);
         }
     }
 }
