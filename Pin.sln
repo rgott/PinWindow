@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin", "Pin\Pin.csproj", "{A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.ColorPicker", "Pin.ColorPicker\Pin.ColorPicker.csproj", "{270A4943-EB0F-4457-B1C1-C7BBAF2F54DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.Tests", "Pin.Tests01\Pin.Tests.csproj", "{71C25BA5-3680-4DDC-80A8-867197AF4CDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.Tests", "Pin.Tests\Pin.Tests.csproj", "{71C25BA5-3680-4DDC-80A8-867197AF4CDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
