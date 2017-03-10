@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="Pin.ProjectContainer.ProjectItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pin.ProjectContainer"
+             xmlns:Pin="clr-namespace:Pin"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ColorPicker="clr-namespace:Pin.ColorPicker;assembly=Pin.ColorPicker"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="400">
+    <i:Interaction.Behaviors>
+        <local:ProjectDropBehavior ProjectVM="{Binding}"/>
+    </i:Interaction.Behaviors>
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <Pin:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisibility"/>
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Opened">
+                    <i:InvokeCommandAction Command="{Binding PauseWindowChange}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Closed">
+                    <i:InvokeCommandAction Command="{Binding ResumeWindowChange}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <MenuItem Header="Open with Explorer" Command="{Binding OpenWithExplorer}"/>
+            <MenuItem Header="Edit" Command="{Binding EditBtn}"/>
+            <MenuItem Header="Delete" Command="{Binding DeleteProject}"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Border VerticalAlignment="Center" Height="50" BorderBrush="{StaticResource MainAppLightColor}" BorderThickness="0,0,0,1">
+        <Grid>
+            <local:ProjectItemView DataContext="{Binding}" Visibility="{Binding ShowEditor,Converter={StaticResource InvertedBoolToVisibility},FallbackValue=Visible}"/>
+            <local:ProjectItemEdit DataContext="{Binding}" Visibility="{Binding ShowEditor,Converter={StaticResource BoolToVisibility},FallbackValue=Hidden}"/>
+        </Grid>
+    </Border>
+</UserControl>

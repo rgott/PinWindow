@@ -1,0 +1,40 @@
+﻿<Window x:Class="Pin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pin"
+        xmlns:MenuContainer="clr-namespace:Pin.MenuContainer"
+        mc:Ignorable="d"
+        x:Name="pinWindow"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="Manual"
+        WindowState="Normal"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        MouseEnter="pinWindow_MouseEnter"
+        MouseLeave="pinWindow_MouseLeave"
+        ResizeMode="NoResize"
+        Left="0" Top="0"
+        DragEnter="UI_pinWindow_DragEnter"
+        DragLeave="pinWindow_DragLeave"
+        Loaded="pinWindow_Loaded"
+        IsHitTestVisible="True"
+        Title="MainWindow" Height="370" Width="525">
+    <Grid>
+        <Grid Name="border">
+            <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
+                <Border HorizontalAlignment="Right" Margin="1,2,2,0" Width="80" BorderBrush="DarkGray" BorderThickness="1">
+                    <UniformGrid Rows="1">
+                        <RadioButton x:Name="UI_RadioButton_Move" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Move" Checked="UI_RadioButton_Checked"/>
+                        <RadioButton x:Name="UI_RadioButton_Copy" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Copy" Checked="UI_RadioButton_Checked"/>
+                    </UniformGrid>
+                </Border>
+            </Grid>
+            <local:Project x:Name="UI_Project" Margin="0,20,0,0"/>
+        </Grid>
+        <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+    </Grid>
+</Window>
