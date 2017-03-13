@@ -35,7 +35,7 @@
     <Border VerticalAlignment="Center" Height="50" BorderBrush="{StaticResource MainAppLightColor}" BorderThickness="0,0,0,1">
         <Grid>
             <local:ProjectItemView DataContext="{Binding}" Visibility="{Binding ShowEditor,Converter={StaticResource InvertedBoolToVisibility},FallbackValue=Visible}"/>
-            <local:ProjectItemEdit DataContext="{Binding}" Visibility="{Binding ShowEditor,Converter={StaticResource BoolToVisibility},FallbackValue=Hidden}"/>
+            <local:ProjectItemEdit DataContext="{Binding}" Visibility="{Binding ShowEditor,Converter={StaticResource BoolToVisibility},FallbackValue=Collapsed}"/>
         </Grid>
     </Border>
 </UserControl>

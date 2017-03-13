@@ -97,7 +97,7 @@
                                 <ColumnDefinition Width="10"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
-                            <TextBox Text="{Binding UI_TxtBox_ProjectName}" Grid.Column="1"/>
+                            <TextBox Text="{Binding AddProject.Name}" Grid.Column="1"/>
                         </Grid>
                         <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
                             <Grid.ColumnDefinitions>
@@ -107,7 +107,7 @@
                                 <ColumnDefinition Width="10"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
-                            <TextBox Text="{Binding Add_ProjectPath}" Grid.Column="1"/>
+                            <TextBox Text="{Binding AddProject.Path}" Grid.Column="1"/>
                             <Button x:Name="UI_Btn_FolderBrowse" Command="{Binding ChangeDirectory}" Grid.Column="2">Browse</Button>
                         </Grid>
                         <Button Command="{Binding AddProject_ClickCmd}" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>

@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -37,9 +36,9 @@ namespace Pin.ColorPicker
             uint color = Win32.GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
             Win32.ReleaseDC(IntPtr.Zero, hdc);
 
-            byte r = (byte)(color >> 0);
-            byte g = (byte)(color >> 8);
-            byte b = (byte)(color >> 16);
+            var r = (byte)(color >> 0);
+            var g = (byte)(color >> 8);
+            var b = (byte)(color >> 16);
 
             // ignore any alpha channel (want non transparent colors)
             return System.Windows.Media.Color.FromArgb(255, r, g, b);
@@ -75,6 +74,20 @@ namespace Pin.ColorPicker
             }
         }
 
+        private Brush _SelectionColor = new SolidColorBrush(Colors.Red);
+        public Brush SelectionColor
+        {
+            get
+            {
+                return _SelectionColor;
+            }
+            set
+            {
+                _SelectionColor = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         public ICommand Color_Click { get; set; }
         public ICommand Done_Click { get; set; }
@@ -82,27 +95,24 @@ namespace Pin.ColorPicker
         public ICommand MajorColorSelectorPlane_MouseDown { get; set; }
         public ICommand ColorSelectionGrid_MouseMove { get; set; }
         public ICommand ColorSelectionGrid_MouseDown { get; set; }
-        public ColorSelectionViewModel PickerSelectionPlaneContext { get; set; }
-        public Action<Brush> ColorChanged { get; set; }
         public Action<bool> PopupIsOpenChanged { get; set; }
 
+        public delegate void ColorChangedEventHandler(Brush Color);
+        public event ColorChangedEventHandler ColorChanged;
         /// <summary>
         /// The color box of the selected color
         /// </summary>
-        /// <param name="ColorChanged">Fired when the user has finished selecting a color (pressed done)</param>
         /// <param name="PopupIsOpenChanged"></param>
-        public ColorSelectionViewModel(Action<Brush> ColorChanged,Action<bool> PopupIsOpenChanged)
+        public ColorSelectionViewModel(Action<bool> PopupIsOpenChanged)
         {
-            this.ColorChanged = ColorChanged;
             this.PopupIsOpenChanged = PopupIsOpenChanged;
 
-            Color_Click = new RelayCommand(Color_ClickCmd);
+            Color_Click = new RelayCommand(() => ColorSelection_isOpen = !ColorSelection_isOpen);
             Done_Click = new RelayCommand(Done_ClickCmd);
             ColorSelectionGrid_MouseMove = new RelayCommand(ColorSelectionGrid_MouseMoveCmd);
             ColorSelectionGrid_MouseDown = new RelayCommand(ColorSelectionGrid_MouseDownCmd);
             MajorColorSelectorPlane_MouseDown = new RelayCommand(MajorColorSelectorPlane_MouseDownCmd);
             MajorColorSelectorPlane_MouseMove = new RelayCommand(MajorColorSelectorPlane_MouseMoveCmd);
-            PickerSelectionPlaneContext = this;
         }
 
 
@@ -153,7 +163,7 @@ namespace Pin.ColorPicker
             Win32.POINT tmpPoint;
             Win32.GetCursorPos(out tmpPoint);
 
-            Color = new SolidColorBrush(ColorSelection(tmpPoint));
+            SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
 
             PrimaryColor = Color;
             MajorColorSelector = new Thickness(0, Mouse.GetPosition(Mouse.DirectlyOver).Y, 0, 0);
@@ -165,7 +175,7 @@ namespace Pin.ColorPicker
             Win32.GetCursorPos(out tmpPoint);
             
             ColorSelectionGridColorFinder = new Thickness(Mouse.GetPosition(Mouse.DirectlyOver).X - 5, Mouse.GetPosition(Mouse.DirectlyOver).Y - 5, 0, 0);
-            Color = new SolidColorBrush(ColorSelection(tmpPoint));
+            SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
         }
 
         private void ColorSelectionGrid_MouseMoveCmd()
@@ -177,19 +187,20 @@ namespace Pin.ColorPicker
 
                 Point mousPos = Mouse.GetPosition(Mouse.DirectlyOver);
                 ColorSelectionGridColorFinder = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
-                Color = new SolidColorBrush(ColorSelection(tmpPoint));
+                SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
             }
         }
 
         private void Done_ClickCmd()
         {
-            ColorChanged(Color);
+            Color = SelectionColor;
+            ColorChanged?.Invoke(Color);
             ColorSelection_isOpen = false;
         }
 
-        private void Color_ClickCmd()
+        public void isSelectionPlaneOpen(bool isOpen = false)
         {
-            ColorSelection_isOpen = !ColorSelection_isOpen;
+            ColorSelection_isOpen = isOpen;
         }
     }
 }

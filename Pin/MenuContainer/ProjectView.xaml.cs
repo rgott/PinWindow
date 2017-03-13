@@ -24,27 +24,12 @@ namespace Pin.MenuContainer
         public ProjectView()
         {
             InitializeComponent();
-            MouseOverController.MouseOverWindow += MouseOverController_handler;
+            //MouseOverController.MouseOverWindow += MouseOverController_handler;
         }
 
-        private bool MouseOverController_handler()
-        {
-            return UIPOPUP.IsMouseOver || IsMouseOver;
-        }
-
-        private void UI_UserControl_DragLeave(object sender, DragEventArgs e)
-        {
-            MouseOverController.isMouseOverMenu = false;
-        }
-
-        private void UI_UserControl_DragEnter(object sender, DragEventArgs e)
-        {
-            MouseOverController.isMouseOverMenu = true;
-
-        }
-        private void UI_TextBlock_FirstProject_MouseMove(object sender, MouseEventArgs e)
-        {
-            MouseOverController.isMouseOverMenu = true;
-        }
+        //private bool MouseOverController_handler()
+        //{
+        //    return UIPOPUP.IsMouseOver || IsMouseOver;
+        //}
     }
 }

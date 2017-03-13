@@ -16,7 +16,7 @@
         <Pin:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisibility"/>
     </UserControl.Resources>
     <Grid>
-        <Button Template="{StaticResource StyledButton}" Background="{Binding Project.Color,FallbackValue=orange}" Margin="0,0,0,0" Width="15" HorizontalAlignment="Left"/>
+        <Button Template="{StaticResource StyledButton}" Background="{Binding Project.Color,FallbackValue={StaticResource NullProjectColor}}" Margin="0,0,0,0" Width="15" HorizontalAlignment="Left"/>
 
         <TextBlock VerticalAlignment="Center" Margin="25,0,0,0" Text="{Binding Project.Name,FallbackValue=ProjectName}"/>
         <Button Template="{StaticResource Template_Explorer_Open}" VerticalAlignment="Center" Command="{Binding OpenWithExplorer}" Margin="0,0,5,0" HorizontalAlignment="Right">

@@ -32,17 +32,17 @@ namespace Pin.Tests
         public void ModifyProject()
         {
             var oldproject = new Model.Project("other", "newerPath", new SolidColorBrush(Colors.Blue));
-            var newproject = new Model.Project("New", "newpath", new SolidColorBrush(Colors.Red));
+            var NewProject = new Model.Project("New", "newpath", new SolidColorBrush(Colors.Red));
 
             model.Add(oldproject);
             Assert.AreEqual(1, model.Projects.Count);
 
-            model.Change(oldproject, newproject);
+            model.Change(oldproject, NewProject);
             Assert.AreEqual(1, model.Projects.Count);
 
-            Assert.AreSame(newproject.Color, model.Projects[0].Project.Color);
-            Assert.AreSame(newproject.Name, model.Projects[0].Project.Name);
-            Assert.AreSame(newproject.Path, model.Projects[0].Project.Path);
+            Assert.AreSame(NewProject.Color, model.Projects[0].Project.Color);
+            Assert.AreSame(NewProject.Name, model.Projects[0].Project.Name);
+            Assert.AreSame(NewProject.Path, model.Projects[0].Project.Path);
         }
 
     }

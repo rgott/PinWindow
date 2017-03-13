@@ -17,50 +17,8 @@ namespace Pin
                 MouseLeaveMenu(e);
         }
 
-        public static void Init()
-        {
-            Win_State = WindowState.Minimized;
-            isPinned = false;
-        }
-
-        public static WindowState Win_State
-        {
-            get
-            {
-                return (WindowState)Application.Current.Properties["WindowState"];
-            }
-            set
-            {
-                Application.Current.Properties["WindowState"] = value;
-            }
-
-        }
-
-        public static bool isPinned
-        {
-            get
-            {
-                return (bool)Application.Current.Properties["isPinned"];
-            }
-            set
-            {
-                Application.Current.Properties["isPinned"] = value;
-            }
-
-        }
-        private static bool _isProjectOpen = false;
-        [Obsolete]
-        public static bool isProjectOpen
-        {
-            get
-            {
-                return _isProjectOpen;
-            }
-            set
-            {
-                _isProjectOpen = value;
-            }
-        }
+        
+        
 
         [Obsolete]
         public static bool isMouseOverMenu

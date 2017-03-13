@@ -11,10 +11,10 @@
     </i:Interaction.Behaviors>
         <i:Interaction.Triggers>
         <i:EventTrigger EventName="DragEnter">
-            <i:InvokeCommandAction Command="{Binding DragEnter}"/>
+            <i:InvokeCommandAction Command="{Binding OpenDragOverView}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="DragLeave">
-            <i:InvokeCommandAction Command="{Binding DragLeave}"/>
+            <i:InvokeCommandAction Command="{Binding CloseDragOverView}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>

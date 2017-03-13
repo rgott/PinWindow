@@ -16,14 +16,17 @@ namespace Pin
         public IMainWindow Window { get; set; }
         public ProjectViewModelList ProjectVM { get; set; }
         public IProject OrigionalProject { get; set; }
-        public ProjectViewModel(ProjectViewModelList ProjectVM, IMainWindow Window, IProject Project)// isettings, iwindow
+        public ProjectViewModel(ProjectViewModelList ProjectVM, IMainWindow Window, IProject Project)
         {
             this.Window = Window;
             this.Project = Project;
             OrigionalProject = Project;
             this.ProjectVM = ProjectVM;
 
-            ColorSelectionContext = new ColorSelectionViewModel((brush) => Project.Color = brush, ColorSelectionContext_PopupisOpenChanged);
+            ColorSelectionContext = new ColorSelectionViewModel(ColorSelectionContext_PopupisOpenChanged);
+
+            ColorSelectionContext.ColorChanged += (brush) => Project.Color = brush;
+            
 
             DeleteProject = new RelayCommand(() => ProjectVM.Delete(OrigionalProject));
             OpenWithExplorer = new RelayCommand(OpenWithExplorerCmd);
@@ -56,8 +59,8 @@ namespace Pin
         public RelayCommand PauseWindowChange { get; private set; }
         public RelayCommand ResumeWindowChange { get; private set; }
         public RelayCommand EditBtn { get; private set; }
-        public RelayCommand CancelEditorBtn { get; private set; }
 
+        public RelayCommand CancelEditorBtn { get; private set; }
         private void CancelEditorBtnCmd()
         {
             Project = OrigionalProject.Clone() as IProject; // reset any changes

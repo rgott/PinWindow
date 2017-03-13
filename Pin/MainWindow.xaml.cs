@@ -52,9 +52,9 @@ namespace Pin
         public ProjectViewModelList ProjectVML { get; set; }
         public MainWindow()
         {
-            //Properties.Settings.Default.Reset();
-            //Properties.Settings.Default.Save();
-            //Properties.Settings.Default.Upgrade();
+            Properties.Settings.Default.Reset();
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Upgrade();
 
             Width = 280;
             Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
@@ -64,8 +64,6 @@ namespace Pin
 
             MenuContainerBind = new MenuItemViewModel(this, ProjectVML);
 
-
-            MouseOverController.Init();
 
             DataContext = this;
             InitializeComponent();
@@ -88,7 +86,7 @@ namespace Pin
 
 
         #region Window Controller
-
+        public WindowState Current_State { get; set; } = Pin.WindowState.Minimized;
         public void WindowChangeState(WindowState? wState = null)
         {
             // if state is locked do not change state
@@ -96,55 +94,47 @@ namespace Pin
 
             if (wState == null)
             { // setoppositestate
-                if (MouseOverController.Win_State == Pin.WindowState.Normal && MouseOverController.isPinned)
+                switch (Current_State)
                 {
-                    wState = Pin.WindowState.Pinned;
-                }
-                else if (MouseOverController.Win_State == Pin.WindowState.Minimized || MouseOverController.Win_State == Pin.WindowState.Pinned)
-                {
-                    wState = Pin.WindowState.Normal;
-                }
-                else
-                {
-                    wState = Pin.WindowState.Minimized;
+                    case Pin.WindowState.Normal:
+                        wState = Pin.WindowState.Minimized;
+                        break;
+                    case Pin.WindowState.Pinned:
+                    case Pin.WindowState.Minimized:
+                    case Pin.WindowState.MinimizedOpen:
+                    case Pin.WindowState.MinimizedDragging:
+                    default:
+                        wState = Pin.WindowState.Normal;
+                        break;
                 }
             }
 
-            Win_prev_State = MouseOverController.Win_State;
-            MouseOverController.Win_State = (Pin.WindowState)wState;
+            Win_prev_State = Current_State;
+            Current_State = (Pin.WindowState)wState;
 
-            MenuContainerBind.WindowChangeState(MouseOverController.Win_State);
+            MenuContainerBind.WindowChangeState(Current_State);
             switch (wState)
             {
                 // remove width and height changes
                 case Pin.WindowState.Pinned:
-                    MouseOverController.isPinned = true;
+                    WindowStateLocks.Add(this);
                     border.Visibility = Visibility.Visible;
                     break;
                 case Pin.WindowState.Normal:
-                    MouseOverController.isPinned = false;
-                    //Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
-                    //Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
+                    WindowStateLocks.Remove(this);
                     border.Visibility = Visibility.Visible;
                     break;
                 case Pin.WindowState.Minimized:
                     border.Visibility = Visibility.Hidden;
-                    //Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_WIDTH;
-                    //Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZED_HEIGHT;
                     break;
                 case Pin.WindowState.MinimizedOpen:
                     border.Visibility = Visibility.Hidden;
-                    //Width = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_WIDTH;
-                    //Height = Properties.Settings.Default.WINDOW_STATE_MINIMIZEDPINNED_HEIGHT;
                     break;
                 case Pin.WindowState.MinimizedDragging:
                     border.Visibility = Visibility.Hidden;
-                    //Width = Properties.Settings.Default.WINDOW_STATE_NORMAL_WIDTH;
-                    //Height = 1000;
                     break;
             }
         }
-
 
         Task task;
         CancellationTokenSource TokenSource;
@@ -152,15 +142,13 @@ namespace Pin
         private void minimizeWindowDelay(int millisecondDelay = 750)
         {
             // should prepare to minimize window?
-            if (
-                MouseOverController.Win_State != Pin.WindowState.Minimized
-                && !MouseOverController.isPinned
-            )
+            if (Current_State != Pin.WindowState.Minimized && WindowStateLocks.Count != 0)
             {
+                // prevent multiple threads from running at one time
                 if(task != null)
                 {
                     TokenSource.Cancel();
-                    task.Wait(); // wait for task to finish
+                    task.Wait(); // wait for task to finish being cancelled
 
                     // dispose both
                     TokenSource.Dispose();
@@ -175,9 +163,9 @@ namespace Pin
                     if (TokenSource?.IsCancellationRequested == true) return;
 
                     // recheck after x time
-                    if (MouseOverController.Win_State != Pin.WindowState.Minimized
+                    if (Current_State != Pin.WindowState.Minimized
                         && !IsMouseOver
-                        && !MouseOverController.isPinned)
+                        && WindowStateLocks.Count != 0)
                     {
                         Dispatcher.Invoke(() => { WindowChangeState(Pin.WindowState.Minimized); });
                     }
@@ -223,7 +211,7 @@ namespace Pin
 
         private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (MouseOverController.Win_State == Pin.WindowState.Minimized)
+            if (Current_State is Pin.WindowState.Minimized)
             {
                 WindowChangeState(Pin.WindowState.MinimizedOpen);
             }
@@ -231,7 +219,7 @@ namespace Pin
 
         private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (MouseOverController.Win_State == Pin.WindowState.MinimizedDragging)
+            if (Current_State == Pin.WindowState.MinimizedDragging)
             {
                 WindowChangeState(Pin.WindowState.Minimized);
             }
