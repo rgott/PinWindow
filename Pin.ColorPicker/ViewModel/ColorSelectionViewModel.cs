@@ -1,11 +1,13 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using LibraryImports;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static LibraryImports.Win32;
 using Drawing = System.Drawing;
 
 namespace Pin.ColorPicker
@@ -30,7 +32,7 @@ namespace Pin.ColorPicker
             }
         }
 
-        private Color ColorSelection(Point screenPoint)
+        private Color ColorSelection(POINT screenPoint)
         {
             IntPtr hdc = Win32.GetDC(IntPtr.Zero);
             uint color = Win32.GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
@@ -129,7 +131,10 @@ namespace Pin.ColorPicker
                 RaisePropertyChanged();
             }
         }
-
+        public void Close()
+        {
+            ColorSelection_isOpen = false;
+        }
 
         private bool _ColorSelection_isOpen = false;
         public bool ColorSelection_isOpen
@@ -165,7 +170,7 @@ namespace Pin.ColorPicker
 
             SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
 
-            PrimaryColor = Color;
+            PrimaryColor = SelectionColor;
             MajorColorSelector = new Thickness(0, Mouse.GetPosition(Mouse.DirectlyOver).Y, 0, 0);
         }
 

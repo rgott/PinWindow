@@ -11,7 +11,6 @@ namespace Pin.MenuContainer
     {
         public PinContainerProjectItem()
         {
-            // datacontext should be set by list
             InitializeComponent();
         }
     }

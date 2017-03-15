@@ -86,7 +86,6 @@
     <Compile Include="ColorSelectionBox.xaml.cs">
       <DependentUpon>ColorSelectionBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModel\ColorSelectionViewModel.cs" />
@@ -127,6 +126,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryImports\LibraryImports.csproj">
+      <Project>{0f32637f-8523-417f-9a6b-e02b524c3399}</Project>
+      <Name>LibraryImports</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

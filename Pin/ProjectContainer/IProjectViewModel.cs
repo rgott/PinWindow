@@ -10,7 +10,6 @@ namespace Pin
         IProject Project { get; set; }
         IProject OrigionalProject { get; set; }
 
-
         Queue<string[]> FileToDrop { get; set; }
 
         /// <summary>

@@ -10,8 +10,6 @@ namespace Pin.ProjectContainer
 {
     public class DragOutBehavior : Behavior<FrameworkElement>
     {
-
-
         public IProjectViewModel ProjectVM
         {
             get { return (IProjectViewModel)GetValue(ProjectVMProperty); }

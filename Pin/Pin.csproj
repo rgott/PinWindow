@@ -120,13 +120,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Error\CustomMessageViewModel.cs" />
+    <Compile Include="Error\CustomMessageWindow.xaml.cs">
+      <DependentUpon>CustomMessageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Error\ErrorBox.cs" />
     <Compile Include="IMainWindow.cs" />
     <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="MenuContainer\MenuContainerDropBehavior.cs" />
     <Compile Include="ProjectContainer\DragOutBehavior.cs" />
     <Compile Include="ProjectContainer\IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="MenuContainer\FrameWorkElementAdorner.cs" />
     <Compile Include="MenuContainer\Maximized.xaml.cs">
       <DependentUpon>Maximized.xaml</DependentUpon>
     </Compile>
@@ -157,7 +161,6 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ProjectContainer\ProjectViewModelList.cs" />
     <Compile Include="Model\XmlBrushConverter.cs" />
-    <Compile Include="MouseOverController.cs" />
     <Compile Include="MenuContainer\Menu.xaml.cs">
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
@@ -170,7 +173,10 @@
     <Compile Include="ProjectContainer\ProjectItem.xaml.cs">
       <DependentUpon>ProjectItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Win32.cs" />
+    <Page Include="Error\CustomMessageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -272,6 +278,10 @@
     <Resource Include="images\Folder.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryImports\LibraryImports.csproj">
+      <Project>{0F32637F-8523-417F-9A6B-E02B524C3399}</Project>
+      <Name>LibraryImports</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pin.ColorPicker\Pin.ColorPicker.csproj">
       <Project>{270a4943-eb0f-4457-b1c1-c7bbaf2f54dd}</Project>
       <Name>Pin.ColorPicker</Name>

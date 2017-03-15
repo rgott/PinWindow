@@ -1,7 +1,7 @@
-﻿using Pin.MenuContainer;
-using Pin.ViewModel;
+﻿using GalaSoft.MvvmLight.Command;
+using LibraryImports;
+using Pin.MenuContainer;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -21,14 +21,7 @@ namespace Pin
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged , IMainWindow
     {
-        public delegate void MinimizedWindowEventHandler(EventArgs e);
-
-        public static event MinimizedWindowEventHandler MinimizedWindow;
-
-        WindowState Win_prev_State;
-
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -48,27 +41,28 @@ namespace Pin
             }
         }
 
-
         public ProjectViewModelList ProjectVML { get; set; }
+
+        public ICommand Copy_RadioBtn_Checked { get; set; }
+        public ICommand Move_RadioBtn_Checked { get; set; }
+
         public MainWindow()
         {
+#if DEBUG
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
             Properties.Settings.Default.Upgrade();
+#endif
 
             Width = 280;
             Height = Properties.Settings.Default.WINDOW_STATE_NORMAL_HEIGHT;
 
             ProjectVML = new ProjectViewModelList(this, Properties.Settings.Default);
-
-
             MenuContainerBind = new MenuItemViewModel(this, ProjectVML);
-
 
             DataContext = this;
             InitializeComponent();
             WindowChangeState(Pin.WindowState.Minimized);
-
 
             switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
             {
@@ -80,10 +74,18 @@ namespace Pin
                     break;
             }
 
+            Copy_RadioBtn_Checked = new RelayCommand(() =>
+            {
+                ProjectVML.ActionEvent = ActionEvent.Copy;
+                Properties.Settings.Default.Save();
+            });
 
-            MouseOverController.MouseLeaveMenu += MouseOverController_MouseLeaveMenu;
+            Move_RadioBtn_Checked = new RelayCommand(() => 
+            {
+                ProjectVML.ActionEvent = ActionEvent.Move;
+                Properties.Settings.Default.Save();
+            });
         }
-
 
         #region Window Controller
         public WindowState Current_State { get; set; } = Pin.WindowState.Minimized;
@@ -99,17 +101,12 @@ namespace Pin
                     case Pin.WindowState.Normal:
                         wState = Pin.WindowState.Minimized;
                         break;
-                    case Pin.WindowState.Pinned:
-                    case Pin.WindowState.Minimized:
-                    case Pin.WindowState.MinimizedOpen:
-                    case Pin.WindowState.MinimizedDragging:
                     default:
                         wState = Pin.WindowState.Normal;
                         break;
                 }
             }
 
-            Win_prev_State = Current_State;
             Current_State = (Pin.WindowState)wState;
 
             MenuContainerBind.WindowChangeState(Current_State);
@@ -124,13 +121,7 @@ namespace Pin
                     WindowStateLocks.Remove(this);
                     border.Visibility = Visibility.Visible;
                     break;
-                case Pin.WindowState.Minimized:
-                    border.Visibility = Visibility.Hidden;
-                    break;
-                case Pin.WindowState.MinimizedOpen:
-                    border.Visibility = Visibility.Hidden;
-                    break;
-                case Pin.WindowState.MinimizedDragging:
+                default:
                     border.Visibility = Visibility.Hidden;
                     break;
             }
@@ -139,10 +130,10 @@ namespace Pin
         Task task;
         CancellationTokenSource TokenSource;
 
-        private void minimizeWindowDelay(int millisecondDelay = 750)
+        private void MinimizeWindowDelay(int millisecondDelay = 750)
         {
             // should prepare to minimize window?
-            if (Current_State != Pin.WindowState.Minimized && WindowStateLocks.Count != 0)
+            if (Current_State != Pin.WindowState.Minimized && WindowStateLocks.Count == 0)
             {
                 // prevent multiple threads from running at one time
                 if(task != null)
@@ -161,11 +152,10 @@ namespace Pin
                     Thread.Sleep(millisecondDelay);
 
                     if (TokenSource?.IsCancellationRequested == true) return;
-
                     // recheck after x time
                     if (Current_State != Pin.WindowState.Minimized
                         && !IsMouseOver
-                        && WindowStateLocks.Count != 0)
+                        && WindowStateLocks.Count == 0)
                     {
                         Dispatcher.Invoke(() => { WindowChangeState(Pin.WindowState.Minimized); });
                     }
@@ -173,66 +163,43 @@ namespace Pin
             }
         }
         #endregion
-
-        private void MouseOverController_MouseLeaveMenu(EventArgs e)
-        {
-            minimizeWindowDelay(250);
-        }
-
-        private void UI_RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if (sender is RadioButton)
-            {
-                var RButton = sender as RadioButton;
-                if (RButton.Name.Equals("UI_RadioButton_Copy"))
-                {
-                    ProjectVML.setActionEvent(ActionEvent.Copy);
-                }
-                else if (RButton.Name.Equals("UI_RadioButton_Move"))
-                {
-                    ProjectVML.setActionEvent(ActionEvent.Move);
-                }
-                Properties.Settings.Default.Save();
-            }
-        }
-
+        
         #region Window Events
-        private void pinWindow_Loaded(object sender, RoutedEventArgs e)
+        private void PinWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
+            var wndHelper = new WindowInteropHelper(this);
 
             // get window style
-            int exStyle = (int)Win32.GetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE);
+            var exStyle = (int)Win32.GetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE);
 
             // add to style that it is a tool window so it does not show in the task view (alt + tab)
             exStyle |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
             Win32.SetWindowLong(wndHelper.Handle, (int)Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle); // set style
         }
 
-        private void pinWindow_MouseEnter(object sender, MouseEventArgs e)
+        private void PinWindow_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Current_State is Pin.WindowState.Minimized)
-            {
+            if (Current_State == Pin.WindowState.Minimized)
                 WindowChangeState(Pin.WindowState.MinimizedOpen);
-            }
         }
 
-        private void pinWindow_MouseLeave(object sender, MouseEventArgs e)
+        private void PinWindow_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Current_State == Pin.WindowState.MinimizedDragging)
+            switch (Current_State)
             {
-                WindowChangeState(Pin.WindowState.Minimized);
-            }
-            else
-            {
-                minimizeWindowDelay();
+                case Pin.WindowState.MinimizedOpen:
+                case Pin.WindowState.MinimizedDragging:
+                    WindowChangeState(Pin.WindowState.Minimized);
+                    break;
+                default:
+                    MinimizeWindowDelay();
+                    break;
             }
         }
 
         public void onExit()
         {
             Properties.Settings.Default.Save();
-
             Close();
         }
 
@@ -245,8 +212,11 @@ namespace Pin
         public void ResumeState(object lockingObject)
         {
             WindowStateLocks.Remove(lockingObject);
+            if (WindowStateLocks.Count == 0 && !IsMouseOver)
+            {
+                MinimizeWindowDelay();
+            }
         }
-
         #endregion
     }
 }

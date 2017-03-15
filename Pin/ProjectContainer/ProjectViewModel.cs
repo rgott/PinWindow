@@ -19,20 +19,19 @@ namespace Pin
         public ProjectViewModel(ProjectViewModelList ProjectVM, IMainWindow Window, IProject Project)
         {
             this.Window = Window;
-            this.Project = Project;
-            OrigionalProject = Project;
+            this.Project = OrigionalProject = Project;
             this.ProjectVM = ProjectVM;
 
             ColorSelectionContext = new ColorSelectionViewModel(ColorSelectionContext_PopupisOpenChanged);
 
             ColorSelectionContext.ColorChanged += (brush) => Project.Color = brush;
-            
 
-            DeleteProject = new RelayCommand(() => ProjectVM.Delete(OrigionalProject));
             OpenWithExplorer = new RelayCommand(OpenWithExplorerCmd);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
             SaveEditorSettings = new RelayCommand(SaveEditorSettingsCmd);
             CancelEditorBtn = new RelayCommand(CancelEditorBtnCmd);
+
+            DeleteProject = new RelayCommand(() => ProjectVM.Delete(OrigionalProject));
             EditBtn = new RelayCommand(() => ShowEditor = true);
             PauseWindowChange = new RelayCommand(() => Window.PauseState(this));
             ResumeWindowChange = new RelayCommand(() => Window.ResumeState(this));
@@ -70,6 +69,8 @@ namespace Pin
         public RelayCommand SaveEditorSettings { get; private set; }
         private void SaveEditorSettingsCmd()
         {
+            ColorSelectionContext.Close();
+
             ProjectVM.Change(OrigionalProject, Project);
 
             OrigionalProject = Project;
@@ -79,20 +80,26 @@ namespace Pin
         public RelayCommand ChangeDirectory { get; set; }
         private void ChangeDirectoryCmd()
         {
+            ColorSelectionContext.Close();
+
             Window.PauseState(this);
 
-            Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
-            userGeneratedPath.ShowDialog();
+            using (var userGeneratedPath = new Forms.FolderBrowserDialog())
+            {
+                userGeneratedPath.ShowDialog();
 
-            Window.ResumeState(this);
+                Window.ResumeState(this);
 
-            // change current version
-            Project.Path = userGeneratedPath.SelectedPath;
+                // change current version
+                Project.Path = userGeneratedPath.SelectedPath;
+            }
         }
 
         public RelayCommand OpenWithExplorer { get; set; }
         private void OpenWithExplorerCmd()
         {
+            ColorSelectionContext.Close();
+
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", Project.Path));
         }
 

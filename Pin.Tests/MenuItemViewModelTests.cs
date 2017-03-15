@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Windows.Media;
 using NUnit.Framework;
 
 namespace Pin.Tests
@@ -18,9 +15,11 @@ namespace Pin.Tests
         [SetUp]
         public void ProjectViewModelList()
         {
-            ProjectViewModelList ProjModel = new ProjectViewModelList(new BlankTestWindow(), new BlankTestSettings());
+            var ProjModel = new ProjectViewModelList(new BlankTestWindow(), new BlankTestSettings());
 
             Model = new MenuItemViewModel(new BlankTestWindow(), ProjModel);
         }
+
+
     }
 }

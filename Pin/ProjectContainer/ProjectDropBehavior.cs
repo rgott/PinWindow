@@ -156,7 +156,7 @@ namespace Pin.ProjectContainer
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Invalid Location:" + DestinationPath);
+                        Error.ErrorBox.Show("Invalid Location:" + DestinationPath);
                     }
                 }
                 return (string[])data;

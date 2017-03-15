@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.Windows.Media;
 using System.Linq;
 using Pin.Model;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Pin
 {
@@ -14,7 +16,7 @@ namespace Pin
         public IMainWindow Window { get; set; }
 
         public ObservableCollection<IProjectViewModel> Projects { get; set; } = new ObservableCollection<IProjectViewModel>();
-        public ProjectViewModelList(IMainWindow Window,ISettings Settings)
+        public ProjectViewModelList(IMainWindow Window, ISettings Settings)
         {
             this.Settings = Settings;
             this.Window = Window;
@@ -28,7 +30,7 @@ namespace Pin
                 // load into viewable object
                 foreach (string item in Settings.Projects)
                 {
-                    Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Model.Project.Deserialize<Model.Project>(item))); 
+                    Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Model.Project.Deserialize<Model.Project>(item)));
                 }
             }
         }
@@ -36,21 +38,20 @@ namespace Pin
         public bool Add(IProject Project)
         {
             // only unique projects
-            if(Projects.Count(currentProject => currentProject == Project) != 0)
+            if (Projects.Count(currentProject => currentProject == Project) != 0)
                 return false;
 
             Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Project));
-            Settings.Projects.Add(Project.Serialize());
 
+            Settings.Projects.Add(Project.Serialize());
             Settings.Save();
             return true;
         }
 
-        public IProjectViewModel find(IProject project)
+        public IProjectViewModel Find(IProject project)
         {
             return Projects.FirstOrDefault(m => m.Project == project);
         }
-
 
         public void Change(IProject OldProject, IProject NewProject)
         {
@@ -70,7 +71,6 @@ namespace Pin
             {
                 PrimaryProject = NewProjectVM;
             }
-
             Settings.Save();
         }
 
@@ -84,17 +84,21 @@ namespace Pin
             Settings.Save();
         }
 
-
         public delegate void ActionEventChangedEventHandler(ActionEvent actionevent);
         public event ActionEventChangedEventHandler ActionEventChanged;
-        public void setActionEvent(ActionEvent actionevent)
+        public ActionEvent ActionEvent
         {
-            Settings.ActionEvent = (int)actionevent;
-            Settings.Save();
-
-            ActionEventChanged?.Invoke(actionevent);
+            get
+            {
+                return (ActionEvent)Settings.ActionEvent;
+            }
+            set
+            {
+                Settings.ActionEvent = (int)value;
+                Settings.Save();
+                ActionEventChanged?.Invoke(value);
+            }
         }
-
 
         public delegate void ProjectChangedEventHandler(IProject project);
         public event ProjectChangedEventHandler PrimaryProjectChanged;
@@ -108,7 +112,6 @@ namespace Pin
             set
             {
                 Settings.PrimaryProjectName = value.Project.Name;
-
                 PrimaryProjectChanged?.Invoke(value?.Project);
             }
         }

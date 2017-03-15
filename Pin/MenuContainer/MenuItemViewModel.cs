@@ -12,27 +12,25 @@ namespace Pin.MenuContainer
 {
     public class MenuItemViewModel : ViewModelBase
     {
-        public RelayCommand SizingBtnCmd { get; set; }
-        public RelayCommand ExitBtnCmd { get; set; }
-        public RelayCommand CheckedBtnCmd { get; set; }
-        public RelayCommand UncheckedBtnCmd { get; set; }
+        public ICommand SizingBtnCmd { get; set; }
+        public ICommand ExitBtnCmd { get; set; }
 
-        public RelayCommand AddProject_ClickCmd { get; set; }
+        public ICommand AddProject_ClickCmd { get; set; }
 
-        public RelayCommand ResumeWindow { get; set; }
-        public RelayCommand PauseWindow { get; set; }
+        public ICommand ResumeWindow { get; set; }
+        public ICommand PauseWindow { get; set; }
 
-        public RelayCommand ProjectAddClick { get; set; }
-        public RelayCommand UI_Popup_Menu { get; set; }
+        public ICommand ProjectAddClick { get; set; }
+        public ICommand UI_Popup_Menu { get; set; }
 
-        public RelayCommand UI_Popup_Menu_ClickCmd { get; set; }
+        public ICommand UI_Popup_Menu_ClickCmd { get; set; }
         private bool UI_Popup_Menu_IsOpen = false;
         public IMainWindow Window { get; set; }
 
         public ICommand OpenDragOverView { get; set; }
         public ICommand CloseDragOverView { get; set; }
 
-        public Model.Project AddProject { get; set; } = new Project("", "", new SolidColorBrush(Colors.Black));
+        public Model.Project AddProject { get; set; } = new Project("", "", new SolidColorBrush(Colors.Red));
         public MenuItemViewModel(IMainWindow window, ProjectViewModelList pList)
         {
             ResumeWindow = new RelayCommand(() => Window.ResumeState(this));
@@ -70,6 +68,17 @@ namespace Pin.MenuContainer
                         break;
                 }
             });
+            switch (pList.ActionEvent)
+            {
+                case ActionEvent.Move:
+                    UI_TextBlock_ActionEventType = "Move";
+                    break;
+                case ActionEvent.Copy:
+                    UI_TextBlock_ActionEventType = "Copy";
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ColorSelectionContext_PopupIsOpenChanged(bool obj)
@@ -115,12 +124,12 @@ namespace Pin.MenuContainer
 
 
         #region ProjectsOverviewListVM
-
-
         public RelayCommand ChangeDirectory { get; set; }
         private void ChangeDirectoryCmd()
         {
-            Forms.FolderBrowserDialog userGeneratedPath = new Forms.FolderBrowserDialog();
+            ColorSelectionContext.Close();
+
+            var userGeneratedPath = new Forms.FolderBrowserDialog();
 
             Window.PauseState(userGeneratedPath);// pause window while searching a directory
             userGeneratedPath.ShowDialog();
@@ -132,6 +141,8 @@ namespace Pin.MenuContainer
         }
         private void ProjectAddClickCmd()
         {
+            ColorSelectionContext.Close();
+
             if (popupToggle_IsChecked)
             {
                 addP_Text = "+";
@@ -203,72 +214,71 @@ namespace Pin.MenuContainer
             Window.ResumeState(this);
 
             popupToggle_IsChecked = false;
-            addP_Text = "+"; 
+            addP_Text = "+";
             AddProject.Name = "";
             AddProject.Path = "";
-            ColorSelectionContext.isSelectionPlaneOpen(false);
-
+            ColorSelectionContext.Close();
         }
         #endregion
 
         #region MenuitemviewModel
         #region Item Visibility
-        private bool _Vis_Minimized = false;
-        public bool Vis_Minimized
-        {
-            get
+            private bool _Vis_Minimized = false;
+            public bool Vis_Minimized
             {
-                return _Vis_Minimized;
+                get
+                {
+                    return _Vis_Minimized;
+                }
+                set
+                {
+                    _Vis_Minimized = value;
+                    RaisePropertyChanged();
+                }
             }
-            set
-            {
-                _Vis_Minimized = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        private bool _Vis_ProjectView = false;
-        public bool Vis_ProjectView
-        {
-            get
+            private bool _Vis_ProjectView = false;
+            public bool Vis_ProjectView
             {
-                return _Vis_ProjectView;
+                get
+                {
+                    return _Vis_ProjectView;
+                }
+                set
+                {
+                    _Vis_ProjectView = value;
+                    RaisePropertyChanged();
+                }
             }
-            set
-            {
-                _Vis_ProjectView = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        private bool _Vis_MinimizedOpen = false;
-        public bool Vis_MinimizedOpen
-        {
-            get
+            private bool _Vis_MinimizedOpen = false;
+            public bool Vis_MinimizedOpen
             {
-                return _Vis_MinimizedOpen;
+                get
+                {
+                    return _Vis_MinimizedOpen;
+                }
+                set
+                {
+                    _Vis_MinimizedOpen = value;
+                    RaisePropertyChanged();
+                }
             }
-            set
-            {
-                _Vis_MinimizedOpen = value;
-                RaisePropertyChanged();
-            }
-        }
 
-        private bool _Vis_Maximized = false;
-        public bool Vis_Maximized
-        {
-            get
+            private bool _Vis_Maximized = false;
+            public bool Vis_Maximized
             {
-                return _Vis_Maximized;
+                get
+                {
+                    return _Vis_Maximized;
+                }
+                set
+                {
+                    _Vis_Maximized = value;
+                    RaisePropertyChanged();
+                }
             }
-            set
-            {
-                _Vis_Maximized = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
+            #endregion
 
 
         bool SizingStatus = false;
@@ -340,6 +350,5 @@ namespace Pin.MenuContainer
                 RaisePropertyChanged();
             }
         }
-
     }
 }

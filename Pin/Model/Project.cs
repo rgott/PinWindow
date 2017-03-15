@@ -57,7 +57,7 @@ namespace Pin.Model
                 NotifyPropertyChanged();
             }
         }
-
+        [XmlElement(Type = typeof(XmlBrushConverter))]
         private Brush _Color;
         [XmlElement(Type = typeof(XmlBrushConverter))]
         public Brush Color
@@ -106,9 +106,11 @@ namespace Pin.Model
 
         public string Serialize()
         {
-            var settings = new XmlWriterSettings();
-            settings.Indent = false;
-            settings.NewLineHandling = NewLineHandling.None;
+            var settings = new XmlWriterSettings()
+            {
+                Indent = false,
+                NewLineHandling = NewLineHandling.None
+            };
 
             var xmlOutput = new StringBuilder();
             using (var writer = XmlWriter.Create(xmlOutput, settings))

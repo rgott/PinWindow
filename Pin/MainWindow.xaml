@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Project="clr-namespace:Pin.ProjectContainer"
         xmlns:MenuContainer="clr-namespace:Pin.MenuContainer"
         mc:Ignorable="d"
@@ -14,11 +15,11 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        MouseEnter="pinWindow_MouseEnter"
-        MouseLeave="pinWindow_MouseLeave"
+        MouseEnter="PinWindow_MouseEnter"
+        MouseLeave="PinWindow_MouseLeave"
         ResizeMode="NoResize"
         Left="0" Top="0"
-        Loaded="pinWindow_Loaded"
+        Loaded="PinWindow_Loaded"
         IsHitTestVisible="True"
         Title="MainWindow" Width="348" Height="279">
     <Grid>
@@ -26,12 +27,24 @@
             <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
                 <Border HorizontalAlignment="Right" Margin="1,2,2,0" Width="80" BorderBrush="DarkGray" BorderThickness="1">
                     <UniformGrid Rows="1">
-                        <RadioButton x:Name="UI_RadioButton_Move" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Move" Checked="UI_RadioButton_Checked"/>
-                        <RadioButton x:Name="UI_RadioButton_Copy" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Copy" Checked="UI_RadioButton_Checked"/>
+                        <RadioButton x:Name="UI_RadioButton_Move" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Move">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <i:InvokeCommandAction Command="{Binding Copy_RadioBtn_Checked}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+                        <RadioButton x:Name="UI_RadioButton_Copy" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Copy">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <i:InvokeCommandAction Command="{Binding Move_RadioBtn_Checked}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
                     </UniformGrid>
                 </Border>
             </Grid>
-            <Project:Project x:Name="UI_Project" DataContext="{Binding MenuContainerBind}" Margin="0,20,0,0"/>
+            <Project:Project DataContext="{Binding MenuContainerBind}" Margin="0,20,0,0"/>
         </Grid>
         <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>
