@@ -4,116 +4,78 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Pin.ProjectContainer"
-             xmlns:ColorPicker="clr-namespace:Pin.ColorPicker;assembly=Pin.ColorPicker"
-             mc:Ignorable="d"
+             
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
-        <ControlTemplate x:Key="Template_Project_Open" TargetType="ToggleButton">
-            <Border CornerRadius="5" Background="{TemplateBinding Background}" Height="20" Width="20">
-                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
     </UserControl.Resources>
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="43"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Border Background="#FF646769">
-                <Grid Margin="10" Grid.Row="0" VerticalAlignment="Top">
-                    <TextBlock FontSize="16" VerticalAlignment="Center" Foreground="White" Text="Projects"/>
-                    <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" Padding="0" Name="projects" Command="{Binding ProjectAddClick}">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
-                                <Setter Property="Background" Value="DarkGray"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Style>
-                        </ToggleButton.Style>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding addP_Text,FallbackValue=+}"/>
-                    </ToggleButton>
-                </Grid>
-            </Border>
-            <ListBox Grid.Row="1" Template="{StaticResource ListViewProjects}" SelectionMode="Single" SelectedItem="{Binding SelectedProject,Mode=TwoWay}" ItemsSource="{Binding ProjectList.Projects}">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="Background" Value="{StaticResource MainAppThemeColor}"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListBoxItem">
-                                    <Border Name="Border" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
-                                        <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Background" Value="{StaticResource HoverColor}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="true">
-                                            <Setter Property="Background" Value="{StaticResource PressedColor}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="true">
-                                            <Setter Property="Foreground" Value="{StaticResource MainTextColor}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <local:ProjectItem/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            
-            <!--Top of all others-->
-            <Grid Visibility="{Binding popupToggle_IsChecked,Converter={StaticResource BoolToVisibility}}" Grid.Row="1" VerticalAlignment="Top">
-                <Border BorderBrush="DarkGray" BorderThickness="1,0,1,1" Margin="10,0,10,0" Height="91">
-                    <Grid  Background="#FF646769" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ColorPicker:ColorSelectionBox DataContext="{Binding ColorSelectionContext}" VerticalAlignment="Center" Margin="10,0" Width="20" Height="20"/>
-
-                        <Grid Height="23" VerticalAlignment="Top" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="10"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Name"/>
-                            <TextBox Text="{Binding AddProject.Name}" Grid.Column="1"/>
-                        </Grid>
-                        <Grid Height="23" Margin="0,30,0,0" VerticalAlignment="Top" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="10"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock FontSize="16" Foreground="White" Margin="10,0,10,0" Text="Path"/>
-                            <TextBox Text="{Binding AddProject.Path}" Grid.Column="1"/>
-                            <Button x:Name="UI_Btn_FolderBrowse" Command="{Binding ChangeDirectory}" Grid.Column="2">Browse</Button>
-                        </Grid>
-                        <Button Command="{Binding AddProject_ClickCmd}" HorizontalAlignment="Right" Margin="0,0,14,10" VerticalAlignment="Bottom" Width="50" Content="Add" Grid.Column="1"/>
-                    </Grid>
-                </Border>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="43"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource MainAppThemeColor}">
+            <Grid Margin="10" Grid.Row="0">
+                <TextBlock FontSize="16" Foreground="{StaticResource MainTextColor}" Text="Projects"/>
+                <ToggleButton Template="{StaticResource Template_Project_Open}" HorizontalAlignment="Right" IsChecked="{Binding NewProject.ShowEditor, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Checked">
+                            <i:InvokeCommandAction Command="{Binding NewProject.PauseWindowChange}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Unchecked">
+                            <i:InvokeCommandAction Command="{Binding NewProject.ResumeWindowChange}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Setter Property="Background" Value="{StaticResource MainAppLightColor}"/>
+                            <Setter Property="Foreground" Value="{StaticResource MainTextColor}"/>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
             </Grid>
-        </Grid>
+        </Border>
+        <ListBox Grid.Row="1" Template="{StaticResource ListViewProjects}" SelectionMode="Single" SelectedItem="{Binding SelectedProject,Mode=TwoWay}" ItemsSource="{Binding ProjectList.Projects}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="Background" Value="{StaticResource MainAppThemeColor}"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="Border" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Background" Value="{StaticResource HoverColor}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="true">
+                                        <Setter Property="Background" Value="{StaticResource PressedColor}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="true">
+                                        <Setter Property="Foreground" Value="{StaticResource MainTextColor}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <local:ProjectItem/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--Top of all others-->
+        <local:ProjectNew Visibility="{Binding ShowEditor ,Converter={StaticResource BoolToVisibility},FallbackValue=Collapsed}" DataContext="{Binding NewProject}" Grid.Row="1"/>
     </Grid>
 </UserControl>

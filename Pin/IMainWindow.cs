@@ -1,12 +1,11 @@
-﻿using System.Linq;
-
-namespace Pin
+﻿namespace Pin
 {
-    public interface IMainWindow
+    public interface IApplicationWindow
     {
-        void WindowChangeState(WindowState? wState = null);
+        void WindowChangeState(WindowState wState);
         void onExit();
         void PauseState(object lockingObject);
         void ResumeState(object lockingObject);
+        WindowState State { get; }
     }
 }

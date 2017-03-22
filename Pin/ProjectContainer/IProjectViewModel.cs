@@ -2,6 +2,7 @@
 using Pin.Model;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
+using Pin.ProjectContainer;
 
 namespace Pin
 {
@@ -9,6 +10,8 @@ namespace Pin
     {
         IProject Project { get; set; }
         IProject OrigionalProject { get; set; }
+
+        ProjectViewModelList Projects { get; set; }
 
         Queue<string[]> FileToDrop { get; set; }
 

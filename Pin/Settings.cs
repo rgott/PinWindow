@@ -1,4 +1,6 @@
-﻿namespace Pin.Properties {
+﻿using System;
+
+namespace Pin.Properties {
     
     
     // This class allows you to handle specific events on the settings class:
@@ -8,23 +10,20 @@
     //  The SettingsSaving event is raised before the setting values are saved.
     internal sealed partial class Settings : ISettings {
         
-        public Settings() {
-            // // To add event handlers for saving and changing settings, uncomment the lines below:
-            //
-            // this.SettingChanging += this.SettingChangingEventHandler;
-            //
-            // this.SettingsSaving += this.SettingsSavingEventHandler;
-            //
-        }
+        public Settings() { }
 
-
-        
-        private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
-            // Add code to handle the SettingChangingEvent event here.
-        }
-        
-        private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) {
-            // Add code to handle the SettingsSaving event here.
+        public event ClipboardActionChangedEventHandler ClipboardActionChanged;
+        public ClipboardEvent ClipboardAction
+        {
+            get
+            {
+                return (ClipboardEvent)ActionEvent;
+            }
+            set
+            {
+                ActionEvent = (int)value;
+                ClipboardActionChanged?.Invoke(value);
+            }
         }
     }
 }

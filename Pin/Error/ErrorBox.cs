@@ -11,13 +11,14 @@ namespace Pin.Error
     {
         public static void Show(string error)
         {
-            var window = new CustomMessageWindow(error)
-            {
-                Left = 10,
-                Top = 20,
-                Width = 600
-            };
-            window.ShowDialog();
+            MessageBox.Show(error);
+            //var window = new CustomMessageWindow(error)
+            //{
+            //    Left = 10,
+            //    Top = 20,
+            //    Width = 600
+            //};
+            //window.ShowDialog();
         }
     }
 }

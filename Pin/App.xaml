@@ -7,6 +7,7 @@
         <SolidColorBrush x:Key="MainTextColor" Color="White" />
         <SolidColorBrush x:Key="PopupBackground" Color="#FF848789" />
         <SolidColorBrush x:Key="PopupTextColor" Color="White" />
+        <SolidColorBrush x:Key="TextBoxBackground" Color="#FFDDDDDD" />
         <SolidColorBrush x:Key="UNDEFINED" Color="Pink" />
 
         <SolidColorBrush x:Key="NullProjectColor" Color="Orange"/>
@@ -18,6 +19,37 @@
         <BitmapImage x:Key="Folder" UriSource="./images/Folder.png" />
         <BitmapImage x:Key="Tack-90deg" UriSource="./images/tack-90deg.png" />
         <BitmapImage x:Key="Tack-45deg" UriSource="./images/tack-45deg.png" />
+        <BitmapImage x:Key="Plus" UriSource="./images/Plus.png" />
+        <BitmapImage x:Key="Cross" UriSource="./images/Cross.png" />
+
+        <ControlTemplate x:Key="Template_Project_Open" TargetType="ToggleButton">
+            <Border CornerRadius="5" Background="{TemplateBinding Background}" Height="20" Width="20">
+                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="{StaticResource Cross}"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="{StaticResource Plus}"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="{x:Null}">
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <ControlTemplate x:Key="StyledButton" TargetType="Button">
             <Border CornerRadius="0" Background="{TemplateBinding Background}">
             <Grid>
@@ -100,6 +132,7 @@
             </Grid>
             </Border>
         </ControlTemplate>
+        
         <ControlTemplate x:Key="ListViewProjects" TargetType="ListBox">
             <Border Name="Border">
                 <ScrollViewer Focusable="false" HorizontalScrollBarVisibility="Disabled">
@@ -112,8 +145,6 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        <Style TargetType="ListBox">
-        </Style>
         
 
         <ControlTemplate x:Key="Template_Explorer_Open" TargetType="Button">
@@ -127,5 +158,10 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource MainAppLightColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource MainTextColor}"/>
+        </Style>
     </Application.Resources>
 </Application>

@@ -5,47 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Project="clr-namespace:Pin.ProjectContainer"
+        xmlns:ProjectContainer="clr-namespace:Pin.ProjectContainer"
         xmlns:MenuContainer="clr-namespace:Pin.MenuContainer"
         mc:Ignorable="d"
-        x:Name="pinWindow"
         ShowInTaskbar="False"
         Topmost="True"
         WindowStartupLocation="Manual"
         WindowState="Normal"
         WindowStyle="None"
+        AllowDrop="True"
         AllowsTransparency="True"
         Background="Transparent"
-        MouseEnter="PinWindow_MouseEnter"
-        MouseLeave="PinWindow_MouseLeave"
         ResizeMode="NoResize"
+        MouseEnter="Window_MouseEnter"
+        MouseLeave="Window_MouseLeave"
+        DragEnter="Window_DragEnter"
+        DragLeave="Window_DragLeave"
         Left="0" Top="0"
-        Loaded="PinWindow_Loaded"
+        Loaded="Window_Loaded"
         IsHitTestVisible="True"
-        Title="MainWindow" Width="348" Height="279">
+        Title="" Width="348" Height="279">
+    <!--<i:Interaction.Triggers>
+        <i:EventTrigger EventName="DragEnter">
+            <i:InvokeCommandAction Command="{Binding OpenDragOverView}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="DragLeave">
+            <i:InvokeCommandAction Command="{Binding CloseDragOverView}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>-->
+    <Window.Resources>
+        <Style x:Key="ContainerStyle" TargetType="Grid">
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
     <Grid>
-        <Grid Name="border">
-            <Grid  Height="20" VerticalAlignment="Top" Background="#FF646769">
+        <Grid Visibility="{Binding Vis_MinimizedOpen,FallbackValue=collapsed,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ContainerStyle}">
+            <MenuContainer:MinimizedOpen DataContext="{Binding MenuContainerBind}" />
+        </Grid>
+        <Grid Visibility="{Binding Vis_Minimized,FallbackValue=collapsed,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ContainerStyle}">
+            <MenuContainer:Minimized DataContext="{Binding MenuContainerBind}"/>
+        </Grid>
+
+        <Grid Visibility="{Binding Vis_Maximized,Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ContainerStyle}">
+            <Grid Height="20" VerticalAlignment="Top" Background="{StaticResource MainAppThemeColor}">
                 <Border HorizontalAlignment="Right" Margin="1,2,2,0" Width="80" BorderBrush="DarkGray" BorderThickness="1">
                     <UniformGrid Rows="1">
-                        <RadioButton x:Name="UI_RadioButton_Move" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Move">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <i:InvokeCommandAction Command="{Binding Copy_RadioBtn_Checked}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </RadioButton>
-                        <RadioButton x:Name="UI_RadioButton_Copy" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Margin="0,0,0,0" Content="Copy">
+                        <RadioButton GroupName="Clipboard" IsChecked="{Binding Clipboard_Move,Mode=OneTime}"  Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Content="Move">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Checked">
                                     <i:InvokeCommandAction Command="{Binding Move_RadioBtn_Checked}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </RadioButton>
+                        <RadioButton GroupName="Clipboard" IsChecked="{Binding Clipboard_Copy,Mode=OneTime}" Template="{StaticResource StyledRadioButton}" HorizontalContentAlignment="Center" Content="Copy">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <i:InvokeCommandAction Command="{Binding Copy_RadioBtn_Checked}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
                     </UniformGrid>
                 </Border>
             </Grid>
-            <Project:Project DataContext="{Binding MenuContainerBind}" Margin="0,20,0,0"/>
+            <MenuContainer:Maximized VerticalAlignment="Top" HorizontalAlignment="Left" DataContext="{Binding MenuContainerBind}"/>
+            <Project:Project DataContext="{Binding MenuContainerBind}" Visibility="{Binding Vis_Maximized, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0"/>
         </Grid>
-        <MenuContainer:Menu DataContext="{Binding MenuContainerBind}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+        <Grid Visibility="{Binding Vis_ProjectView, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ContainerStyle}">
+            <MenuContainer:ProjectView DataContext="{Binding MenuContainerBind}"/>
+        </Grid>
     </Grid>
 </Window>

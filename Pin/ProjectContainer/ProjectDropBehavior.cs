@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,8 +18,7 @@ namespace Pin.ProjectContainer
 
         // Using a DependencyProperty as the backing store for ProjectVM.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ProjectVMProperty =
-            DependencyProperty.Register("ProjectVM", typeof(IProjectViewModel), typeof(ProjectDropBehavior));
-
+            DependencyProperty.Register(nameof(ProjectVM), typeof(IProjectViewModel), typeof(ProjectDropBehavior));
 
         protected override void OnAttached()
         {
@@ -34,12 +32,10 @@ namespace Pin.ProjectContainer
 
         protected virtual void DragEnterCmd(object sender, DragEventArgs e)
         {
-            //Window.WindowChangeState(WindowState.MinimizedDragging);
         }
 
         protected virtual void DragLeaveCmd(object sender, DragEventArgs e)
         {
-            //Window.WindowChangeState(WindowState.Minimized);
         }
 
         protected virtual void DropCmd(object sender, DragEventArgs e)
@@ -47,9 +43,8 @@ namespace Pin.ProjectContainer
             dropData(ProjectVM.Project, e);
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="project"></param>
         /// <param name="e"></param>
@@ -72,10 +67,6 @@ namespace Pin.ProjectContainer
             }
             return null;
         }
-
-
-
-
 
         private static string[] DropHtml(Model.IProject project, DragEventArgs e)
         {
@@ -119,8 +110,7 @@ namespace Pin.ProjectContainer
 
         public static string[] DropFileDrop(Model.IProject project, DragEventArgs e)
         {
-            Array data = ((IDataObject)e.Data).GetData(DataFormats.FileDrop) as Array;
-            if (data != null)
+            if (((IDataObject)e.Data).GetData(DataFormats.FileDrop) is Array data)
             {
                 foreach (string SourcePath in data)
                 {
@@ -128,31 +118,34 @@ namespace Pin.ProjectContainer
 
                     try
                     {
-                        if (Directory.Exists(DestinationPath))
+                        if (Directory.Exists(SourcePath))
                         {
-                            switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
+                            // copy directories
+                            switch ((ClipboardEvent)Properties.Settings.Default.ActionEvent)
                             {
-                                case ActionEvent.Copy:
+                                case ClipboardEvent.Copy:
                                     CopyDirectory(SourcePath, DestinationPath);
                                     break;
-                                case ActionEvent.Move:
+
+                                case ClipboardEvent.Move:
                                     Directory.Move(SourcePath, DestinationPath);
                                     break;
                             }
                         }
                         else
                         {
-                            switch ((ActionEvent)Properties.Settings.Default.ActionEvent)
+                            // copy files
+                            switch ((ClipboardEvent)Properties.Settings.Default.ActionEvent)
                             {
-                                case ActionEvent.Copy:
+                                case ClipboardEvent.Copy:
                                     File.Copy(SourcePath, DestinationPath);
                                     break;
-                                case ActionEvent.Move:
+
+                                case ClipboardEvent.Move:
                                     File.Move(SourcePath, DestinationPath);
                                     break;
                             }
                         }
-
                     }
                     catch (Exception)
                     {
@@ -163,7 +156,6 @@ namespace Pin.ProjectContainer
             }
             return null;
         }
-
 
         /// <summary>
         /// Finds a random name for a file that does not exist
@@ -178,9 +170,8 @@ namespace Pin.ProjectContainer
             return fileName;
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <see cref="http://stackoverflow.com/a/3822913"/>
         /// <param name="SourcePath">Source Directory</param>
@@ -197,6 +188,5 @@ namespace Pin.ProjectContainer
                 SearchOption.AllDirectories))
                 File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
         }
-
     }
 }

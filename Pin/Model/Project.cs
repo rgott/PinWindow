@@ -85,6 +85,10 @@ namespace Pin.Model
             this.Color = Color;
         }
 
+        public static Project DefaultRed => new Project("", "", new SolidColorBrush(Colors.Red));
+        public static Project DefaultOrange => new Project("", "", new SolidColorBrush(Colors.Red));
+
+
         public override bool Equals(object obj)
         {
             if (obj is Project)
@@ -106,7 +110,7 @@ namespace Pin.Model
 
         public string Serialize()
         {
-            var settings = new XmlWriterSettings()
+            var settings = new XmlWriterSettings
             {
                 Indent = false,
                 NewLineHandling = NewLineHandling.None

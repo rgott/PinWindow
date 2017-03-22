@@ -6,7 +6,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:Pin.MenuContainer"
              mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="100">
+             d:DesignHeight="40" d:DesignWidth="120">
     <Grid Background="Transparent">
         <ToggleButton x:Name="UI_ToggleBtn_Tack" Background="White" Margin="60,0,0,0">
             <i:Interaction.Triggers>
@@ -62,7 +62,7 @@
         <Button Background="White" Template="{StaticResource PinBtn}" Margin="20,0,0,0" Command="{Binding ExitBtnCmd}">
             <Image Source="{StaticResource Exit}"/>
         </Button>
-        <local:Minimized Margin="80,0,0,0"/>
+        <local:Minimized Margin="80,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Popup x:Name="UI_Popup_Menu" IsOpen="{Binding UI_Popup_Menu_IsOpen,UpdateSourceTrigger=PropertyChanged}" Placement="MousePoint" Width="auto" Height="auto">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeave">
@@ -72,9 +72,6 @@
                     <i:InvokeCommandAction Command="{Binding UI_Popup_Menu_ClickCmd}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <Grid Background="White">
-                <Button Command="{Binding CleanProjectsBtnCmd}" Click="MenuItem_Click">Clear All Items (Immediate Application Restart)</Button>
-            </Grid>
         </Popup>
     </Grid>
 </UserControl>

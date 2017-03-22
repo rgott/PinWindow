@@ -6,38 +6,63 @@ using System;
 using Pin.ColorPicker;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Media;
 
-namespace Pin
+namespace Pin.ProjectContainer
 {
     public class ProjectViewModel : ViewModelBase, IProjectViewModel
     {
-        public IMainWindow Window { get; set; }
-        public ProjectViewModelList ProjectVM { get; set; }
+        public IApplicationWindow Window { get; set; }
+        public ProjectViewModelList Projects { get; set; }
         public IProject OrigionalProject { get; set; }
-        public ProjectViewModel(ProjectViewModelList ProjectVM, IMainWindow Window, IProject Project)
+
+        public ICommand AddProject { get; set; }
+
+        public ProjectViewModel(ProjectViewModelList Projects, IApplicationWindow Window) 
+            : this(Projects,Window,Model.Project.DefaultRed) { }
+
+        public ProjectViewModel(ProjectViewModelList Projects, IApplicationWindow Window, IProject Project)
         {
             this.Window = Window;
-            this.Project = OrigionalProject = Project;
-            this.ProjectVM = ProjectVM;
+            OrigionalProject = Project.Clone() as IProject;
+            this.Project = Project;
+            this.Projects = Projects;
 
             ColorSelectionContext = new ColorSelectionViewModel(ColorSelectionContext_PopupisOpenChanged);
 
             ColorSelectionContext.ColorChanged += (brush) => Project.Color = brush;
+
+            AddProject = new RelayCommand(AddProjectCmd);
 
             OpenWithExplorer = new RelayCommand(OpenWithExplorerCmd);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
             SaveEditorSettings = new RelayCommand(SaveEditorSettingsCmd);
             CancelEditorBtn = new RelayCommand(CancelEditorBtnCmd);
 
-            DeleteProject = new RelayCommand(() => ProjectVM.Delete(OrigionalProject));
+            DeleteProject = new RelayCommand(() => Projects.Remove(OrigionalProject));
             EditBtn = new RelayCommand(() => ShowEditor = true);
             PauseWindowChange = new RelayCommand(() => Window.PauseState(this));
             ResumeWindowChange = new RelayCommand(() => Window.ResumeState(this));
-
         }
 
+        private void AddProjectCmd()
+        {
+            if(Projects.Find(Project) == null)
+            {
+                ShowEditor = false;
+
+                Window.ResumeState(this);
+
+                Projects.Add(Project.Clone() as IProject);
+                Project.Name = "";
+                Project.Path = "";
+            }
+            else
+            {
+                Error.ErrorBox.Show("Cannot add a two projects of the same name.");
+            }
+        }
         private void ColorSelectionContext_PopupisOpenChanged(bool obj)
         {
             if(obj)
@@ -53,7 +78,6 @@ namespace Pin
         public RelayCommand DeleteProject { get; private set; }
 
         public ColorSelectionViewModel ColorSelectionContext { get; set; }
-
 
         public RelayCommand PauseWindowChange { get; private set; }
         public RelayCommand ResumeWindowChange { get; private set; }
@@ -71,14 +95,14 @@ namespace Pin
         {
             ColorSelectionContext.Close();
 
-            ProjectVM.Change(OrigionalProject, Project);
+            Projects.Change(OrigionalProject, Project);
 
             OrigionalProject = Project;
             ShowEditor = false;
         }
 
         public RelayCommand ChangeDirectory { get; set; }
-        private void ChangeDirectoryCmd()
+        internal void ChangeDirectoryCmd()
         {
             ColorSelectionContext.Close();
 
@@ -91,7 +115,8 @@ namespace Pin
                 Window.ResumeState(this);
 
                 // change current version
-                Project.Path = userGeneratedPath.SelectedPath;
+                if(!String.IsNullOrEmpty(userGeneratedPath.SelectedPath))
+                    Project.Path = userGeneratedPath.SelectedPath;
             }
         }
 
@@ -127,6 +152,7 @@ namespace Pin
             set
             {
                 _ShowEditor = value;
+                
                 RaisePropertyChanged();
             }
         }
@@ -156,11 +182,6 @@ namespace Pin
                 return Equals(obj as IProjectViewModel);
             }
             return false;
-        }
-
-        public bool Equals(IProject project)
-        {
-            return OrigionalProject.Equals(Project);
         }
 
         public bool Equals(IProjectViewModel obj)

@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Pex.Framework;
+using Pin;
+using NUnit.Framework;
+using Pin.Model;
 using System;
 using System.Windows.Media;
 
@@ -7,11 +10,14 @@ namespace Pin.Tests
     [TestFixture]
     public class ProjectViewModelListTest
     {
-        ProjectViewModelList model;
+        Pin.ProjectContainer.ProjectViewModelList model;
+
+        IProject project = new Model.Project("Name1", "Path1", new SolidColorBrush(Colors.Red));
+
         [SetUp]
         public void Init()
         {
-            model = new ProjectViewModelList(null,new BlankTestSettings());
+            model = new Pin.ProjectContainer.ProjectViewModelList(null, new BlankTestSettings());
         }
 
         [Test]
@@ -45,5 +51,36 @@ namespace Pin.Tests
             Assert.AreSame(NewProject.Path, model.Projects[0].Project.Path);
         }
 
+        [Test]
+        public void DuplicateProject()
+        {
+            Assert.True(model.Add(project));
+
+            Assert.False(model.Add((IProject)project.Clone()));
+        }
+
+        [Test]
+        public void FindTest()
+        {
+            Assert.True(model.Add(project));
+
+            Assert.AreEqual(project.Name,model.Find(project).Project.Name);
+        }
+
+        [Test]
+        public void FindNoItemsTest()
+        {
+            Assert.IsNull(model.Find(project));
+        }
+
+        [Test]
+        public void FindItemsNotFoundTest()
+        {
+            Assert.True(model.Add(project));
+
+            var tmpProject = new Project("TmpRandomName", "randPath", new SolidColorBrush(Colors.Firebrick));
+
+            Assert.IsNull(model.Find(tmpProject));
+        }
     }
 }

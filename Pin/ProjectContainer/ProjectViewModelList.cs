@@ -1,22 +1,22 @@
 ﻿using GalaSoft.MvvmLight;
-using System;
+using Pin.Model;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Windows.Media;
 using System.Linq;
-using Pin.Model;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 
-namespace Pin
+namespace Pin.ProjectContainer
 {
     public class ProjectViewModelList : ViewModelBase
     {
         public ISettings Settings { get; set; }
-        public IMainWindow Window { get; set; }
+        public IApplicationWindow Window { get; set; }
 
         public ObservableCollection<IProjectViewModel> Projects { get; set; } = new ObservableCollection<IProjectViewModel>();
-        public ProjectViewModelList(IMainWindow Window, ISettings Settings)
+
+        public IProjectViewModel Selected { get; set; }
+
+        public ProjectViewModelList(IApplicationWindow Window, ISettings Settings)
         {
             this.Settings = Settings;
             this.Window = Window;
@@ -37,20 +37,23 @@ namespace Pin
 
         public bool Add(IProject Project)
         {
-            // only unique projects
-            if (Projects.Count(currentProject => currentProject == Project) != 0)
+            if (Find(Project) == null)
+            {
+                Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Project));
+
+                Settings.Projects.Add(Project.Serialize());
+                Settings.Save();
+                return true;
+            }
+            else
+            {
                 return false;
-
-            Projects.Add(ProjectFactory.getViewModelFromModel(this, Window, Project));
-
-            Settings.Projects.Add(Project.Serialize());
-            Settings.Save();
-            return true;
+            }
         }
 
         public IProjectViewModel Find(IProject project)
         {
-            return Projects.FirstOrDefault(m => m.Project == project);
+            return Projects.FirstOrDefault(m => m.Project.Equals(project));
         }
 
         public void Change(IProject OldProject, IProject NewProject)
@@ -64,17 +67,19 @@ namespace Pin
         public void Change(IProjectViewModel OldProjectVM, IProjectViewModel NewProjectVM)
         {
             var index = Projects.IndexOf(OldProjectVM);
+
             Projects[index] = NewProjectVM;
             Settings.Projects[index] = NewProjectVM.Project.Serialize();
 
-            if (NewProjectVM.Project.Name.Equals(Settings.PrimaryProjectName))
+            if (OldProjectVM.Project.Name.Equals(Settings.PrimaryProjectName))
             {
-                PrimaryProject = NewProjectVM;
+                Settings.PrimaryProjectName = NewProjectVM.Project.Name;
+                Selected = NewProjectVM;
             }
             Settings.Save();
         }
 
-        public void Delete(Model.IProject Model)
+        public void Remove(Model.IProject Model)
         {
             var index = Projects.IndexOf(ProjectFactory.getViewModelFromModel(this, Window, Model));
 
@@ -82,38 +87,6 @@ namespace Pin
             Settings.Projects.RemoveAt(index);
 
             Settings.Save();
-        }
-
-        public delegate void ActionEventChangedEventHandler(ActionEvent actionevent);
-        public event ActionEventChangedEventHandler ActionEventChanged;
-        public ActionEvent ActionEvent
-        {
-            get
-            {
-                return (ActionEvent)Settings.ActionEvent;
-            }
-            set
-            {
-                Settings.ActionEvent = (int)value;
-                Settings.Save();
-                ActionEventChanged?.Invoke(value);
-            }
-        }
-
-        public delegate void ProjectChangedEventHandler(IProject project);
-        public event ProjectChangedEventHandler PrimaryProjectChanged;
-        public IProjectViewModel PrimaryProject
-        {
-            get
-            {
-                return Projects?.FirstOrDefault(Model => Model.Project.Name == Settings.PrimaryProjectName) 
-                    ?? ProjectFactory.getViewModelFromModel(this, Window, ProjectFactory.DefaultProject);
-            }
-            set
-            {
-                Settings.PrimaryProjectName = value.Project.Name;
-                PrimaryProjectChanged?.Invoke(value?.Project);
-            }
         }
     }
 }

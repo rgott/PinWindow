@@ -12,7 +12,7 @@ namespace Pin.Tests
     {
         public BlankTestSettings()
         {
-            ActionEvent = (int)Pin.ActionEvent.Move;
+            ActionEvent = (int)Pin.ClipboardEvent.Move;
             var projectCollection = new StringCollection();
 
             Projects = projectCollection;
@@ -23,7 +23,19 @@ namespace Pin.Tests
 
         public StringCollection Projects { get; set; }
 
-
+        public event ClipboardActionChangedEventHandler ClipboardActionChanged;
+        
+        public ClipboardEvent ClipboardAction
+        {
+            get
+            {
+                return ClipboardEvent.Move;
+            }
+            set
+            {
+                // stub
+            }
+        }
 
         public void Save()
         {

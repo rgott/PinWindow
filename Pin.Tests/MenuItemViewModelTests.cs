@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Pin.ProjectContainer;
 
 namespace Pin.Tests
 {
@@ -17,9 +18,7 @@ namespace Pin.Tests
         {
             var ProjModel = new ProjectViewModelList(new BlankTestWindow(), new BlankTestSettings());
 
-            Model = new MenuItemViewModel(new BlankTestWindow(), ProjModel);
+            Model = new MenuItemViewModel(new BlankTestSettings(),new BlankTestWindow(), ProjModel);
         }
-
-
     }
 }

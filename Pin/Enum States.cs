@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pin
+﻿namespace Pin
 {
     public enum WindowState
     {
         Normal,
-        Pinned,
         MinimizedOpen,
         Minimized,
         MinimizedDragging
@@ -21,7 +14,7 @@ namespace Pin
         closed
     }
 
-    public enum ActionEvent
+    public enum ClipboardEvent
     {
         Move = 0,
         Copy = 1

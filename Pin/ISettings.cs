@@ -1,13 +1,18 @@
 ﻿using System.Collections.Specialized;
-using System.Linq;
 
 namespace Pin
 {
+    public delegate void ClipboardActionChangedEventHandler(ClipboardEvent actionevent);
+
     public interface ISettings
     {
         string PrimaryProjectName { get; set; }
+
         void Save();
-        int ActionEvent { get; set; }
+
+        event ClipboardActionChangedEventHandler ClipboardActionChanged;
+
+        ClipboardEvent ClipboardAction { get; set; }
         StringCollection Projects { get; set; }
     }
 }

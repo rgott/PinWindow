@@ -32,11 +32,11 @@ namespace Pin.ColorPicker
             }
         }
 
-        private Color ColorSelection(POINT screenPoint)
+        private static Color ColorSelection(POINT screenPoint)
         {
-            IntPtr hdc = Win32.GetDC(IntPtr.Zero);
-            uint color = Win32.GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
-            Win32.ReleaseDC(IntPtr.Zero, hdc);
+            var hdc = GetDC(IntPtr.Zero);
+            var color = GetPixel(hdc, (int)screenPoint.X, (int)screenPoint.Y);
+            ReleaseDC(IntPtr.Zero, hdc);
 
             var r = (byte)(color >> 0);
             var g = (byte)(color >> 8);
@@ -146,7 +146,7 @@ namespace Pin.ColorPicker
             set
             {
                 _ColorSelection_isOpen = value;
-                PopupIsOpenChanged(value);
+                PopupIsOpenChanged?.Invoke(value);
                 RaisePropertyChanged();
             }
         }
@@ -155,8 +155,7 @@ namespace Pin.ColorPicker
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Win32.POINT tmpPoint;
-                Win32.GetCursorPos(out tmpPoint);
+                Win32.GetCursorPos(out var tmpPoint);
 
                 PrimaryColor = new SolidColorBrush(ColorSelection(tmpPoint));
                 MajorColorSelector = new Thickness(0, Mouse.GetPosition(Mouse.DirectlyOver).Y, 0, 0);
@@ -165,8 +164,7 @@ namespace Pin.ColorPicker
 
         private void MajorColorSelectorPlane_MouseDownCmd()
         {
-            Win32.POINT tmpPoint;
-            Win32.GetCursorPos(out tmpPoint);
+            Win32.GetCursorPos(out var tmpPoint);
 
             SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
 
@@ -176,8 +174,7 @@ namespace Pin.ColorPicker
 
         private void ColorSelectionGrid_MouseDownCmd()
         {
-            Win32.POINT tmpPoint;
-            Win32.GetCursorPos(out tmpPoint);
+            GetCursorPos(out var tmpPoint);
             
             ColorSelectionGridColorFinder = new Thickness(Mouse.GetPosition(Mouse.DirectlyOver).X - 5, Mouse.GetPosition(Mouse.DirectlyOver).Y - 5, 0, 0);
             SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
@@ -187,10 +184,10 @@ namespace Pin.ColorPicker
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                Win32.POINT tmpPoint;
-                Win32.GetCursorPos(out tmpPoint);
+                POINT tmpPoint;
+                GetCursorPos(out tmpPoint);
 
-                Point mousPos = Mouse.GetPosition(Mouse.DirectlyOver);
+                var mousPos = Mouse.GetPosition(Mouse.DirectlyOver);
                 ColorSelectionGridColorFinder = new Thickness(mousPos.X - 5, mousPos.Y - 5, 0, 0);
                 SelectionColor = new SolidColorBrush(ColorSelection(tmpPoint));
             }
@@ -201,11 +198,6 @@ namespace Pin.ColorPicker
             Color = SelectionColor;
             ColorChanged?.Invoke(Color);
             ColorSelection_isOpen = false;
-        }
-
-        public void isSelectionPlaneOpen(bool isOpen = false)
-        {
-            ColorSelection_isOpen = isOpen;
         }
     }
 }
