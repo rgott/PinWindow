@@ -128,7 +128,6 @@
     <Compile Include="IMainWindow.cs" />
     <Compile Include="InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="ProjectContainer\DragOutBehavior.cs" />
     <Compile Include="ProjectContainer\IProjectViewModel.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MenuContainer\Maximized.xaml.cs">
@@ -161,6 +160,7 @@
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enum States.cs" />
+    <Compile Include="ProjectDragoutBehavior.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModelFactory.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

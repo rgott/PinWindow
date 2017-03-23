@@ -29,6 +29,8 @@ namespace Pin.ProjectContainer
             this.AssociatedObject.DragLeave += DragLeaveCmd;
             this.AssociatedObject.Drop += DropCmd;
         }
+        
+       
 
         protected virtual void DragEnterCmd(object sender, DragEventArgs e)
         {
@@ -40,7 +42,7 @@ namespace Pin.ProjectContainer
 
         protected virtual void DropCmd(object sender, DragEventArgs e)
         {
-            dropData(ProjectVM.Project, e);
+            ProjectVM.FileToDrop.Enqueue(dropData(ProjectVM.Project, e));
         }
 
         /// <summary>
@@ -166,7 +168,10 @@ namespace Pin.ProjectContainer
         private static string getCheckedRandomFileName(string path, string ext)
         {
             string fileName;
-            while (File.Exists(fileName = Path.Combine(path, Path.GetRandomFileName().Replace(".", "") + ext))) { }
+            while (File.Exists(fileName = Path.Combine(path, Path.GetRandomFileName().Replace(".", "") + ext)))
+            {
+                // logic in while loop
+            }
             return fileName;
         }
 

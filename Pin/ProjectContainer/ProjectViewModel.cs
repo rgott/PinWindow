@@ -188,5 +188,10 @@ namespace Pin.ProjectContainer
         {
             return OrigionalProject.Equals(obj.OrigionalProject);
         }
+
+        public override int GetHashCode()
+        {
+            return OrigionalProject.GetHashCode();
+        }
     }
 }

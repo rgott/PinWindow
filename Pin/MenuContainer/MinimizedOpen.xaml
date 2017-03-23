@@ -6,23 +6,20 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:Pin.MenuContainer"
              xmlns:Project="clr-namespace:Pin.ProjectContainer"
+             xmlns:Root="clr-namespace:Pin"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="40">
     <Grid>
-        <Rectangle 
-            Fill="{Binding UI_DragOut_Color,FallbackValue={StaticResource NullProjectColor}}"
+
+        <Rectangle
+            Fill="{Binding SelectedProject.OrigionalProject.Color,FallbackValue={StaticResource NullProjectColor}}"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Width="20" Height="20"
             Margin="0,20,0,0">
             <i:Interaction.Behaviors>
-                <Project:DragOutBehavior/>
+                <Root:ProjectDragoutBehavior ProjectVM="{Binding SelectedProject}"/>
             </i:Interaction.Behaviors>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <i:InvokeCommandAction Command="{Binding DragOutCmd}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </Rectangle>
         
         <Button Background="White" Template="{StaticResource PinBtn}" Margin="0,0,0,0" Command="{Binding SizingBtnCmd}">

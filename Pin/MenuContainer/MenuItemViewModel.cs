@@ -1,7 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Pin.ColorPicker;
-using Pin.Model;
 using Pin.ProjectContainer;
 using System;
 using System.Windows.Input;
@@ -21,22 +19,10 @@ namespace Pin.MenuContainer
             Settings.ClipboardActionChanged += PList_ActionEventChanged;
             PList_ActionEventChanged(Settings.ClipboardAction);
 
-            
             ProjectList = pList;
 
             NewProject = new Pin.ProjectContainer.ProjectViewModel(pList, Window);
         }
-
-        public ICommand MouseLeave { get; set; }
-        public ICommand ResumeWindow { get; private set; }
-        public ICommand PauseWindow { get; private set; }
-        public ICommand ExitBtnCmd { get; set; }
-        public ICommand SizingBtnCmd { get; set; }
-
-        public IApplicationWindow Window { get; private set; }
-
-       
-
         private void InitCommands()
         {
             ResumeWindow = new RelayCommand(() => Window.ResumeState(this));
@@ -50,9 +36,17 @@ namespace Pin.MenuContainer
 
             UI_DragOut_Color = new SolidColorBrush(Colors.Orange);
             ChangeDirectory = new RelayCommand(ChangeDirectoryCmd);
-
-
         }
+
+        public ICommand MouseLeave { get; set; }
+        public ICommand ResumeWindow { get; private set; }
+        public ICommand PauseWindow { get; private set; }
+        public ICommand ExitBtnCmd { get; set; }
+        public ICommand SizingBtnCmd { get; set; }
+
+        public IApplicationWindow Window { get; private set; }
+
+        
 
         private void SizingBtn()
         {
@@ -61,11 +55,13 @@ namespace Pin.MenuContainer
                 case WindowState.Normal:
                     Window.WindowChangeState(WindowState.MinimizedOpen);
                     break;
+
                 default:
                     Window.WindowChangeState(WindowState.Normal);
                     break;
             }
         }
+
         private string _ClipboardActionText;
         public string ClipboardActionText
         {
@@ -104,18 +100,22 @@ namespace Pin.MenuContainer
                 case ClipboardEvent.Move:
                     ClipboardActionText = "Move";
                     break;
+
                 case ClipboardEvent.Copy:
                     ClipboardActionText = "Copy";
                     break;
+
                 default:
                     break;
             }
         }
+
         public ICommand UI_Popup_Menu { get; set; }
 
         public ICommand UI_Popup_Menu_ClickCmd { get; set; }
 
         private bool _UI_Popup_Menu_IsOpen = false;
+
         private bool UI_Popup_Menu_IsOpen
         {
             get
@@ -130,14 +130,13 @@ namespace Pin.MenuContainer
         }
 
         public Model.Project AddProject { get; set; } = Model.Project.DefaultRed;
-        
 
         #region ProjectsOverviewListVM
-        
+
         public RelayCommand ChangeDirectory { get; set; }
+
         private void ChangeDirectoryCmd()
         {
-
             var userGeneratedPath = new Forms.FolderBrowserDialog();
 
             Window.PauseState(userGeneratedPath);// pause window while searching a directory
@@ -149,9 +148,8 @@ namespace Pin.MenuContainer
                 AddProject.Path = userGeneratedPath.SelectedPath;
         }
 
-
-        
         private ProjectViewModelList _ProjectList;
+
         public ProjectViewModelList ProjectList
         {
             get
@@ -166,12 +164,12 @@ namespace Pin.MenuContainer
         }
 
         private ProjectViewModel _NewProject;
+
         public ProjectViewModel NewProject
         {
             get
             {
                 return _NewProject;
-
             }
             set
             {
@@ -180,10 +178,11 @@ namespace Pin.MenuContainer
             }
         }
 
-        #endregion
+        #endregion ProjectsOverviewListVM
 
         // project color
         public SolidColorBrush _UI_DragOut_Color { get; set; }
+
         public SolidColorBrush UI_DragOut_Color
         {
             get

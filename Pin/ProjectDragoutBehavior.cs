@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interactivity;
 
-namespace Pin.ProjectContainer
+namespace Pin
 {
-    public class DragOutBehavior : Behavior<FrameworkElement>
+    public class ProjectDragoutBehavior : Behavior<FrameworkElement>
     {
         public IProjectViewModel ProjectVM
         {
@@ -18,18 +18,26 @@ namespace Pin.ProjectContainer
 
         // Using a DependencyProperty as the backing store for ProjectVM.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ProjectVMProperty =
-            DependencyProperty.Register(nameof(ProjectVM), typeof(IProjectViewModel), typeof(DragOutBehavior));
-
+            DependencyProperty.Register(nameof(ProjectVM), typeof(IProjectViewModel), typeof(ProjectDragoutBehavior));
 
         protected override void OnAttached()
         {
             base.OnAttached();
 
-            this.AssociatedObject.DragLeave += AssociatedObject_DragLeave;
+            this.AssociatedObject.AllowDrop = true;
+            this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
         }
 
-        private void AssociatedObject_DragLeave(object sender, DragEventArgs e)
+        public static void dragDataOut(DependencyObject source, string[] filesToDrag)
         {
+            var data = new DataObject(DataFormats.FileDrop, filesToDrag);
+            DragDrop.DoDragDrop(source, data, getEffects((ClipboardEvent)Properties.Settings.Default.ActionEvent));
+        }
+
+        private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ProjectVM == null) return;
+
             if (ProjectVM.FileToDrop.Count == 0)
             {
                 Error.ErrorBox.Show("No Files to drag out.");
@@ -39,10 +47,8 @@ namespace Pin.ProjectContainer
             DragDrop.DoDragDrop(this.AssociatedObject, data, getEffects((ClipboardEvent)Properties.Settings.Default.ActionEvent));
         }
 
-
         public static void setEffects(DragEventArgs e)
         {
-            
             if (e.Data.GetDataPresent(DataFormats.Html)
                 || e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -60,5 +66,7 @@ namespace Pin.ProjectContainer
             }
             return DragDropEffects.None;
         }
+        
+
     }
 }
