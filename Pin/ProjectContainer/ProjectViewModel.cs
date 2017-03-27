@@ -21,9 +21,10 @@ namespace Pin.ProjectContainer
 
         public ProjectViewModel(ProjectViewModelList Projects, IApplicationWindow Window) 
             : this(Projects,Window,Model.Project.DefaultRed) { }
-
+        public ISettings Settings { get; set; }
         public ProjectViewModel(ProjectViewModelList Projects, IApplicationWindow Window, IProject Project)
         {
+            Settings = Projects.Settings;
             this.Window = Window;
             OrigionalProject = Project.Clone() as IProject;
             this.Project = Project;
@@ -55,8 +56,8 @@ namespace Pin.ProjectContainer
                 Window.ResumeState(this);
 
                 Projects.Add(Project.Clone() as IProject);
-                Project.Name = "";
-                Project.Path = "";
+                Project.Name = String.Empty;
+                Project.Path = String.Empty;
             }
             else
             {

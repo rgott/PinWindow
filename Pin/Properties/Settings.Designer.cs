@@ -12,7 +12,7 @@ namespace Pin.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.0.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,84 +25,12 @@ namespace Pin.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public int WINDOW_STATE_NORMAL_WIDTH {
-            get {
-                return ((int)(this["WINDOW_STATE_NORMAL_WIDTH"]));
-            }
-            set {
-                this["WINDOW_STATE_NORMAL_WIDTH"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public int WINDOW_STATE_NORMAL_HEIGHT {
-            get {
-                return ((int)(this["WINDOW_STATE_NORMAL_HEIGHT"]));
-            }
-            set {
-                this["WINDOW_STATE_NORMAL_HEIGHT"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int WINDOW_STATE_MINIMIZED_HEIGHT {
-            get {
-                return ((int)(this["WINDOW_STATE_MINIMIZED_HEIGHT"]));
-            }
-            set {
-                this["WINDOW_STATE_MINIMIZED_HEIGHT"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int WINDOW_STATE_MINIMIZED_WIDTH {
-            get {
-                return ((int)(this["WINDOW_STATE_MINIMIZED_WIDTH"]));
-            }
-            set {
-                this["WINDOW_STATE_MINIMIZED_WIDTH"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.Collections.Specialized.StringCollection Projects {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["Projects"]));
             }
             set {
                 this["Projects"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public int WINDOW_STATE_MINIMIZEDPINNED_WIDTH {
-            get {
-                return ((int)(this["WINDOW_STATE_MINIMIZEDPINNED_WIDTH"]));
-            }
-            set {
-                this["WINDOW_STATE_MINIMIZEDPINNED_WIDTH"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public int WINDOW_STATE_MINIMIZEDPINNED_HEIGHT {
-            get {
-                return ((int)(this["WINDOW_STATE_MINIMIZEDPINNED_HEIGHT"]));
-            }
-            set {
-                this["WINDOW_STATE_MINIMIZEDPINNED_HEIGHT"] = value;
             }
         }
         

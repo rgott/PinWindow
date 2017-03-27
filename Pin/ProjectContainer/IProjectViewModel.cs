@@ -14,7 +14,7 @@ namespace Pin
         ProjectViewModelList Projects { get; set; }
 
         Queue<string[]> FileToDrop { get; set; }
-
+        ISettings Settings { get; set; }
         /// <summary>
         /// Used to display editor view
         /// </summary>

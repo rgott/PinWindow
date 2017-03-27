@@ -8,6 +8,9 @@ using System.Windows.Interactivity;
 
 namespace Pin.ProjectContainer
 {
+    /// <summary>
+    /// Need to set <para>ProjectVM</para> in XAML.
+    /// </summary>
     public class ProjectDropBehavior : Behavior<FrameworkElement>
     {
         public IProjectViewModel ProjectVM
@@ -42,41 +45,40 @@ namespace Pin.ProjectContainer
 
         protected virtual void DropCmd(object sender, DragEventArgs e)
         {
-            ProjectVM.FileToDrop.Enqueue(dropData(ProjectVM.Project, e));
+            var DroppedFiles = dropData(ProjectVM.OrigionalProject, ProjectVM.Settings.ClipboardAction, e);
+            if(DroppedFiles != null)
+            {
+                ProjectVM.FileToDrop.Enqueue(DroppedFiles);
+            }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="project"></param>
-        /// <param name="e"></param>
         /// <returns>Path of newly dropped file</returns>
-        public static string[] dropData(Model.IProject project, DragEventArgs e)
+        public static string[] dropData(Model.IProject project,ClipboardEvent ClipboardAction, DragEventArgs e)
         {
             if (String.IsNullOrEmpty(project.Path))
             {
                 MessageBox.Show("Path Not set.");
                 return null;
             }
-
-            if (e.Data.GetFormats().Contains(DataFormats.Html))
+            
+            if (e.Data.GetDataPresent(DataFormats.Html))
             {// if html then from web retrieve and save or content
                 return DropHtml(project, e);
             }
-            else if (e.Data.GetFormats().Contains(DataFormats.FileDrop))
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {// file drop
-                return DropFileDrop(project, e);
+                return DropFileDrop(project,ClipboardAction, e);
             }
             return null;
         }
 
-        private static string[] DropHtml(Model.IProject project, DragEventArgs e)
+        internal static string[] DropHtml(Model.IProject project, DragEventArgs e)
         {
-            var match = Regex.Match((string)e.Data.GetData(DataFormats.Html), "src=\"(.*?)\""); // find source of dropped image
-            if (match.Groups.Count >= 2)
+            var matchHtmlImageSource = Regex.Match((string)e.Data.GetData(DataFormats.Html), "src=\"(.*?)\""); // find source of dropped image
+            if (matchHtmlImageSource.Groups.Count >= 2)
             {
                 string DestinationPath;
-                var matchValue = match.Groups[1].Value;
+                var matchValue = matchHtmlImageSource.Groups[1].Value;
                 if (matchValue.StartsWith("http"))
                 { // must download first
                     using (WebClient client = new WebClient())
@@ -86,15 +88,15 @@ namespace Pin.ProjectContainer
                         DestinationPath = Path.Combine(project.Path, "_" + fileName);
                         if (File.Exists(DestinationPath))
                         {
-                            DestinationPath = getCheckedRandomFileName(project.Path, fileName);
+                            DestinationPath = getCheckedRandomName(project.Path, fileName);
                         }
                         client.DownloadFile(matchValue, DestinationPath);
                     }
                 }
                 else //if (matchValue.StartsWith("data")
                 { // contains a base 64 image
-                    var extention = Regex.Match(matchValue, @"image\/(.*?);").Groups[1]?.Value; // finds the type of image (data:image/jpeg;...)
-                    DestinationPath = getCheckedRandomFileName(project.Path, "." + extention);
+                    var extention = "+" + Regex.Match(matchValue, @"image\/(.*?);").Groups[1]?.Value; // finds the type of image (data:image/jpeg;...)
+                    DestinationPath = getCheckedRandomName(project.Path, extention);
 
                     var base64 = Regex.Match(matchValue, "base64,(.*)").Groups[1]?.Value;
                     var bytes = Convert.FromBase64String(base64);
@@ -110,7 +112,7 @@ namespace Pin.ProjectContainer
             // new WebClient().DownloadFile("data:image/jpeg;base64,/9j/4AAQSk...
         }
 
-        public static string[] DropFileDrop(Model.IProject project, DragEventArgs e)
+        internal static string[] DropFileDrop(Model.IProject project,ClipboardEvent ClipboardAction, DragEventArgs e)
         {
             if (((IDataObject)e.Data).GetData(DataFormats.FileDrop) is Array data)
             {
@@ -122,31 +124,11 @@ namespace Pin.ProjectContainer
                     {
                         if (Directory.Exists(SourcePath))
                         {
-                            // copy directories
-                            switch ((ClipboardEvent)Properties.Settings.Default.ActionEvent)
-                            {
-                                case ClipboardEvent.Copy:
-                                    CopyDirectory(SourcePath, DestinationPath);
-                                    break;
-
-                                case ClipboardEvent.Move:
-                                    Directory.Move(SourcePath, DestinationPath);
-                                    break;
-                            }
+                            CopyOrMoveDirectory(SourcePath, DestinationPath, ClipboardAction);
                         }
                         else
                         {
-                            // copy files
-                            switch ((ClipboardEvent)Properties.Settings.Default.ActionEvent)
-                            {
-                                case ClipboardEvent.Copy:
-                                    File.Copy(SourcePath, DestinationPath);
-                                    break;
-
-                                case ClipboardEvent.Move:
-                                    File.Move(SourcePath, DestinationPath);
-                                    break;
-                            }
+                            CopyOrMoveFile(SourcePath, DestinationPath, ClipboardAction);
                         }
                     }
                     catch (Exception)
@@ -159,39 +141,71 @@ namespace Pin.ProjectContainer
             return null;
         }
 
+        private static void CopyOrMoveFile(string SourcePath, string DestinationPath, ClipboardEvent ClipboardAction)
+        {
+            // copy files
+            switch (ClipboardAction)
+            {
+                case ClipboardEvent.Copy:
+                    File.Copy(SourcePath, DestinationPath);
+                    break;
+
+                case ClipboardEvent.Move:
+                    File.Move(SourcePath, DestinationPath);
+                    break;
+            }
+        }
+
+        private static void CopyOrMoveDirectory(string SourcePath, string DestinationPath, ClipboardEvent ClipboardAction)
+        {
+            // copy directories
+            switch (ClipboardAction)
+            {
+                case ClipboardEvent.Copy:
+                    CopyDirectory(SourcePath, DestinationPath);
+                    break;
+
+                case ClipboardEvent.Move:
+                    Directory.Move(SourcePath, DestinationPath);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Finds a random name for a file that does not exist
         /// </summary>
         /// <param name="path">Directory where file will be located</param>
         /// <param name="ext">File extention. must contain the leading period.</param>
         /// <returns></returns>
-        private static string getCheckedRandomFileName(string path, string ext)
+        internal static string getCheckedRandomName(string path, string ext = null)
         {
             string fileName;
-            while (File.Exists(fileName = Path.Combine(path, Path.GetRandomFileName().Replace(".", "") + ext)))
+            do
             {
-                // logic in while loop
+                fileName = Path.Combine(path, Path.GetRandomFileName().Replace(".", string.Empty) + (ext ?? ""));
             }
+            while (File.Exists(fileName));
             return fileName;
         }
 
         /// <summary>
-        ///
+        /// Copies entire directory
         /// </summary>
         /// <see cref="http://stackoverflow.com/a/3822913"/>
         /// <param name="SourcePath">Source Directory</param>
         /// <param name="DestinationPath">Destination Directory</param>
-        public static void CopyDirectory(string SourcePath, string DestinationPath)
+        internal static void CopyDirectory(string SourcePath, string DestinationPath)
         {
+            if (!Directory.Exists(DestinationPath)) Directory.CreateDirectory(DestinationPath);
+
             //Now Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*",
-                SearchOption.AllDirectories))
+            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
                 Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
 
             //Copy all the files & Replaces any files with the same name
-            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*",
-                SearchOption.AllDirectories))
+            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
                 File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+
         }
     }
 }

@@ -23,8 +23,10 @@ namespace Pin.Tests
 
         public StringCollection Projects { get; set; }
 
+#pragma warning disable CS0067 //test class does not need subscription
         public event ClipboardActionChangedEventHandler ClipboardActionChanged;
-        
+#pragma warning restore CS0067
+
         public ClipboardEvent ClipboardAction
         {
             get

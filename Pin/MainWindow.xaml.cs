@@ -17,11 +17,6 @@ namespace Pin
         public MainWindow()
         {
             Settings = Properties.Settings.Default;
-//#if DEBUG
-//            Properties.Settings.Default.Reset();
-//            Properties.Settings.Default.Save();
-//            Properties.Settings.Default.Upgrade();
-//#endif
 
             Width = 280;
             Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;

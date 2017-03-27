@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Interactivity;
 
 namespace Pin
 {
     public class ProjectDragoutBehavior : Behavior<FrameworkElement>
     {
+
+
         public IProjectViewModel ProjectVM
         {
             get { return (IProjectViewModel)GetValue(ProjectVMProperty); }
@@ -28,12 +25,6 @@ namespace Pin
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
         }
 
-        public static void dragDataOut(DependencyObject source, string[] filesToDrag)
-        {
-            var data = new DataObject(DataFormats.FileDrop, filesToDrag);
-            DragDrop.DoDragDrop(source, data, getEffects((ClipboardEvent)Properties.Settings.Default.ActionEvent));
-        }
-
         private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (ProjectVM == null) return;
@@ -44,17 +35,10 @@ namespace Pin
                 return;
             }
             var data = new DataObject(DataFormats.FileDrop, ProjectVM.FileToDrop.Dequeue());
-            DragDrop.DoDragDrop(this.AssociatedObject, data, getEffects((ClipboardEvent)Properties.Settings.Default.ActionEvent));
+            DragDrop.DoDragDrop(this.AssociatedObject, data, getEffects(ProjectVM.Settings.ClipboardAction));
         }
 
-        public static void setEffects(DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.Html)
-                || e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effects = getEffects((ClipboardEvent)Properties.Settings.Default.ActionEvent);
-            }
-        }
+        
         public static DragDropEffects getEffects(ClipboardEvent e)
         {
             switch (e)
