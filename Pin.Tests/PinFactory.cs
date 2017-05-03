@@ -1,11 +1,7 @@
-﻿using Pin.Model;
-using Pin.ProjectContainer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Media;
+using Pin.Model;
+using Pin.ProjectContainer;
 
 namespace Pin.Tests
 {

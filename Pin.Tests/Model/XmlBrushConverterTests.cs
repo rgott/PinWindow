@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Media;
+using NUnit.Framework;
 
 namespace Pin.Model.Tests
 {

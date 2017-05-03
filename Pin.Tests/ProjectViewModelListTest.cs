@@ -1,8 +1,8 @@
-﻿using Microsoft.Pex.Framework;
+﻿using System;
+using Microsoft.Pex.Framework;
 using Pin;
 using NUnit.Framework;
 using Pin.Model;
-using System;
 using System.Windows.Media;
 
 namespace Pin.Tests

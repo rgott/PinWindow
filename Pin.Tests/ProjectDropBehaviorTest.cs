@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using Pin.ProjectContainer;
+﻿using System;
 using System.IO;
-using System.Linq;
+using NUnit.Framework;
+using Pin.ProjectContainer;
 
 namespace Pin.Tests
 {
