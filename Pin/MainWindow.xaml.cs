@@ -1,5 +1,4 @@
-﻿using Pin.MenuContainer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using LibraryImports;
-using Pin;
 
 namespace Pin
 {

@@ -1,4 +1,6 @@
-﻿namespace Pin
+﻿using System;
+
+namespace Pin
 {
     public enum WindowState
     {

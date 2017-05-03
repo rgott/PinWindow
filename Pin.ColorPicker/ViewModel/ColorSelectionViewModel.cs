@@ -1,14 +1,12 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using LibraryImports;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using static LibraryImports.Win32;
 using Drawing = System.Drawing;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using LibraryImports;
 
 namespace Pin.ColorPicker
 {

@@ -1,10 +1,7 @@
-﻿using System.Windows.Media;
-
-using System.Linq;
-using System;
+﻿using System;
 using System.Xml.Serialization;
 using System.Xml;
-using System.Xml.Schema;
+using System.Windows.Media;
 
 namespace Pin.Model
 {

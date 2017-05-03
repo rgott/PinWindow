@@ -1,13 +1,11 @@
-﻿using GalaSoft.MvvmLight.Command;
-using Pin.Model;
-using System.Linq;
-using Forms = System.Windows.Forms;
-using System;
-using Pin.ColorPicker;
-using System.Windows.Input;
-using GalaSoft.MvvmLight;
+﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
+using System.Windows.Input;
+using Forms = System.Windows.Forms;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight;
+using Pin.ColorPicker;
+using Pin.Model;
 
 namespace Pin.ProjectContainer
 {

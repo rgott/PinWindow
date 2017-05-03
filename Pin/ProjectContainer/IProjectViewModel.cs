@@ -1,4 +1,4 @@
-﻿using System.Windows.Media;
+﻿using System;
 using Pin.Model;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;

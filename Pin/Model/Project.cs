@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -135,6 +134,5 @@ namespace Pin.Model
                 return (T)serializer.Deserialize(reader);
             }
         }
-
     }
 }

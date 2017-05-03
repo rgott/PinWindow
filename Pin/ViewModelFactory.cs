@@ -1,6 +1,6 @@
-﻿using Pin.MenuContainer;
+﻿using System;
+using Pin.MenuContainer;
 using Pin.ProjectContainer;
-using System;
 
 namespace Pin
 {

@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using Pin.ProjectContainer;
-using System;
+﻿using System;
 using System.Windows.Input;
 using System.Windows.Media;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Pin.ProjectContainer;
 using Forms = System.Windows.Forms;
 
 namespace Pin.MenuContainer

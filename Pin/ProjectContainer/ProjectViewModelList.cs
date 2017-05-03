@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight;
-using Pin.Model;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using GalaSoft.MvvmLight;
+using Pin.Model;
 
 namespace Pin.ProjectContainer
 {

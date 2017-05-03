@@ -1,8 +1,6 @@
-﻿using Pin.Model;
+﻿using System;
+using Pin.Model;
 using Pin.ProjectContainer;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace Pin
 {
