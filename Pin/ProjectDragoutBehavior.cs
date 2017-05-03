@@ -5,8 +5,6 @@ namespace Pin
 {
     public class ProjectDragoutBehavior : Behavior<FrameworkElement>
     {
-
-
         public IProjectViewModel ProjectVM
         {
             get { return (IProjectViewModel)GetValue(ProjectVMProperty); }
@@ -35,11 +33,10 @@ namespace Pin
                 return;
             }
             var data = new DataObject(DataFormats.FileDrop, ProjectVM.FileToDrop.Dequeue());
-            DragDrop.DoDragDrop(this.AssociatedObject, data, getEffects(ProjectVM.Settings.ClipboardAction));
+            DragDrop.DoDragDrop(this.AssociatedObject, data, GetEffects(ProjectVM.Settings.ClipboardAction));
         }
 
-        
-        public static DragDropEffects getEffects(ClipboardEvent e)
+        public static DragDropEffects GetEffects(ClipboardEvent e)
         {
             switch (e)
             {
@@ -50,7 +47,5 @@ namespace Pin
             }
             return DragDropEffects.None;
         }
-        
-
     }
 }

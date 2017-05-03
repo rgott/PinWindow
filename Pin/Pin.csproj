@@ -17,7 +17,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Users\Rob\Desktop\Pins\</PublishUrl>
+    <PublishUrl>C:\Users\Rob\Desktop\Pin\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -27,7 +27,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -69,8 +69,12 @@
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <StartupObject>Pin.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>WindowIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
@@ -165,7 +169,6 @@
     <Compile Include="ProjectDragoutBehavior.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModelFactory.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ProjectContainer\ProjectViewModelList.cs" />
     <Compile Include="Model\XmlBrushConverter.cs" />
     <Compile Include="MenuContainer\PinContainerProjectItem.xaml.cs">
@@ -283,7 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryImports\LibraryImports.csproj">
-      <Project>{0F32637F-8523-417F-9A6B-E02B524C3399}</Project>
+      <Project>{0f32637f-8523-417f-9a6b-e02b524c3399}</Project>
       <Name>LibraryImports</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pin.ColorPicker\Pin.ColorPicker.csproj">
@@ -296,6 +299,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\Plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="WindowIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

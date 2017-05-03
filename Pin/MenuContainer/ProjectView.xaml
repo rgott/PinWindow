@@ -10,7 +10,7 @@
     <StackPanel Background="Transparent">
         <ListBox Template="{StaticResource ListViewProjects}" ItemsSource="{Binding ProjectList.Projects}">
             <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
+                <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Padding" Value="0" />
                     <Setter Property="Margin" Value="0" />
                     <Setter Property="BorderThickness" Value="0" />
@@ -18,8 +18,8 @@
                     <Setter Property="VerticalAlignment" Value="Stretch" />
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="Border" SnapsToDevicePixels="true">
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border x:Name="Border" SnapsToDevicePixels="true">
                                     <ContentPresenter VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                                 </Border>
                             </ControlTemplate>
@@ -35,7 +35,7 @@
         </ListBox>
         <TextBlock Margin="0" Text="Add a project first" Padding="10" Background="{StaticResource MainAppThemeColor}"  Foreground="{StaticResource MainTextColor}" FontSize="15">
             <TextBlock.Style>
-                <Style TargetType="TextBlock">
+                <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ProjectList.Projects.Count}" Value="0">
@@ -46,7 +46,7 @@
             </TextBlock.Style>
         </TextBlock>
         <Border Padding="3" HorizontalAlignment="Left" Background="{StaticResource MainAppThemeColor}" BorderBrush="DarkBlue" BorderThickness="1">
-            <TextBlock Text="{Binding ClipboardActionText,FallbackValue=Move}" Foreground="{StaticResource MainTextColor}" />
+            <TextBlock Text="{Binding ClipboardActionText, FallbackValue=Move}" Foreground="{StaticResource MainTextColor}" />
         </Border>
     </StackPanel>
 </UserControl>
